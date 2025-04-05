@@ -9,9 +9,10 @@ namespace GameLogic.Entities
    public class CharacterTest
    {
       [TestCase]
-      public void StringToLower()
+      public void CharacterNameIsSet()
       {
-         AssertString("AbcD".ToLower()).IsEqual("abcd");
+         Character character = new Character("Jack");
+         AssertString(character.Name).IsEqual("Jack");
       }
    }
 }
