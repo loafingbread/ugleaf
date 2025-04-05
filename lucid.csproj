@@ -6,6 +6,8 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="gdUnit4.api" Version="4.2.*" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="gdUnit4.api" Version="4.3.*" />
+    <PackageReference Include="gdUnit4.test.adapter" Version="2.*" />
   </ItemGroup>
 </Project>
