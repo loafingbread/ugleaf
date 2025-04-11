@@ -1,4 +1,3 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using GameLogic.Entities;
@@ -6,7 +5,7 @@ using System.Linq;
 
 namespace GameLogic.TurnBased
 {
-    public partial class TurnQueue : GodotObject
+    public class TurnQueue 
     {
         List<Character> _turnQueue;
         List<Character> _players;

@@ -1,4 +1,3 @@
-using Godot;
 using System.Collections.Generic;
 using GameLogic.Entities;
 using System.Transactions;
@@ -20,7 +19,7 @@ namespace GameLogic.TurnBased
         BattleEnd,
     }
 
-    public partial class BattleState : GodotObject
+    public class BattleState  
     {
         public EPhase Phase { get; private set; }
         public TurnQueue Queue { get; private set; }

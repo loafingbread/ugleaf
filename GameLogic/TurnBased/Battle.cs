@@ -1,11 +1,10 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using GameLogic.Entities;
 
 namespace GameLogic.TurnBased
 {
-    public partial class Battle : GodotObject
+    public class Battle  
     {
         BattleState State;
         public Battle(

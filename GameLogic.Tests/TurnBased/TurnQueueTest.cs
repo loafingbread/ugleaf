@@ -1,9 +1,9 @@
-using GdUnit4;
-using static GdUnit4.Assertions;
+using Xunit;
 using GameLogic.Entities;
+using GameLogic.TurnBased;
 using System.Collections.Generic;
 
-namespace GameLogic.TurnBased
+namespace GameLogic.TurnBasedTests
 {
     class TurnQueueTestData
     {
@@ -22,10 +22,9 @@ namespace GameLogic.TurnBased
         }
     }
 
-    [TestSuite]
-    public partial class TurnQueueTest
+    public class TurnQueueTest
     {
-        [TestCase]
+        [Fact]
         public void GetCurrentTurn_ReturnsFirstCharacter()
         {
             TurnQueueTestData td = new TurnQueueTestData();
@@ -33,10 +32,10 @@ namespace GameLogic.TurnBased
 
             Character currentTurn = sut.GetCurrentTurn();
 
-            AssertString(currentTurn.Name).IsEqual("Ash");
+            Assert.Equal("Ash", currentTurn.Name);
         }
 
-        [TestCase]
+        [Fact]
         public void GetAlliesForCharacter_ReturnsPlayersForPlayer()
         {
             TurnQueueTestData td = new TurnQueueTestData();
@@ -44,10 +43,10 @@ namespace GameLogic.TurnBased
 
             List<Character> allies = sut.GetAlliesForCharacter(td.Players[0]);
 
-            AssertThat(allies).IsEqual(td.Players);
+            Assert.Equal(allies, td.Players);
         }
 
-        [TestCase]
+        [Fact]
         public void GetAlliesForCharacter_ReturnsEnemiesForEnemy()
         {
             TurnQueueTestData td = new TurnQueueTestData();
@@ -55,10 +54,10 @@ namespace GameLogic.TurnBased
 
             List<Character> allies = sut.GetAlliesForCharacter(td.Enemies[0]);
 
-            AssertThat(allies).IsEqual(td.Enemies);
+            Assert.Equal(allies, td.Enemies);
         }
 
-        [TestCase]
+        [Fact]
         public void GetEnemiesForCharacter_ReturnsEnemiesForPlayer()
         {
             TurnQueueTestData td = new TurnQueueTestData();
@@ -66,10 +65,10 @@ namespace GameLogic.TurnBased
 
             List<Character> allies = sut.GetEnemiesForCharacter(td.Players[0]);
 
-            AssertThat(allies).IsEqual(td.Enemies);
+            Assert.Equal(allies, td.Enemies);
         }
 
-        [TestCase]
+        [Fact]
         public void GetEnemiesForCharacter_ReturnsPlayersForEnemy()
         {
             TurnQueueTestData td = new TurnQueueTestData();
@@ -77,7 +76,7 @@ namespace GameLogic.TurnBased
 
             List<Character> allies = sut.GetEnemiesForCharacter(td.Enemies[0]);
 
-            AssertThat(allies).IsEqual(td.Players);
+            Assert.Equal(allies, td.Players);
         }
     }
 }
