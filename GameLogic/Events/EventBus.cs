@@ -7,13 +7,15 @@ namespace GameLogic.Events
         private class EventHandler
         {
             public Func<IEvent, Task> Handler { get; }
+            public object OriginalHandler { get; }
 
             // Priority is used to determine the order of execution
             public int Priority { get; }
 
-            public EventHandler(Func<IEvent, Task> handler, int priority)
+            public EventHandler(Func<IEvent, Task> handler, object originalHandler, int priority)
             {
                 Handler = handler;
+                OriginalHandler = originalHandler;
                 Priority = priority;
             }
         }
@@ -31,7 +33,7 @@ namespace GameLogic.Events
 
             // Need to cast from IEvent to TEvent
             Func<IEvent, Task> handlerWrapper = e => handler((TEvent)e);
-            _subscribers[eventType].Add(new EventHandler(handlerWrapper, priority));
+            _subscribers[eventType].Add(new EventHandler(handlerWrapper, handler, priority));
             _subscribers[eventType]
                 .Sort((EventHandler a, EventHandler b) => b.Priority.CompareTo(a.Priority));
         }
@@ -42,7 +44,7 @@ namespace GameLogic.Events
             var eventType = typeof(TEvent);
             if (_subscribers.TryGetValue(eventType, out var eventHandlers))
             {
-                eventHandlers.RemoveAll((EventHandler h) => h.Handler.Equals(handler));
+                eventHandlers.RemoveAll(h => h.OriginalHandler.Equals(handler));
             }
         }
 
