@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
-using GameLogic.Entities;
 using System.Linq;
+using GameLogic.Entities;
 
 namespace GameLogic.TurnBased
 {
-    public class TurnQueue 
+    public class TurnQueue
     {
         List<Character> _turnQueue;
         List<Character> _players;
         List<Character> _enemies;
 
-        public TurnQueue(
-            List<Character> players, List<Character> enemies)
+        public TurnQueue(List<Character> players, List<Character> enemies)
         {
             this._turnQueue = new List<Character>(players);
             this._turnQueue.AddRange(enemies);
@@ -26,7 +25,8 @@ namespace GameLogic.TurnBased
             return this._turnQueue[0];
         }
 
-        public bool IsCharacterAnEnemy(Character character) {
+        public bool IsCharacterAnEnemy(Character character)
+        {
             return this._enemies.Contains(character);
         }
 
@@ -57,13 +57,15 @@ namespace GameLogic.TurnBased
             return this._players.Count > 0 && this._enemies.Count > 0;
         }
 
-        public void NextTurn() {
+        public void NextTurn()
+        {
             Character prevTurn = this._turnQueue[0];
             this._turnQueue.RemoveAt(0);
             this._turnQueue.Append(prevTurn);
         }
 
-        public void RemoveCharacter(Character character)  {
+        public void RemoveCharacter(Character character)
+        {
             this._turnQueue.Remove(character);
             this._enemies.Remove(character);
             this._enemies.Remove(character);

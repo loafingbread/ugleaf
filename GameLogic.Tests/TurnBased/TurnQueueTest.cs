@@ -1,7 +1,7 @@
-using Xunit;
+using System.Collections.Generic;
 using GameLogic.Entities;
 using GameLogic.TurnBased;
-using System.Collections.Generic;
+using Xunit;
 
 namespace GameLogic.TurnBasedTests
 {
@@ -12,13 +12,8 @@ namespace GameLogic.TurnBasedTests
 
         public TurnQueueTestData()
         {
-            this.Players = new List<Character>{
-                new Character("Ash"),
-                new Character("Brock"),
-            };
-            this.Enemies = new List<Character>{
-                new Character("Missy"),
-            };
+            this.Players = new List<Character> { new Character("Ash"), new Character("Brock") };
+            this.Enemies = new List<Character> { new Character("Missy") };
         }
     }
 

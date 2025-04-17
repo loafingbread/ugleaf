@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using GameLogic.Entities;
 using System.Transactions;
+using GameLogic.Entities;
 
 namespace GameLogic.TurnBased
 {
@@ -19,20 +19,20 @@ namespace GameLogic.TurnBased
         BattleEnd,
     }
 
-    public class BattleState  
+    public class BattleState
     {
         public EPhase Phase { get; private set; }
         public TurnQueue Queue { get; private set; }
 
-        public BattleState(
-            List<Character> players, List<Character> enemies)
+        public BattleState(List<Character> players, List<Character> enemies)
         {
             this.Phase = EPhase.BattleStart;
             this.Queue = new TurnQueue(players, enemies);
         }
 
-        public void SetPhase(EPhase phase) {
-           this.Phase = phase; 
+        public void SetPhase(EPhase phase)
+        {
+            this.Phase = phase;
         }
     }
 }

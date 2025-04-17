@@ -7,6 +7,7 @@ namespace GameLogic.Events
         private class EventHandler
         {
             public Func<IEvent, Task> Handler { get; }
+
             // Priority is used to determine the order of execution
             public int Priority { get; }
 
@@ -19,7 +20,8 @@ namespace GameLogic.Events
 
         private readonly Dictionary<Type, List<EventHandler>> _subscribers = new();
 
-        public void Subscribe<TEvent>(Func<TEvent, Task> handler, int priority = 0) where TEvent : IEvent
+        public void Subscribe<TEvent>(Func<TEvent, Task> handler, int priority = 0)
+            where TEvent : IEvent
         {
             var eventType = typeof(TEvent);
             if (!_subscribers.ContainsKey(eventType))
@@ -30,10 +32,12 @@ namespace GameLogic.Events
             // Need to cast from IEvent to TEvent
             Func<IEvent, Task> handlerWrapper = e => handler((TEvent)e);
             _subscribers[eventType].Add(new EventHandler(handlerWrapper, priority));
-            _subscribers[eventType].Sort((EventHandler a, EventHandler b) => b.Priority.CompareTo(a.Priority));
+            _subscribers[eventType]
+                .Sort((EventHandler a, EventHandler b) => b.Priority.CompareTo(a.Priority));
         }
 
-        public void Unsubscribe<TEvent>(Func<TEvent, Task> handler) where TEvent : IEvent
+        public void Unsubscribe<TEvent>(Func<TEvent, Task> handler)
+            where TEvent : IEvent
         {
             var eventType = typeof(TEvent);
             if (_subscribers.TryGetValue(eventType, out var eventHandlers))
@@ -42,7 +46,8 @@ namespace GameLogic.Events
             }
         }
 
-        public async void Publish<TEvent>(TEvent evt) where TEvent : IEvent
+        public async void Publish<TEvent>(TEvent evt)
+            where TEvent : IEvent
         {
             var eventType = typeof(TEvent);
             if (_subscribers.TryGetValue(eventType, out var eventHandlers))

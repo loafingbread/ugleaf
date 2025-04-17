@@ -6,6 +6,6 @@ namespace GameLogic.Events
         Menu,
         UI,
         Skill,
-        Inventory
+        Inventory,
     }
 }

@@ -4,11 +4,11 @@ using GameLogic.Entities;
 
 namespace GameLogic.TurnBased
 {
-    public class Battle  
+    public class Battle
     {
         BattleState State;
-        public Battle(
-            List<Character> players, List<Character> enemies)
+
+        public Battle(List<Character> players, List<Character> enemies)
         {
             this.State = new BattleState(players, enemies);
         }
@@ -116,9 +116,6 @@ namespace GameLogic.TurnBased
             this.State.SetPhase(EPhase.BattleEnd);
         }
 
-        void BattleEnd()
-        {
-
-        }
+        void BattleEnd() { }
     }
 }

@@ -1,5 +1,5 @@
-using Xunit;
 using GameLogic.Entities;
+using Xunit;
 
 namespace GameLogic.EntitiesTests
 {
@@ -13,4 +13,3 @@ namespace GameLogic.EntitiesTests
         }
     }
 }
-
