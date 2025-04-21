@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Transactions;
 using GameLogic.Entities;
 
 namespace GameLogic.TurnBased
