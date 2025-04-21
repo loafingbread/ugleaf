@@ -1,14 +1,18 @@
 namespace GameLogic.Events.SkillEvents
 {
-    public class SkillUsedEvent : GameEvent<EventCategory>
+    public class SkillEvent : GameEvent<BuiltInEventCategory>
     {
         // ✅ Overrides
         public string Name => $"{GetType().Name}: {SkillName}";
 
         public string SkillName { get; } = "";
-        public SkillUsedEvent(string skillName) : base(EventCategory.Skill)
+        public string TargetName { get; } = "";
+
+        public SkillEvent(string skillName, string targetName)
+            : base(BuiltInEventCategory.Skill)
         {
-            SkillName = skillName;
+            this.SkillName = skillName;
+            this.TargetName = targetName;
         }
     }
 }

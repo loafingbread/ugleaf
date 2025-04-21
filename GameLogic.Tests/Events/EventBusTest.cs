@@ -1,80 +1,55 @@
+using System.Diagnostics;
 using GameLogic.Events;
+using GameLogic.Events.SkillEvents;
 using Xunit;
 
 namespace GameLogic.EventsTests
 {
-    class EventBusTestData 
+    class EventBusTestData
     {
-        public List<Func<IEvent, Task>> Subscribers;
-        public StringWriter Output;
-        public TextWriter OriginalOutput;
+        public SkillEvent FireballEvent = new("Fireball", "Alice");
+        public SkillEvent? ReceivedSkillEvent { get; set; }
 
-        public EventBusTestData()
-        {
-           this.Subscribers = new List<Func<IEvent, Task>> {
-            (e) => {
-                Console.WriteLine("Subscriber 1");
-                return Task.CompletedTask;
-            },
-            (e) => {
-                Console.WriteLine("Subscriber 2");
-                return Task.CompletedTask;  
-            }
-           };
-           (this.Output, this.OriginalOutput) = setup();
-        } 
-
-        private (StringWriter, TextWriter) setup() {
-            var output = new StringWriter();
-            var originalOutput = Console.Out;
-            Console.SetOut(output);
-
-            return (output, originalOutput);
-        }
-
-        public void Teardown() {
-            Console.SetOut(OriginalOutput);
-            Output.Dispose();
-        }
-    }
-
-    public class TestEvent : IEvent
-    {
-        public string Name => "TestEvent";
+        public EventBusTestData() { }
     }
 
     public class EventBusTest
     {
         [Fact]
-        public void PublishEvent() {
+        public void PublishEvent()
+        {
             EventBusTestData td = new EventBusTestData();
             EventBus eventBus = new EventBus();
 
-            eventBus.Subscribe<TestEvent>(td.Subscribers[0]);
-            eventBus.Subscribe<TestEvent>(td.Subscribers[1]);
+            eventBus.Subscribe<SkillEvent, BuiltInEventCategory>(
+                (SkillEvent receivedEvent) =>
+                {
+                    td.ReceivedSkillEvent = receivedEvent;
+                    return Task.CompletedTask;
+                }
+            );
+            eventBus.Publish<SkillEvent, BuiltInEventCategory>(td.FireballEvent);
 
-            eventBus.Publish(new TestEvent());
-            
-            Assert.Contains("Subscriber 1", td.Output.ToString());
-            Assert.Contains("Subscriber 2", td.Output.ToString());
-
-            td.Teardown();
+            Assert.Equal(td.FireballEvent, td.ReceivedSkillEvent);
         }
 
         [Fact]
-        public void UnsubscribeEvent() {
+        public void UnsubscribeEvent()
+        {
             EventBusTestData td = new EventBusTestData();
             EventBus eventBus = new EventBus();
+            bool handlerWasCalled = false;
+            Func<SkillEvent, Task> handler = (SkillEvent receivedEvent) =>
+            {
+                handlerWasCalled = true;
+                return Task.CompletedTask;
+            };
 
-            eventBus.Subscribe<TestEvent>(td.Subscribers[0]);
-            eventBus.Unsubscribe<TestEvent>(td.Subscribers[0]);
+            eventBus.Subscribe<SkillEvent, BuiltInEventCategory>(handler);
+            eventBus.Unsubscribe<SkillEvent, BuiltInEventCategory>(handler);
+            eventBus.Publish<SkillEvent, BuiltInEventCategory>(td.FireballEvent);
 
-            eventBus.Publish(new TestEvent());
-
-            Assert.DoesNotContain("Subscriber 1", td.Output.ToString());
-
-            td.Teardown();
+            Assert.False(handlerWasCalled);
         }
-
     }
 }
