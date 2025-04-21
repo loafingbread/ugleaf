@@ -1,4 +1,4 @@
-namespace GameLogic.Events
+namespace GameLogic.Events.Categories
 {
     public abstract class SkillEvent : GameEvent<BuiltInEventCategory>
     {

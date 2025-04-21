@@ -1,6 +1,6 @@
 using GameLogic.Entities;
 
-namespace GameLogic.Events
+namespace GameLogic.Events.Categories
 {
     public abstract class CombatEvent : GameEvent<BuiltInEventCategory>
     {
