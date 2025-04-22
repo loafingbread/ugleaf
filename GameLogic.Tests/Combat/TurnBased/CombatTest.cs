@@ -3,5 +3,5 @@ using Xunit;
 
 namespace GameLogic.EntitiesTests
 {
-    public class BattleTest { }
+    public class CombatTest { }
 }
