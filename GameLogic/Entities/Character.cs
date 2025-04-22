@@ -1,11 +1,28 @@
+using GameLogic.Config;
+
 namespace GameLogic.Entities;
 
-public class Character
+public class Character : IConfigurable<ICharacterData>
 {
-    public string Name { get; set; } = "";
+    public string Id { get; private set; } = "";
+    public string Name { get; private set; } = "";
+    public int Health { get; private set; }
+    public int Attack { get; private set; }
+    public int Defense { get; private set; }
 
-    public Character(string name)
+    public Character() { }
+
+    public Character(ICharacterData config)
     {
-        this.Name = name;
+        this.ApplyConfig(config);
+    }
+
+    public void ApplyConfig(ICharacterData config)
+    {
+        this.Id = config.Id;
+        this.Name = config.Name;
+        this.Health = config.Health;
+        this.Attack = config.Attack;
+        this.Defense = config.Defense;
     }
 }

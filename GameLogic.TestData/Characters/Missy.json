@@ -1,0 +1,7 @@
+{
+    "Id": "char_pc_missy",
+    "Name": "Missy",
+    "Health": 100,
+    "Attack": 30,
+    "Defense": 10
+}

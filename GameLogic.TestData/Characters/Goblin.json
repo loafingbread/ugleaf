@@ -1,0 +1,7 @@
+{
+    "Id": "char_npc_goblin",
+    "Name": "Goblin",
+    "Health": 50,
+    "Attack": 20,
+    "Defense": 10
+}

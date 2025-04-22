@@ -1,0 +1,8 @@
+
+{
+    "Id": "char_pc_goblinslayer",
+    "Name": "Goblin Slayer",
+    "Health": 200,
+    "Attack": 50,
+    "Defense": 15
+}

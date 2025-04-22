@@ -1,27 +1,46 @@
 namespace GameLogic.TurnBasedTests;
 
 using GameLogic.Combat.TurnBased;
+using GameLogic.Config;
 using GameLogic.Entities;
+using GameLogic.EntitiesTest;
 using Xunit;
 
 class TurnQueueTestData
 {
+    private readonly CharacterTestFixture _characters;
+
     public List<Character> Players;
     public List<Character> Enemies;
 
-    public TurnQueueTestData()
+    public TurnQueueTestData(CharacterTestFixture characters)
     {
-        this.Players = new List<Character> { new Character("Ash"), new Character("Brock") };
-        this.Enemies = new List<Character> { new Character("Missy") };
+        this._characters = characters;
+        this.Players =
+        [
+            GameFactory.CreateFromConfig<Character, ICharacterData>(this._characters.AshConfig),
+            GameFactory.CreateFromConfig<Character, ICharacterData>(this._characters.BrockConfig),
+        ];
+        this.Enemies =
+        [
+            GameFactory.CreateFromConfig<Character, ICharacterData>(this._characters.MissyConfig),
+        ];
     }
 }
 
-public class TurnQueueTest
+public class TurnQueueTest : IClassFixture<CharacterTestFixture>
 {
+    private readonly CharacterTestFixture _characters;
+
+    public TurnQueueTest(CharacterTestFixture characters)
+    {
+        this._characters = characters;
+    }
+
     [Fact]
     public void GetCurrentTurn_ReturnsFirstCharacter()
     {
-        TurnQueueTestData td = new TurnQueueTestData();
+        TurnQueueTestData td = new TurnQueueTestData(this._characters);
         TurnQueue sut = new TurnQueue(td.Players, td.Enemies);
 
         Character currentTurn = sut.GetCurrentTurn();
@@ -32,7 +51,7 @@ public class TurnQueueTest
     [Fact]
     public void GetAlliesForCharacter_ReturnsPlayersForPlayer()
     {
-        TurnQueueTestData td = new TurnQueueTestData();
+        TurnQueueTestData td = new TurnQueueTestData(this._characters);
         TurnQueue sut = new TurnQueue(td.Players, td.Enemies);
 
         List<Character> allies = sut.GetAlliesForCharacter(td.Players[0]);
@@ -43,7 +62,7 @@ public class TurnQueueTest
     [Fact]
     public void GetAlliesForCharacter_ReturnsEnemiesForEnemy()
     {
-        TurnQueueTestData td = new TurnQueueTestData();
+        TurnQueueTestData td = new TurnQueueTestData(this._characters);
         TurnQueue sut = new TurnQueue(td.Players, td.Enemies);
 
         List<Character> allies = sut.GetAlliesForCharacter(td.Enemies[0]);
@@ -54,7 +73,7 @@ public class TurnQueueTest
     [Fact]
     public void GetEnemiesForCharacter_ReturnsEnemiesForPlayer()
     {
-        TurnQueueTestData td = new TurnQueueTestData();
+        TurnQueueTestData td = new TurnQueueTestData(this._characters);
         TurnQueue sut = new TurnQueue(td.Players, td.Enemies);
 
         List<Character> allies = sut.GetEnemiesForCharacter(td.Players[0]);
@@ -65,7 +84,7 @@ public class TurnQueueTest
     [Fact]
     public void GetEnemiesForCharacter_ReturnsPlayersForEnemy()
     {
-        TurnQueueTestData td = new TurnQueueTestData();
+        TurnQueueTestData td = new TurnQueueTestData(this._characters);
         TurnQueue sut = new TurnQueue(td.Players, td.Enemies);
 
         List<Character> allies = sut.GetEnemiesForCharacter(td.Enemies[0]);

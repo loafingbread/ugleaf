@@ -18,6 +18,6 @@ public abstract class SkillEvent : GameEvent<BuiltInEventCategory>
 
 public class SkillUseEvent : SkillEvent
 {
-    public SkillUseEvent(string skillName, string targetName)
-        : base(skillName, targetName) { }
+    public SkillUseEvent(string skillName, string userName)
+        : base(skillName, userName) { }
 }
