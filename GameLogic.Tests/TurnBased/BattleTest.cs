@@ -1,4 +1,4 @@
-using GameLogic.TurnBased;
+using GameLogic.Combat;
 using Xunit;
 
 namespace GameLogic.EntitiesTests

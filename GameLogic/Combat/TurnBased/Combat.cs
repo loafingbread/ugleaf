@@ -1,23 +1,21 @@
-using System;
-using System.Collections.Generic;
 using GameLogic.Entities;
 
-namespace GameLogic.TurnBased
+namespace GameLogic.Combat.TurnBased
 {
-    public class Battle
+    public class Combat
     {
-        BattleState State;
+        CombatState State;
 
-        public Battle(List<Character> players, List<Character> enemies)
+        public Combat(List<Character> players, List<Character> enemies)
         {
-            this.State = new BattleState(players, enemies);
+            this.State = new CombatState(players, enemies);
         }
 
         public void Play()
         {
-            if (this.State.Phase == EPhase.BattleStart)
+            if (this.State.Phase == EPhase.CombatStart)
             {
-                this.BattleStart();
+                this.CombatStart();
             }
             else if (this.State.Phase == EPhase.TurnStart)
             {
@@ -48,10 +46,10 @@ namespace GameLogic.TurnBased
                 this.TurnEnd();
             }
 
-            this.BattleEnd();
+            this.CombatEnd();
         }
 
-        void BattleStart()
+        void CombatStart()
         {
             this.State.SetPhase(EPhase.TurnStart);
         }
@@ -113,9 +111,9 @@ namespace GameLogic.TurnBased
                 return;
             }
 
-            this.State.SetPhase(EPhase.BattleEnd);
+            this.State.SetPhase(EPhase.CombatEnd);
         }
 
-        void BattleEnd() { }
+        void CombatEnd() { }
     }
 }

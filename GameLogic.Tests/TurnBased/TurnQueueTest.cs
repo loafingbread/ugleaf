@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using GameLogic.Entities;
-using GameLogic.TurnBased;
+using GameLogic.Combat.TurnBased;
 using Xunit;
 
 namespace GameLogic.TurnBasedTests

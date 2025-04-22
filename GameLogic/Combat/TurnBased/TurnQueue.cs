@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using GameLogic.Entities;
 
-namespace GameLogic.TurnBased
+namespace GameLogic.Combat.TurnBased
 {
     public class TurnQueue
     {
@@ -13,11 +10,10 @@ namespace GameLogic.TurnBased
 
         public TurnQueue(List<Character> players, List<Character> enemies)
         {
-            this._turnQueue = new List<Character>(players);
-            this._turnQueue.AddRange(enemies);
+            this._turnQueue = [.. players, .. enemies];
 
-            this._players = new List<Character>(players);
-            this._enemies = new List<Character>(enemies);
+            this._players = [.. players];
+            this._enemies = [.. enemies];
         }
 
         public Character GetCurrentTurn()
@@ -35,10 +31,10 @@ namespace GameLogic.TurnBased
             bool isEnemy = this._enemies.Contains(character);
             if (isEnemy)
             {
-                return new List<Character>(this._enemies);
+                return [.. this._enemies];
             }
 
-            return new List<Character>(this._players);
+            return [.. this._players];
         }
 
         public List<Character> GetEnemiesForCharacter(Character character)
@@ -46,10 +42,10 @@ namespace GameLogic.TurnBased
             bool isEnemy = this._enemies.Contains(character);
             if (isEnemy)
             {
-                return new List<Character>(this._players);
+                return [.. this._players];
             }
 
-            return new List<Character>(this._enemies);
+            return [.. this._enemies];
         }
 
         public bool HaveMorePlayersAndEnemies()

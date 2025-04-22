@@ -1,10 +1,10 @@
 using GameLogic.Entities;
 
-namespace GameLogic.TurnBased
+namespace GameLogic.Combat.TurnBased
 {
     public enum EPhase
     {
-        BattleStart,
+        CombatStart,
         TurnStart,
         PlayerTurn,
         AwaitPlayerSelectCommand,
@@ -14,17 +14,17 @@ namespace GameLogic.TurnBased
         EnemySelectTargets,
         ExecuteCommand,
         TurnEnd,
-        BattleEnd,
+        CombatEnd,
     }
 
-    public class BattleState
+    public class CombatState
     {
         public EPhase Phase { get; private set; }
         public TurnQueue Queue { get; private set; }
 
-        public BattleState(List<Character> players, List<Character> enemies)
+        public CombatState(List<Character> players, List<Character> enemies)
         {
-            this.Phase = EPhase.BattleStart;
+            this.Phase = EPhase.CombatStart;
             this.Queue = new TurnQueue(players, enemies);
         }
 
