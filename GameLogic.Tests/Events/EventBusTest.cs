@@ -1,80 +1,79 @@
+namespace GameLogic.EventsTests;
+
 using GameLogic.Events;
 using Xunit;
 
-namespace GameLogic.EventsTests
+class EventBusTestData
 {
-    class EventBusTestData
+    public Events.Categories.SkillUseEvent FireballSkillUseEvent = new("Fireball", "Alice");
+    public Events.Categories.SkillEvent? ReceivedFireballSkillEvent { get; set; }
+
+    public Events.Categories.CombatPhaseChangeEvent StartCombatPhaseChangedEvent = new(
+        new Entities.Character("Alice"),
+        new Entities.Character("Alice"),
+        new List<Entities.Character>() { new Entities.Character("Jack") },
+        "Skill use",
+        "Player turn"
+    );
+    public Events.Categories.CombatEvent? ReceivedCombatPhaseChangedEvent { get; set; }
+
+    public EventBusTestData() { }
+}
+
+public class EventBusTest
+{
+    [Fact]
+    public void Publish_CallsTwoDifferentEventCategories()
     {
-        public Events.Categories.SkillUseEvent FireballSkillUseEvent = new("Fireball", "Alice");
-        public Events.Categories.SkillEvent? ReceivedFireballSkillEvent { get; set; }
+        EventBusTestData td = new EventBusTestData();
+        EventBus eventBus = new EventBus();
 
-        public Events.Categories.CombatPhaseChangeEvent StartCombatPhaseChangedEvent = new(
-            new Entities.Character("Alice"),
-            new Entities.Character("Alice"),
-            new List<Entities.Character>() { new Entities.Character("Jack") },
-            "Skill use",
-            "Player turn"
+        eventBus.Subscribe<Events.Categories.SkillEvent, BuiltInEventCategory>(
+            (Events.Categories.SkillEvent receivedEvent) =>
+            {
+                td.ReceivedFireballSkillEvent = receivedEvent;
+                return Task.CompletedTask;
+            }
         );
-        public Events.Categories.CombatEvent? ReceivedCombatPhaseChangedEvent { get; set; }
+        eventBus.Subscribe<Events.Categories.CombatEvent, BuiltInEventCategory>(
+            (Events.Categories.CombatEvent receivedEvent) =>
+            {
+                td.ReceivedCombatPhaseChangedEvent = receivedEvent;
+                return Task.CompletedTask;
+            }
+        );
 
-        public EventBusTestData() { }
+        eventBus.Publish<Events.Categories.SkillEvent, BuiltInEventCategory>(
+            td.FireballSkillUseEvent
+        );
+        eventBus.Publish<Events.Categories.CombatEvent, BuiltInEventCategory>(
+            td.StartCombatPhaseChangedEvent
+        );
+
+        Assert.Equal(td.FireballSkillUseEvent, td.ReceivedFireballSkillEvent);
+        Assert.Equal(td.StartCombatPhaseChangedEvent, td.ReceivedCombatPhaseChangedEvent);
     }
 
-    public class EventBusTest
+    [Fact]
+    public void Publish_DoNotCallHandlerAfterUnsubscribe()
     {
-        [Fact]
-        public void Publish_CallsTwoDifferentEventCategories()
+        EventBusTestData td = new EventBusTestData();
+        EventBus eventBus = new EventBus();
+        bool handlerWasCalled = false;
+        Func<Events.Categories.SkillEvent, Task> handler = (
+            Events.Categories.SkillEvent receivedEvent
+        ) =>
         {
-            EventBusTestData td = new EventBusTestData();
-            EventBus eventBus = new EventBus();
+            handlerWasCalled = true;
+            return Task.CompletedTask;
+        };
 
-            eventBus.Subscribe<Events.Categories.SkillEvent, BuiltInEventCategory>(
-                (Events.Categories.SkillEvent receivedEvent) =>
-                {
-                    td.ReceivedFireballSkillEvent = receivedEvent;
-                    return Task.CompletedTask;
-                }
-            );
-            eventBus.Subscribe<Events.Categories.CombatEvent, BuiltInEventCategory>(
-                (Events.Categories.CombatEvent receivedEvent) =>
-                {
-                    td.ReceivedCombatPhaseChangedEvent = receivedEvent;
-                    return Task.CompletedTask;
-                }
-            );
+        eventBus.Subscribe<Events.Categories.SkillEvent, BuiltInEventCategory>(handler);
+        eventBus.Unsubscribe<Events.Categories.SkillEvent, BuiltInEventCategory>(handler);
+        eventBus.Publish<Events.Categories.SkillEvent, BuiltInEventCategory>(
+            td.FireballSkillUseEvent
+        );
 
-            eventBus.Publish<Events.Categories.SkillEvent, BuiltInEventCategory>(
-                td.FireballSkillUseEvent
-            );
-            eventBus.Publish<Events.Categories.CombatEvent, BuiltInEventCategory>(
-                td.StartCombatPhaseChangedEvent
-            );
-
-            Assert.Equal(td.FireballSkillUseEvent, td.ReceivedFireballSkillEvent);
-            Assert.Equal(td.StartCombatPhaseChangedEvent, td.ReceivedCombatPhaseChangedEvent);
-        }
-
-        [Fact]
-        public void Publish_DoNotCallHandlerAfterUnsubscribe()
-        {
-            EventBusTestData td = new EventBusTestData();
-            EventBus eventBus = new EventBus();
-            bool handlerWasCalled = false;
-            Func<Events.Categories.SkillEvent, Task> handler = (
-                Events.Categories.SkillEvent receivedEvent
-            ) =>
-            {
-                handlerWasCalled = true;
-                return Task.CompletedTask;
-            };
-
-            eventBus.Subscribe<Events.Categories.SkillEvent, BuiltInEventCategory>(handler);
-            eventBus.Unsubscribe<Events.Categories.SkillEvent, BuiltInEventCategory>(handler);
-            eventBus.Publish<Events.Categories.SkillEvent, BuiltInEventCategory>(
-                td.FireballSkillUseEvent
-            );
-
-            Assert.False(handlerWasCalled);
-        }
+        Assert.False(handlerWasCalled);
     }
 }

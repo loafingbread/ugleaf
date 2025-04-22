@@ -1,7 +1,3 @@
-using GameLogic.Combat;
-using Xunit;
+namespace GameLogic.EntitiesTests;
 
-namespace GameLogic.EntitiesTests
-{
-    public class CombatTest { }
-}
+public class CombatTest { }

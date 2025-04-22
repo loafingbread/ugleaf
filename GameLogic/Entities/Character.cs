@@ -1,12 +1,11 @@
-namespace GameLogic.Entities
-{
-    public partial class Character
-    {
-        public string Name { get; set; } = "";
+namespace GameLogic.Entities;
 
-        public Character(string name)
-        {
-            this.Name = name;
-        }
+public class Character
+{
+    public string Name { get; set; } = "";
+
+    public Character(string name)
+    {
+        this.Name = name;
     }
 }

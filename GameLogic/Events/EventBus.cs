@@ -1,74 +1,69 @@
-namespace GameLogic.Events
+namespace GameLogic.Events;
+
+public class EventBus
 {
-    public class EventBus
+    private class EventHandler
     {
-        private class EventHandler
+        public Func<IEventBase, Task> Handler { get; }
+        public object OriginalHandler { get; }
+
+        // Priority is used to determine the order of execution
+        public int Priority { get; }
+
+        public EventHandler(Func<IEventBase, Task> handler, object originalHandler, int priority)
         {
-            public Func<IEventBase, Task> Handler { get; }
-            public object OriginalHandler { get; }
+            this.Handler = handler;
+            this.OriginalHandler = originalHandler;
+            this.Priority = priority;
+        }
+    }
 
-            // Priority is used to determine the order of execution
-            public int Priority { get; }
+    private readonly Dictionary<Type, List<EventHandler>> _subscribers = [];
 
-            public EventHandler(
-                Func<IEventBase, Task> handler,
-                object originalHandler,
-                int priority
-            )
-            {
-                this.Handler = handler;
-                this.OriginalHandler = originalHandler;
-                this.Priority = priority;
-            }
+    public void Subscribe<TEvent, TCategory>(Func<TEvent, Task> handler, int priority = 0)
+        where TEvent : IEvent<TCategory>, IEventBase
+        where TCategory : IEventCategory<EventCategoryConfig>
+    {
+        var eventType = typeof(TEvent);
+        if (!_subscribers.ContainsKey(eventType))
+        {
+            _subscribers[eventType] = [];
         }
 
-        private readonly Dictionary<Type, List<EventHandler>> _subscribers = new();
+        // Need to cast from IEventBase to TEvent
+        Func<IEventBase, Task> handlerWrapper = (IEventBase e) => handler((TEvent)e);
+        _subscribers[eventType].Add(new EventHandler(handlerWrapper, handler, priority));
+        _subscribers[eventType]
+            .Sort((EventHandler a, EventHandler b) => b.Priority.CompareTo(a.Priority));
+    }
 
-        public void Subscribe<TEvent, TCategory>(Func<TEvent, Task> handler, int priority = 0)
-            where TEvent : IEvent<TCategory>, IEventBase
-            where TCategory : IEventCategory<EventCategoryConfig>
+    public void Unsubscribe<TEvent, TCategory>(Func<TEvent, Task> handler)
+        where TEvent : IEvent<TCategory>, IEventBase
+        where TCategory : IEventCategory<EventCategoryConfig>
+    {
+        var eventType = typeof(TEvent);
+        if (_subscribers.TryGetValue(eventType, out var eventHandlers))
         {
-            var eventType = typeof(TEvent);
-            if (!_subscribers.ContainsKey(eventType))
-            {
-                _subscribers[eventType] = new List<EventHandler>();
-            }
-
-            // Need to cast from IEventBase to TEvent
-            Func<IEventBase, Task> handlerWrapper = (IEventBase e) => handler((TEvent)e);
-            _subscribers[eventType].Add(new EventHandler(handlerWrapper, handler, priority));
-            _subscribers[eventType]
-                .Sort((EventHandler a, EventHandler b) => b.Priority.CompareTo(a.Priority));
+            eventHandlers.RemoveAll(h => h.OriginalHandler.Equals(handler));
         }
+    }
 
-        public void Unsubscribe<TEvent, TCategory>(Func<TEvent, Task> handler)
-            where TEvent : IEvent<TCategory>, IEventBase
-            where TCategory : IEventCategory<EventCategoryConfig>
+    public async void Publish<TEvent, TCategory>(TEvent evt)
+        where TEvent : IEvent<TCategory>, IEventBase
+        where TCategory : IEventCategory<EventCategoryConfig>
+    {
+        var eventType = typeof(TEvent);
+        if (_subscribers.TryGetValue(eventType, out var eventHandlers))
         {
-            var eventType = typeof(TEvent);
-            if (_subscribers.TryGetValue(eventType, out var eventHandlers))
+            foreach (var handler in eventHandlers)
             {
-                eventHandlers.RemoveAll(h => h.OriginalHandler.Equals(handler));
-            }
-        }
-
-        public async void Publish<TEvent, TCategory>(TEvent evt)
-            where TEvent : IEvent<TCategory>, IEventBase
-            where TCategory : IEventCategory<EventCategoryConfig>
-        {
-            var eventType = typeof(TEvent);
-            if (_subscribers.TryGetValue(eventType, out var eventHandlers))
-            {
-                foreach (var handler in eventHandlers)
+                try
                 {
-                    try
-                    {
-                        await handler.Handler(evt);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error handling event {evt.Name}: {ex.Message}");
-                    }
+                    await handler.Handler(evt);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error handling event {evt.Name}: {ex.Message}");
                 }
             }
         }
