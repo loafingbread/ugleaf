@@ -1,0 +1,8 @@
+{
+    "Id": "skill_sprayandpray",
+    "Name": "Spray And Pray",
+    "Targeter": {
+        "TargetQuantity": "All",
+        "AllowedTargets": ["Ally", "Enemy", "Neutral"]
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "Id": "skill_facepalm",
+    "Name": "Face Palm",
+    "Targeter": {
+        "TargetQuantity": "Count",
+        "AllowedTargets": ["Self"],
+        "Count": 1
+    }
+}

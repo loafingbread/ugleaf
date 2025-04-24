@@ -1,17 +1,17 @@
 namespace GameLogic.Events;
 
-// Derivable class for event category configuration
-public class EventCategoryConfig
-{
-    public string DisplayName { get; set; } = "";
-    public List<string> Tags { get; set; } = [];
-}
-
 public interface IEventCategory<out T>
     where T : EventCategoryConfig
 {
     public string Id { get; }
     public T Config { get; }
+}
+
+// Derivable class for event category configuration
+public class EventCategoryConfig
+{
+    public string DisplayName { get; set; } = "";
+    public List<string> Tags { get; set; } = [];
 }
 
 public class BuiltInEventCategory : IEventCategory<EventCategoryConfig>

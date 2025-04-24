@@ -1,0 +1,9 @@
+{
+    "Id": "skill_mug",
+    "Name": "Mug",
+    "Targeter": {
+        "TargetQuantity": "Count",
+        "AllowedTargets": ["Enemy"],
+        "Count": 1
+    }
+}

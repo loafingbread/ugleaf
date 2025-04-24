@@ -1,0 +1,9 @@
+{
+    "Id": "skill_steal",
+    "Name": "Steal",
+    "Targeter": {
+        "TargetQuantity": "Count",
+        "AllowedTargets": ["Ally", "Enemy", "Neutral"],
+        "Count": 1
+    }
+}

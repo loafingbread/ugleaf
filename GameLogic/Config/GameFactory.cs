@@ -6,7 +6,7 @@ public static class GameFactory
     public static T CreateFromConfig<T, TConfig>(TConfig config)
         where T : IConfigurable<TConfig>, new()
     {
-        T instance = new T();
+        T instance = new();
         instance.ApplyConfig(config);
         return instance;
     }

@@ -1,6 +1,6 @@
-using GameLogic.Config;
-
 namespace GameLogic.Entities;
+
+using GameLogic.Config;
 
 public class Character : IConfigurable<ICharacterData>
 {

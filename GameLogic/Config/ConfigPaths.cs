@@ -23,4 +23,17 @@ public static class ConfigPaths
         public static readonly string Goblin = Path.Combine(Folder, "Goblin.json");
         public static readonly string GoblinSlayer = Path.Combine(Folder, "GoblinSlayer.json");
     }
+
+    public static class Skill
+    {
+        public static readonly string Folder = Path.Combine(
+            BasePath,
+            "GameLogic.TestData/Entities/Skills/"
+        );
+
+        public static readonly string FacePalm = Path.Combine(Folder, "FacePalm.json");
+        public static readonly string Steal = Path.Combine(Folder, "Steal.json");
+        public static readonly string Mug = Path.Combine(Folder, "Mug.json");
+        public static readonly string SprayAndPray = Path.Combine(Folder, "SprayAndPray.json");
+    }
 }
