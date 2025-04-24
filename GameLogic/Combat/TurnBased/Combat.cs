@@ -1,6 +1,6 @@
 namespace GameLogic.Combat.TurnBased;
 
-using GameLogic.Entities;
+using GameLogic.Entities.Characters;
 
 public class Combat
 {

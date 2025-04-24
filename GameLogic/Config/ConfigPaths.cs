@@ -13,7 +13,7 @@ public static class ConfigPaths
     {
         public static readonly string Folder = Path.Combine(
             BasePath,
-            "GameLogic.TestData/Characters/"
+            "GameLogic.TestData/Entities/Characters/"
         );
         public static readonly string Alice = Path.Combine(Folder, "Alice.json");
         public static readonly string Ash = Path.Combine(Folder, "Ash.json");

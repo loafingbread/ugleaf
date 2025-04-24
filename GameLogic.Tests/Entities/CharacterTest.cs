@@ -1,7 +1,7 @@
 namespace GameLogic.EntitiesTests;
 
 using GameLogic.Config;
-using GameLogic.Entities;
+using GameLogic.Entities.Characters;
 using GameLogic.EntitiesTest;
 using Xunit;
 

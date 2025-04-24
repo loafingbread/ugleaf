@@ -1,5 +1,5 @@
 using GameLogic.Config;
-using GameLogic.Entities;
+using GameLogic.Entities.Characters;
 
 namespace GameLogic.EntitiesTest;
 

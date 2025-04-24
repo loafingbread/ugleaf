@@ -1,6 +1,6 @@
 namespace GameLogic.Events.Categories;
 
-using GameLogic.Entities;
+using GameLogic.Entities.Characters;
 
 public abstract class CombatEvent : GameEvent<BuiltInEventCategory>
 {
