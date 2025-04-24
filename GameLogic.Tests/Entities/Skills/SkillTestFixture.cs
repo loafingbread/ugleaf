@@ -1,7 +1,7 @@
-using GameLogic.Config;
-using GameLogic.Entities;
+namespace GameLogic.Tests;
 
-namespace GameLogic.EntitiesTest;
+using GameLogic.Config;
+using GameLogic.Entities.Skills;
 
 public class SkillTestFixture
 {

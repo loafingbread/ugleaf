@@ -1,67 +1,6 @@
+namespace GameLogic.Targeting;
+
 using GameLogic.Config;
-
-namespace GameLogic.Entities;
-
-public enum ETargetQuantity
-{
-    None,
-    Count,
-    All,
-}
-
-public record TargeterConfig
-{
-    public required ETargetQuantity TargetQuantity { get; init; }
-    public required List<EFactionRelationship> AllowedTargets { get; init; }
-    public int Count { get; init; }
-}
-
-public interface ITargeterType
-{
-    public string Id { get; }
-    public string DisplayName { get; }
-    public List<EFactionRelationship> AllowedTargets { get; }
-    public ETargetQuantity TargetQuantity { get; }
-    public int? Count { get; }
-    public ITargeter CreateInstance();
-}
-
-public static class TargeterTypeRegistry
-{
-    private static readonly Dictionary<string, ITargeterType> _types = new();
-
-    public static void Register(ITargeterType type) => _types[type.Id] = type;
-
-    public static ITargeterType Get(string id)
-    {
-        bool found = _types.TryGetValue(id, out var type);
-        if (!found)
-        {
-            throw new KeyNotFoundException($"TargeterTypeRegistry: TargeterType '{id}' not found");
-        }
-        else if (type == null)
-        {
-            throw new NullReferenceException(
-                $"TargeterTypeRegistry: TargeterType should not be null"
-            );
-        }
-
-        return type;
-    }
-}
-
-public enum EFactionRelationship
-{
-    Self,
-    Ally,
-    Enemy,
-    Neutral,
-}
-
-public interface ITargetable
-{
-    public EFactionRelationship GetRelationTo(object source);
-}
 
 public interface ITargeter
 {

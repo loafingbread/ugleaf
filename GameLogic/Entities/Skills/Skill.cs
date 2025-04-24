@@ -1,6 +1,7 @@
-namespace GameLogic.Entities;
+namespace GameLogic.Entities.Skills;
 
 using GameLogic.Config;
+using GameLogic.Targeting;
 
 public class Skill : IConfigurable<ISkillData>
 {

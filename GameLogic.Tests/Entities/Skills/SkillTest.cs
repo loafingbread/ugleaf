@@ -1,7 +1,7 @@
-namespace GameLogic.EntitiesTests;
+namespace GameLogic.Tests;
 
-using GameLogic.Entities;
-using GameLogic.EntitiesTest;
+using GameLogic.Entities.Skills;
+using GameLogic.Targeting;
 using Xunit;
 
 public class SkillTest : IClassFixture<SkillTestFixture>

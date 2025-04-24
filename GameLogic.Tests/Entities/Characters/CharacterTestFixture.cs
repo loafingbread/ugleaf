@@ -1,7 +1,7 @@
+namespace GameLogic.Tests;
+
 using GameLogic.Config;
 using GameLogic.Entities.Characters;
-
-namespace GameLogic.EntitiesTest;
 
 public class CharacterTestFixture
 {

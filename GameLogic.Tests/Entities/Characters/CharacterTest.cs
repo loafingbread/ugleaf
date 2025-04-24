@@ -1,8 +1,7 @@
-namespace GameLogic.EntitiesTests;
+namespace GameLogic.Tests;
 
 using GameLogic.Config;
 using GameLogic.Entities.Characters;
-using GameLogic.EntitiesTest;
 using Xunit;
 
 public class CharacterTest : IClassFixture<CharacterTestFixture>

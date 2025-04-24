@@ -1,4 +1,6 @@
-namespace GameLogic.Entities;
+namespace GameLogic.Entities.Skills;
+
+using GameLogic.Targeting;
 
 public interface ISkillData
 {

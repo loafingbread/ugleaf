@@ -2,7 +2,7 @@ namespace GameLogic.EventsTests;
 
 using GameLogic.Config;
 using GameLogic.Entities.Characters;
-using GameLogic.EntitiesTest;
+using GameLogic.Tests;
 using GameLogic.Events;
 using Xunit;
 

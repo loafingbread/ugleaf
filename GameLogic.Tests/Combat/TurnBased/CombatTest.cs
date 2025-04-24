@@ -1,3 +1,3 @@
-namespace GameLogic.EntitiesTests;
+namespace GameLogic.Tests;
 
 public class CombatTest { }
