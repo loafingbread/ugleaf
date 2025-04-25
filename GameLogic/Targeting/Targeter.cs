@@ -2,19 +2,6 @@ namespace GameLogic.Targeting;
 
 using GameLogic.Config;
 
-public interface ITargeter
-{
-    public bool IsTargetable(object source, ITargetable candidate);
-    public int GetMaxTargets(object source, IEnumerable<ITargetable> candidates);
-    public IEnumerable<ITargetable> GetEligibleTargets(
-        object source,
-        IEnumerable<ITargetable> candidates
-    );
-    public void ClearTargets();
-    public bool Target(object source, ITargetable target, IEnumerable<ITargetable> candidates);
-    public bool Untarget(object source, ITargetable target);
-}
-
 public class Targeter : ITargeter, IConfigurable<TargeterConfig>
 {
     private List<ITargetable> _targets = new();
