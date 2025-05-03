@@ -17,6 +17,12 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
         this.Config = config;
     }
 
+    /** ITargeter **/
+    public bool CanTarget(ITargetable candidate)
+    {
+        return this.Config.AllowedTargets.Contains(candidate.GetRelationTo(this));
+    }
+
     // Get max number of eligibile targets
     public int GetMaxTargets(object source, IEnumerable<ITargetable> candidates)
     {
@@ -40,7 +46,7 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
                 return targetCount;
             }
 
-            bool IsTargetable = this.IsTargetable(source, candidate);
+            bool IsTargetable = this.CanTarget(candidate);
             if (IsTargetable)
             {
                 targetCount++;
@@ -48,11 +54,6 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
         }
 
         return targetCount;
-    }
-
-    public bool IsTargetable(object source, ITargetable candidate)
-    {
-        return this.Config.AllowedTargets.Contains(candidate.GetRelationTo(source));
     }
 
     public IEnumerable<ITargetable> GetEligibleTargets(
@@ -63,7 +64,7 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
         List<ITargetable> targets = new();
         foreach (ITargetable candidate in candidates)
         {
-            if (this.IsTargetable(source, candidate))
+            if (this.CanTarget(candidate))
             {
                 targets.Add(candidate);
             }
@@ -84,7 +85,7 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
             return true;
         }
 
-        if (!this.IsTargetable(source, target))
+        if (!this.CanTarget(target))
         {
             return false;
         }
@@ -100,7 +101,7 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
         return doneTargeting;
     }
 
-    public bool Untarget(object source, ITargetable target)
+    public bool Untarget(ITargetable target)
     {
         return this._targets.Remove(target);
     }
