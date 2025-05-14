@@ -4,14 +4,19 @@ namespace GameLogic.Usables;
 
 public class User : IUser
 {
+    /*********************************
+    * IUser
+    *********************************/
+    public Entity GetEntity() => (Entity)this;
+
     public bool CanUse(IUsable usable)
     {
         // TODO: Add method to IUsable to check if usable
         return true;
     }
 
-    public UsableResult Use(IUsable usable, Entity user, Entity target)
+    public IEnumerable<UsableResult> Use(IUsable usable, Entity user, IEnumerable<Entity> targets)
     {
-        return usable.Use(user, target);
+        return usable.Use(user, targets);
     }
 }

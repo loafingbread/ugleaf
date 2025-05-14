@@ -1,12 +1,23 @@
 namespace GameLogic.Usables;
 
-using System.Security.Cryptography.X509Certificates;
+using GameLobic.Usables;
 using GameLogic.Entities;
+using GameLogic.Targeting;
 
 public interface IUsable
 {
-    public UsableResult Use(Entity user, Entity target);
+    public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets);
 }
+
+public interface IUsableEffect
+{
+    string Id { get; }
+
+    public EEffectType Type { get; }
+
+    UsableResult Apply(IUser user, ITargetable target);
+}
+
 
 public class UsableResult
 {
@@ -20,8 +31,9 @@ public class UsableResult
     public UsableResult(
         Entity user, Entity target,
         bool didCrit, bool didHit,
-        IUsable usable, int value 
-    ) {
+        IUsable usable, int value
+    )
+    {
         this.User = user;
         this.Target = target;
         this.DidCrit = didCrit;

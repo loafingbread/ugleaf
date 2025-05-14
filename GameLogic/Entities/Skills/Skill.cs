@@ -2,6 +2,8 @@ namespace GameLogic.Entities.Skills;
 
 using GameLogic.Config;
 using GameLogic.Targeting;
+using GameLogic.Usables;
+
 
 public class Skill : IConfigurable<ISkillData>
 {
@@ -10,6 +12,7 @@ public class Skill : IConfigurable<ISkillData>
 
     // public IUsable Usable { get; }
     public ITargeter? Targeter { get; private set; } = null;
+    public IUsable? Usable { get; private set; } = null;
 
     public Skill() { }
 
@@ -24,5 +27,6 @@ public class Skill : IConfigurable<ISkillData>
         this.Name = config.Name;
 
         this.Targeter = new Targeter(config.Targeter);
+        this.Usable = new Usable(config.Usable);
     }
 }

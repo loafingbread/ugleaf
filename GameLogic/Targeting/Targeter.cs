@@ -1,8 +1,10 @@
 namespace GameLogic.Targeting;
 
 using GameLogic.Config;
+using GameLogic.Entities;
 
-public class Targeter : ITargeter, IConfigurable<TargeterConfig>
+
+public class Targeter : IConfigurable<TargeterConfig>, ITargeter
 {
     private List<ITargetable> _targets = new();
     public TargeterConfig Config { get; private set; }
@@ -12,12 +14,19 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
         this.Config = config;
     }
 
+    /*********************************
+    * IConfigurable<TargeterConfig>
+    *********************************/
     public void ApplyConfig(TargeterConfig config)
     {
         this.Config = config;
     }
 
-    /** ITargeter **/
+    /*********************************
+    * ITargeter
+    *********************************/
+    public Entity GetEntity() => (Entity)this;
+
     public bool CanTarget(ITargetable candidate)
     {
         return this.Config.AllowedTargets.Contains(candidate.GetRelationTo(this));
@@ -42,7 +51,8 @@ public class Targeter : ITargeter, IConfigurable<TargeterConfig>
         int targetCount = 0;
         foreach (ITargetable candidate in candidates)
         {
-            if (targetCount == maxTargets) {
+            if (targetCount == maxTargets)
+            {
                 return targetCount;
             }
 

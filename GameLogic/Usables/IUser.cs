@@ -2,9 +2,8 @@ namespace GameLogic.Usables;
 
 using GameLogic.Entities;
 
-public interface IUser
+public interface IUser : IEntity
 {
     public bool CanUse(IUsable usable);
-    public UsableResult Use(IUsable usable, Entity user, Entity target);
+    public IEnumerable<UsableResult> Use(IUsable usable, Entity user, IEnumerable<Entity> target);
 }
-

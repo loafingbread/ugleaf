@@ -1,12 +1,31 @@
 namespace GameLogic.Usables;
 
+using GameLobic.Usables;
+using GameLogic.Config;
 using GameLogic.Entities;
 
-public class Usable : IUsable
+public class Usable : IUsable, IConfigurable<UsableConfig>
 {
-    public UsableResult Use(Entity user, Entity target)
+    public UsableConfig Config { get; private set; }
+    public Usable(UsableConfig config)
+    {
+        this.Config = config;
+    }
+
+    public void ApplyConfig(UsableConfig config)
+    {
+        this.Config = config;
+    }
+
+    public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets)
     {
         // TODO: Implement usable result calculation
-        return new UsableResult(user, target, false, true, this, 5);
+        List<UsableResult> results = new();
+        foreach (Entity target in targets)
+        {
+            results.Add(new UsableResult(user, target, false, true, this, 5));
+        }
+
+        return results;
     }
 }

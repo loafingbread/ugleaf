@@ -1,6 +1,8 @@
 namespace GameLogic.Targeting;
 
-public interface ITargeter
+using GameLogic.Entities;
+
+public interface ITargeter : IEntity
 {
     public bool CanTarget(ITargetable candidate);
     public int GetMaxTargets(object source, IEnumerable<ITargetable> candidates);
@@ -11,4 +13,5 @@ public interface ITargeter
     public void ClearTargets();
     public bool Target(object source, ITargetable target, IEnumerable<ITargetable> candidates);
     public bool Untarget(ITargetable target);
+
 }
