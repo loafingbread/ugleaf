@@ -11,10 +11,6 @@ public interface IUsable
 
 public interface IUsableEffect
 {
-    string Id { get; }
-
-    public EEffectType Type { get; }
-
     UsableResult Apply(IUser user, ITargetable target);
 }
 
