@@ -20,13 +20,12 @@ public record SkillRecord : ISkillRecord
     public List<UsableRecord> Usables { get; init; } = new();
 }
 
-
 public class SkillConfig
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
     public TargeterConfig? Targeter { get; init; }
-    public List<IUsableConfig> Usables { get; init; } = new();
+    public List<UsableConfig> Usables { get; init; } = new();
 
     [SetsRequiredMembers]
     public SkillConfig(ISkillRecord record)

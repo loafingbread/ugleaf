@@ -1,6 +1,6 @@
 namespace GameLogic.Usables.Effects;
 
-public class HealEffectConfig : EffectConfigBase
+public class HealEffectConfig : EffectConfig
 {
     public int Value { get; init; }
 

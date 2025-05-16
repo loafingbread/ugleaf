@@ -1,6 +1,6 @@
 namespace GameLogic.Usables.Effects;
 
-public class AttackEffectConfig : EffectConfigBase
+public class AttackEffectConfig : EffectConfig
 {
     public int Damage { get; init; }
 

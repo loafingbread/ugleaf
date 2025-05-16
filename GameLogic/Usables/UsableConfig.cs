@@ -18,14 +18,7 @@ public record UsableRecord : IUsableRecord
     public required List<EffectRecord> Effects { get; init; } = new();
 }
 
-public interface IUsableConfig
-{
-    public string Id { get; }
-    public TargeterConfig Targeter { get; }
-    public List<IEffect> Effects { get; }
-}
-
-public class UsableConfig : IUsableConfig
+public class UsableConfig
 {
     public required string Id { get; init; }
     public required TargeterConfig Targeter { get; init; }

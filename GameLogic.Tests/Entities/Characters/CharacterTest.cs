@@ -19,7 +19,7 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
     {
         Character goblin = CharacterFactory.CreateFromRecord(this._fixture.GoblinRecord);
 
-        ICharacterConfig config = goblin.GetConfig();
+        CharacterConfig config = goblin.GetConfig();
         Assert.Equal("char_npc_goblin", config.Id);
         Assert.Equal("Goblin", config.Name);
         Assert.Equal(50, config.Health);
@@ -32,7 +32,7 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
     {
         Character ash = CharacterFactory.CreateFromRecord(this._fixture.AshRecord);
 
-        ICharacterConfig config = ash.GetConfig();
+        CharacterConfig config = ash.GetConfig();
         Assert.Equal("char_pc_ash", config.Id);
 
         Skill firstSkill = config.Skills[0];

@@ -36,7 +36,7 @@ public class Skill : IConfigurable<SkillConfig>
             this.Targeter = new Targeter(config.Targeter);
         }
 
-        foreach (IUsableConfig usableConfig in config.Usables)
+        foreach (UsableConfig usableConfig in config.Usables)
         {
             this.Usables.Add(new Usable(usableConfig));
         }

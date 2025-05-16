@@ -23,20 +23,7 @@ public record CharacterRecord : ICharacterRecord
     public List<SkillRecord> Skills { get; init; } = new();
 }
 
-public interface ICharacterConfig
-{
-    public string Id { get; init; }
-    public string Name { get; init; }
-    public int Health { get; init; }
-    public int Attack { get; init; }
-    public int Defense { get; init; }
-    public List<Skill> Skills { get; init; }
-}
-
-// TODO: Ask if I should stick to interface instead of abstract
-// class for these configs and records. What if I want to compose without
-// redefining them all again
-public class CharacterConfig : ICharacterConfig
+public class CharacterConfig
 {
     public required string Id { get; init; }
     public required string Name { get; init; }

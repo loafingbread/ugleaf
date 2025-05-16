@@ -2,20 +2,20 @@ namespace GameLogic.Entities.Characters;
 
 using GameLogic.Config;
 
-public class Character : IConfigurable<ICharacterConfig>
+public class Character : IConfigurable<CharacterConfig>
 {
-    private ICharacterConfig _config { get; set; }
+    private CharacterConfig _config { get; set; }
     public Character() { }
 
-    public Character(ICharacterConfig config)
+    public Character(CharacterConfig config)
     {
         this.ApplyConfig(config);
     }
 
-    public void ApplyConfig(ICharacterConfig config)
+    public void ApplyConfig(CharacterConfig config)
     {
         this._config = config;
     }
 
-    public ICharacterConfig GetConfig() => this._config;
+    public CharacterConfig GetConfig() => this._config;
 }

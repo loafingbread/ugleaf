@@ -13,7 +13,6 @@ public interface IEffectRecord
     public JsonElement Parameters { get; } // raw json node
 }
 
-
 // Reads json data file
 public record EffectRecord : IEffectRecord
 {
@@ -25,22 +24,14 @@ public record EffectRecord : IEffectRecord
     public required JsonElement Parameters { get; init; } // raw json node
 }
 
-public interface IEffectConfig 
-{ 
-    public string Id { get; init; }
-    public string Type { get; init; }
-    public string Subtype { get; init; }
-    public string Variant { get; init; }
-}
-
-public abstract class EffectConfigBase : IEffectConfig
+public class EffectConfig
 {
     public string Id { get; init; }
     public string Type { get; init; }
     public string Subtype { get; init; }
     public string Variant { get; init; }
 
-    protected EffectConfigBase(string id, string type, string subtype, string variant)
+    protected EffectConfig(string id, string type, string subtype, string variant)
     {
         this.Id = id;
         this.Type = type;
@@ -59,17 +50,11 @@ public enum EEffectType
     Status,
 }
 
-public abstract class StatusEffectConfigBase : EffectConfigBase
+public class StatusEffectConfig : EffectConfig
 {
     public int Duration { get; init; }
 
-    public StatusEffectConfigBase(
-        string id,
-        string type,
-        string subtype,
-        string variant,
-        int duration
-    )
+    public StatusEffectConfig(string id, string type, string subtype, string variant, int duration)
         : base(id, type, subtype, variant)
     {
         this.Duration = duration;

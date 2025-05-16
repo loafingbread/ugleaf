@@ -1,6 +1,6 @@
 namespace GameLogic.Usables.Effects;
 
-public class PoisonStatusEffectConfig : StatusEffectConfigBase
+public class PoisonStatusEffectConfig : StatusEffectConfig
 {
     public int DamagePerTurn { get; init; }
 
@@ -20,6 +20,6 @@ public class PoisonStatusEffectConfig : StatusEffectConfigBase
 
 public class PoisonStatusEffect : StatusEffect
 {
-    public PoisonStatusEffect(IEffectConfig config)
+    public PoisonStatusEffect(EffectConfig config)
         : base(config) { }
 }

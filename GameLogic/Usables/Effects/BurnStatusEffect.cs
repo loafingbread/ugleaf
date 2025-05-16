@@ -6,7 +6,7 @@ public record BurnStatusEffectParametersRecord
     public required int DamagePerTurn { get; init; }
 }
 
-public class BurnStatusEffectConfig : StatusEffectConfigBase
+public class BurnStatusEffectConfig : StatusEffectConfig
 {
     public int DamagePerTurn { get; init; }
 
@@ -26,6 +26,6 @@ public class BurnStatusEffectConfig : StatusEffectConfigBase
 
 public class BurnStatusEffect : StatusEffect
 {
-    public BurnStatusEffect(IEffectConfig config)
+    public BurnStatusEffect(EffectConfig config)
         : base(config) { }
 }

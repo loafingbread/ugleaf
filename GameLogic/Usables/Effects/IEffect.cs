@@ -4,7 +4,7 @@ using GameLogic.Config;
 using GameLogic.Entities;
 using GameLogic.Targeting;
 
-public interface IEffect : IConfigurable<IEffectConfig>
+public interface IEffect : IConfigurable<EffectConfig>
 {
     EffectResult Apply(IUser user, ITargetable target);
 }
