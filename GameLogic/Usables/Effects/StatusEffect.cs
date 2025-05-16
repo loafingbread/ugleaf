@@ -4,12 +4,19 @@ using GameLogic.Targeting;
 
 public abstract class StatusEffect : IEffect
 {
-    public IEffectConfig Config { get; }
+    private IEffectConfig _config { get; set; }
 
     protected StatusEffect(IEffectConfig config)
     {
-        this.Config = config;
+        this._config = config;
     }
+
+    public void ApplyConfig(IEffectConfig config)
+    {
+        this._config = config;
+    }
+
+    public IEffectConfig GetConfig() => this._config;
 
     public EffectResult Apply(IUser user, ITargetable target)
     {

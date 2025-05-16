@@ -1,9 +1,10 @@
 namespace GameLogic.Usables.Effects;
 
+using GameLogic.Config;
 using GameLogic.Entities;
 using GameLogic.Targeting;
 
-public interface IEffect
+public interface IEffect : IConfigurable<IEffectConfig>
 {
     EffectResult Apply(IUser user, ITargetable target);
 }

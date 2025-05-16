@@ -54,7 +54,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
 
         IEffect _effect = usableConfig.Effects[0];
         BurnStatusEffect effect = (BurnStatusEffect)_effect;
-        BurnStatusEffectConfig effectConfig = (BurnStatusEffectConfig)effect.Config;
+        BurnStatusEffectConfig effectConfig = (BurnStatusEffectConfig)effect.GetConfig();
         Assert.Equal("effect_burn_dot", effectConfig.Id);
         Assert.Equal("Status", effectConfig.Type);
         Assert.Equal("Burn", effectConfig.Subtype);

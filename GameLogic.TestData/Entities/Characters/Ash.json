@@ -3,5 +3,40 @@
     "Name": "Ash",
     "Health": 100,
     "Attack": 30,
-    "Defense": 10
+    "Defense": 10,
+    "Skills": [
+        {
+            "Id": "skill_ignite",
+            "Name": "Ignite",
+            "Targeter": {
+                "TargetQuantity": "Count",
+                "AllowedTargets": [
+                    "Enemy"
+                ],
+                "Count": 1
+            },
+            "Usable": {
+                "Id": "usable_ignite",
+                "Targeter": {
+                    "TargetQuantity": "Count",
+                    "AllowedTargets": [
+                        "Enemy"
+                    ],
+                    "Count": 1
+                },
+                "Effects": [
+                    {
+                        "Id": "effect_burn_dot",
+                        "Type": "Status",
+                        "Subtype": "Burn",
+                        "Variant": "DOT",
+                        "Parameters": {
+                            "Duration": 3,
+                            "DamagePerTurn": 5
+                        }
+                    }
+                ]
+            }
+        }
+    ]
 }

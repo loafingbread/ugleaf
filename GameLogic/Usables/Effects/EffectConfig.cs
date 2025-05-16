@@ -25,7 +25,13 @@ public record EffectRecord : IEffectRecord
     public required JsonElement Parameters { get; init; } // raw json node
 }
 
-public interface IEffectConfig { }
+public interface IEffectConfig 
+{ 
+    public string Id { get; init; }
+    public string Type { get; init; }
+    public string Subtype { get; init; }
+    public string Variant { get; init; }
+}
 
 public abstract class EffectConfigBase : IEffectConfig
 {
