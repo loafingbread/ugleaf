@@ -5,18 +5,18 @@ using GameLogic.Entities.Characters;
 
 public class CharacterTestFixture
 {
-    public CharacterConfig AliceConfig { get; }
-    public CharacterConfig AshConfig { get; }
-    public CharacterConfig BrockConfig { get; }
-    public CharacterConfig GoblinConfig { get; }
-    public CharacterConfig MissyConfig { get; }
+    public CharacterRecord AliceRecord { get; }
+    public CharacterRecord AshRecord { get; }
+    public CharacterRecord BrockRecord { get; }
+    public CharacterRecord GoblinRecord { get; }
+    public CharacterRecord MissyRecord { get; }
 
     public CharacterTestFixture()
     {
-        AliceConfig = JsonConfigLoader.LoadFromFile<CharacterConfig>(ConfigPaths.Character.Alice);
-        AshConfig = JsonConfigLoader.LoadFromFile<CharacterConfig>(ConfigPaths.Character.Ash);
-        BrockConfig = JsonConfigLoader.LoadFromFile<CharacterConfig>(ConfigPaths.Character.Brock);
-        GoblinConfig = JsonConfigLoader.LoadFromFile<CharacterConfig>(ConfigPaths.Character.Goblin);
-        MissyConfig = JsonConfigLoader.LoadFromFile<CharacterConfig>(ConfigPaths.Character.Missy);
+        AliceRecord = JsonConfigLoader.LoadFromFile<CharacterRecord>(ConfigPaths.Character.Alice);
+        AshRecord = JsonConfigLoader.LoadFromFile<CharacterRecord>(ConfigPaths.Character.Ash);
+        BrockRecord = JsonConfigLoader.LoadFromFile<CharacterRecord>(ConfigPaths.Character.Brock);
+        GoblinRecord = JsonConfigLoader.LoadFromFile<CharacterRecord>(ConfigPaths.Character.Goblin);
+        MissyRecord = JsonConfigLoader.LoadFromFile<CharacterRecord>(ConfigPaths.Character.Missy);
     }
 }

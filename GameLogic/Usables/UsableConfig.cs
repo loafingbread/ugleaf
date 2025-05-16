@@ -4,7 +4,14 @@ using GameLogic.Usables.Effects;
 
 namespace GameLogic.Usables;
 
-public record UsableRecord
+public interface IUsableRecord
+{
+    public string Id { get; }
+    public TargeterRecord Targeter { get; }
+    public List<EffectRecord> Effects { get; }
+}
+
+public record UsableRecord : IUsableRecord
 {
     public required string Id { get; init; }
     public required TargeterRecord Targeter { get; init; }
@@ -18,14 +25,14 @@ public class UsableConfig
     public required List<IEffect> Effects { get; init; } = new();
 
     [SetsRequiredMembers]
-    public UsableConfig(UsableRecord record)
+    public UsableConfig(IUsableRecord record)
     {
         this.Id = record.Id;
         this.Targeter = new TargeterConfig(record.Targeter);
 
         foreach (EffectRecord effectRecord in record.Effects)
         {
-            IEffect effect = EffectConfigFactory.CreateFromRecord(effectRecord);
+            IEffect effect = EffectFactory.CreateFromRecord(effectRecord);
             this.Effects.Add(effect);
         }
     }

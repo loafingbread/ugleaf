@@ -2,8 +2,20 @@ namespace GameLogic.Usables.Effects;
 
 using System.Text.Json;
 
+// Effect json minimum format
+public interface IEffectRecord
+{
+    public string Id { get; }
+    public string Type { get; }
+    public string Subtype { get; }
+    public string Variant { get; }
+    public string? BaseEffectId { get; }
+    public JsonElement Parameters { get; } // raw json node
+}
+
+
 // Reads json data file
-public record EffectRecord
+public record EffectRecord : IEffectRecord
 {
     public required string Id { get; init; }
     public required string Type { get; init; }

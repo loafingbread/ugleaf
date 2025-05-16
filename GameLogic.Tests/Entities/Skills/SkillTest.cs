@@ -22,22 +22,22 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     [Fact]
     public void Skill_CanLoadFromFile()
     {
-        Skill facePalm = new Skill(this._fixture.FacePalmConfig);
+        Skill facePalm = SkillFactory.CreateFromRecord(this._fixture.FacePalmRecord);
 
         Assert.Equal("skill_facepalm", facePalm.Id);
         Assert.Equal("Face Palm", facePalm.Name);
-        Assert.Equal(1, this._fixture.FacePalmConfig.Targeter?.Count);
-        Assert.Equal(ETargetQuantity.Count, this._fixture.FacePalmConfig.Targeter?.TargetQuantity);
+        Assert.Equal(1, this._fixture.FacePalmRecord.Targeter?.Count);
+        Assert.Equal(ETargetQuantity.Count, this._fixture.FacePalmRecord.Targeter?.TargetQuantity);
         Assert.Equal(
             [EFactionRelationship.Self],
-            this._fixture.FacePalmConfig.Targeter?.AllowedTargets
+            this._fixture.FacePalmRecord.Targeter?.AllowedTargets
         );
     }
 
     [Fact]
     public void Skill_CanLoadFullFromFile()
     {
-        Skill ignite = new Skill(this._fixture.IgniteConfig);
+        Skill ignite = SkillFactory.CreateFromRecord(this._fixture.IgniteRecord);
 
         if (ignite.Usable?.GetConfig() == null)
         {
@@ -52,13 +52,6 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         Assert.Equal([EFactionRelationship.Enemy], usableConfig.Targeter?.AllowedTargets);
         Assert.Equal(1, usableConfig.Targeter?.Count);
 
-        _output.WriteLine("\n\n\nTEST:::\n\n");
-        _output.WriteLine($"{usableConfig.Effects}");
-        _output.WriteLine($"{usableConfig.Effects.Count}");
-        // _output.WriteLine(
-        //     System.Text.Json.JsonSerializer.Serialize(ignite),
-        //     new JsonSerializerOptions { WriteIndented = true }
-        // );
         IEffect _effect = usableConfig.Effects[0];
         BurnStatusEffect effect = (BurnStatusEffect)_effect;
         BurnStatusEffectConfig effectConfig = (BurnStatusEffectConfig)effect.Config;

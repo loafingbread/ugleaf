@@ -1,6 +1,13 @@
 namespace GameLogic.Targeting;
 
-public record TargeterRecord
+public interface ITargeterRecord
+{
+    public ETargetQuantity TargetQuantity { get; }
+    public List<EFactionRelationship> AllowedTargets { get; }
+    public int Count { get; }
+}
+
+public record TargeterRecord : ITargeterRecord
 {
     public required ETargetQuantity TargetQuantity { get; init; }
     public required List<EFactionRelationship> AllowedTargets { get; init; }
@@ -13,7 +20,7 @@ public class TargeterConfig
     public List<EFactionRelationship> AllowedTargets { get; private set; }
     public int Count { get; private set; }
 
-    public TargeterConfig(TargeterRecord record)
+    public TargeterConfig(ITargeterRecord record)
     {
         this.TargetQuantity = record.TargetQuantity;
         this.AllowedTargets = [.. record.AllowedTargets];

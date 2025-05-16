@@ -2,9 +2,9 @@ namespace GameLogic.Usables.Effects;
 
 using System.Text.Json;
 
-public static class EffectConfigFactory
+public static class EffectFactory
 {
-    public static IEffect CreateFromRecord(EffectRecord record)
+    public static IEffect CreateFromRecord(IEffectRecord record)
     {
         return record.Type switch
         {
@@ -13,7 +13,7 @@ public static class EffectConfigFactory
         };
     }
 
-    private static IEffect CreateStatusEffect(EffectRecord record)
+    private static IEffect CreateStatusEffect(IEffectRecord record)
     {
         return record.Subtype switch
         {
@@ -25,7 +25,7 @@ public static class EffectConfigFactory
         };
     }
 
-    private static IEffect CreateBurn(EffectRecord record)
+    private static IEffect CreateBurn(IEffectRecord record)
     {
         var burnRecord = record.Parameters.Deserialize<BurnStatusEffectParametersRecord>()!;
         var burnConfig = new BurnStatusEffectConfig(
@@ -39,7 +39,7 @@ public static class EffectConfigFactory
         return new BurnStatusEffect(burnConfig);
     }
 
-    private static IEffect CreatePoison(EffectRecord record)
+    private static IEffect CreatePoison(IEffectRecord record)
     {
         var poisonConfig = record.Parameters.Deserialize<PoisonStatusEffectConfig>()!;
         return new PoisonStatusEffect(poisonConfig);

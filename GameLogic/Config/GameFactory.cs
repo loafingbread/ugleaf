@@ -10,4 +10,10 @@ public static class GameFactory
         instance.ApplyConfig(config);
         return instance;
     }
+
+    public static T CreateFromRecord<T, TRecord>(Func<TRecord, T> createRecord, TRecord record)
+    {
+        T instance = createRecord(record);
+        return instance;
+    }
 }

@@ -1,10 +1,10 @@
 namespace GameLogic.Entities.Skills;
 
 using System.Diagnostics.CodeAnalysis;
-using GameLogic.Usables;
 using GameLogic.Targeting;
+using GameLogic.Usables;
 
-public interface ISkillData
+public interface ISkillRecord
 {
     public string Id { get; }
     public string Name { get; }
@@ -12,7 +12,7 @@ public interface ISkillData
     public UsableRecord? Usable { get; }
 }
 
-public record SkillRecord : ISkillData
+public record SkillRecord : ISkillRecord
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
@@ -28,7 +28,7 @@ public class SkillConfig
     public UsableConfig? Usable { get; init; }
 
     [SetsRequiredMembers]
-    public SkillConfig(ISkillData record)
+    public SkillConfig(ISkillRecord record)
     {
         this.Id = record.Id;
         this.Name = record.Name;

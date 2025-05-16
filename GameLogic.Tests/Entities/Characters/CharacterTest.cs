@@ -16,14 +16,13 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
     [Fact]
     public void Character_CanLoadFromFile()
     {
-        Character goblin = GameFactory.CreateFromConfig<Character, ICharacterData>(
-            this._fixture.GoblinConfig
-        );
+        Character goblin = CharacterFactory.CreateFromRecord(this._fixture.GoblinRecord);
 
-        Assert.Equal("char_npc_goblin", goblin.Id);
-        Assert.Equal("Goblin", goblin.Name);
-        Assert.Equal(50, goblin.Health);
-        Assert.Equal(20, goblin.Attack);
-        Assert.Equal(10, goblin.Defense);
+        ICharacterConfig config = goblin.GetConfig();
+        Assert.Equal("char_npc_goblin", config.Id);
+        Assert.Equal("Goblin", config.Name);
+        Assert.Equal(50, config.Health);
+        Assert.Equal(20, config.Attack);
+        Assert.Equal(10, config.Defense);
     }
 }

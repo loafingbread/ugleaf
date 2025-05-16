@@ -18,13 +18,11 @@ class TurnQueueTestData
         this._characters = characters;
         this.Players =
         [
-            GameFactory.CreateFromConfig<Character, ICharacterData>(this._characters.AshConfig),
-            GameFactory.CreateFromConfig<Character, ICharacterData>(this._characters.BrockConfig),
+            CharacterFactory.CreateFromRecord(this._characters.AshRecord),
+            CharacterFactory.CreateFromRecord(this._characters.BrockRecord),
+            CharacterFactory.CreateFromRecord(this._characters.MissyRecord),
         ];
-        this.Enemies =
-        [
-            GameFactory.CreateFromConfig<Character, ICharacterData>(this._characters.MissyConfig),
-        ];
+        this.Enemies = [CharacterFactory.CreateFromRecord(this._characters.MissyRecord)];
     }
 }
 
@@ -45,7 +43,7 @@ public class TurnQueueTest : IClassFixture<CharacterTestFixture>
 
         Character currentTurn = sut.GetCurrentTurn();
 
-        Assert.Equal("Ash", currentTurn.Name);
+        Assert.Equal("Ash", currentTurn.GetConfig().Name);
     }
 
     [Fact]

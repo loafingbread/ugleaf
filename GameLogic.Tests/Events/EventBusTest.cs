@@ -21,14 +21,10 @@ class EventBusTestData
     public EventBusTestData(CharacterTestFixture characters)
     {
         this._characters = characters;
-        this.Alice = GameFactory.CreateFromConfig<Character, ICharacterData>(
-            this._characters.AliceConfig
-        );
-        this.Brock = GameFactory.CreateFromConfig<Character, ICharacterData>(
-            this._characters.BrockConfig
-        );
+        this.Alice = CharacterFactory.CreateFromRecord(this._characters.AliceRecord);
+        this.Brock = CharacterFactory.CreateFromRecord(this._characters.BrockRecord);
 
-        this.FireballSkillUseEvent = new("Fireball", this.Alice.Name);
+        this.FireballSkillUseEvent = new("Fireball", this.Alice.GetConfig().Name);
         this.StartCombatPhaseChangedEvent = new(
             this.Alice,
             this.Alice,
