@@ -12,7 +12,7 @@ public class Skill : IConfigurable<SkillConfig>
 
     // public IUsable Usable { get; }
     public ITargeter? Targeter { get; private set; } = null;
-    public IUsable? Usable { get; private set; } = null;
+    public List<IUsable> Usables { get; private set; } = new();
 
     public Skill(SkillConfig config)
     {
@@ -22,7 +22,7 @@ public class Skill : IConfigurable<SkillConfig>
 
     public bool CanTarget() => this.Targeter != null;
 
-    public bool CanUse() => this.Usable != null;
+    public bool CanUse() => this.Usables.Count > 0;
 
     public void ApplyConfig(SkillConfig config)
     {
@@ -36,9 +36,9 @@ public class Skill : IConfigurable<SkillConfig>
             this.Targeter = new Targeter(config.Targeter);
         }
 
-        if (config.Usable != null)
+        foreach (IUsableConfig usableConfig in config.Usables)
         {
-            this.Usable = new Usable(config.Usable);
+            this.Usables.Add(new Usable(usableConfig));
         }
     }
 

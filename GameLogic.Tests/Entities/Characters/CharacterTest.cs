@@ -1,6 +1,5 @@
 namespace GameLogic.Tests;
 
-using GameLogic.Config;
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
 using GameLogic.Targeting;
@@ -36,10 +35,15 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
         ICharacterConfig config = ash.GetConfig();
         Assert.Equal("char_pc_ash", config.Id);
 
-        List<Skill> skills = config.Skills;
-        Assert.Equal("skill_ignite", skills[0].Id);
-        Assert.Equal(ETargetQuantity.Count, skills[0].Targeter?.GetConfig().TargetQuantity);
-        Assert.Equal("usable_ignite", skills[0].Usable?.GetConfig().Id);
-        Assert.Equal("effect_burn_dot", skills[0].Usable?.GetConfig().Effects[0].GetConfig().Id);
+        Skill firstSkill = config.Skills[0];
+        Assert.Equal("skill_ignite", firstSkill.Id);
+
+        Assert.Equal(ETargetQuantity.Count, firstSkill.Targeter?.GetConfig().TargetQuantity);
+
+        Assert.Equal("usable_ignite", firstSkill.Usables[0].GetConfig().Id);
+        Assert.Equal(
+            "effect_burn_dot",
+            firstSkill.Usables[0].GetConfig().Effects[0].GetConfig().Id
+        );
     }
 }

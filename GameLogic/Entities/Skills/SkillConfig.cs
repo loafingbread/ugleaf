@@ -9,7 +9,7 @@ public interface ISkillRecord
     public string Id { get; }
     public string Name { get; }
     public TargeterRecord? Targeter { get; }
-    public UsableRecord? Usable { get; }
+    public List<UsableRecord> Usables { get; }
 }
 
 public record SkillRecord : ISkillRecord
@@ -17,15 +17,16 @@ public record SkillRecord : ISkillRecord
     public required string Id { get; init; }
     public required string Name { get; init; }
     public TargeterRecord? Targeter { get; init; }
-    public UsableRecord? Usable { get; init; }
+    public List<UsableRecord> Usables { get; init; } = new();
 }
+
 
 public class SkillConfig
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
     public TargeterConfig? Targeter { get; init; }
-    public UsableConfig? Usable { get; init; }
+    public List<IUsableConfig> Usables { get; init; } = new();
 
     [SetsRequiredMembers]
     public SkillConfig(ISkillRecord record)
@@ -38,9 +39,9 @@ public class SkillConfig
             this.Targeter = new TargeterConfig(record.Targeter);
         }
 
-        if (record.Usable != null)
+        foreach (IUsableRecord usableRecord in record.Usables)
         {
-            this.Usable = new UsableConfig(record.Usable);
+            this.Usables.Add(new UsableConfig(usableRecord));
         }
     }
 }

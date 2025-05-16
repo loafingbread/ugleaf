@@ -39,15 +39,10 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     {
         Skill ignite = SkillFactory.CreateFromRecord(this._fixture.IgniteRecord);
 
-        if (ignite.Usable?.GetConfig() == null)
-        {
-            throw new NoNullAllowedException("Config should not be null!");
-        }
-
         Assert.Equal("skill_ignite", ignite.Id);
         Assert.Equal("Ignite", ignite.Name);
 
-        UsableConfig usableConfig = ignite.Usable.GetConfig();
+        UsableConfig usableConfig = (UsableConfig)ignite.Usables[0].GetConfig();
         Assert.Equal(ETargetQuantity.Count, usableConfig.Targeter?.TargetQuantity);
         Assert.Equal([EFactionRelationship.Enemy], usableConfig.Targeter?.AllowedTargets);
         Assert.Equal(1, usableConfig.Targeter?.Count);

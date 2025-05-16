@@ -4,19 +4,19 @@ using GameLogic.Entities;
 
 public class Usable : IUsable
 {
-    private UsableConfig _config { get; set; }
-    public Usable(UsableConfig config)
+    private IUsableConfig _config { get; set; }
+    public Usable(IUsableConfig config)
     {
         this._config = config;
         this.ApplyConfig(config);
     }
 
-    public void ApplyConfig(UsableConfig config)
+    public void ApplyConfig(IUsableConfig config)
     {
         this._config = config;
     }
 
-    public UsableConfig GetConfig() => this._config;
+    public IUsableConfig GetConfig() => this._config;
 
     public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets)
     {

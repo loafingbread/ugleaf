@@ -4,7 +4,7 @@ using GameLogic.Config;
 using GameLogic.Entities;
 using GameLogic.Usables.Effects;
 
-public interface IUsable : IConfigurable<UsableConfig>
+public interface IUsable : IConfigurable<IUsableConfig>
 {
     public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets);
 }

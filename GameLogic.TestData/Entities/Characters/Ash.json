@@ -15,28 +15,30 @@
                 ],
                 "Count": 1
             },
-            "Usable": {
-                "Id": "usable_ignite",
-                "Targeter": {
-                    "TargetQuantity": "Count",
-                    "AllowedTargets": [
-                        "Enemy"
-                    ],
-                    "Count": 1
-                },
-                "Effects": [
-                    {
-                        "Id": "effect_burn_dot",
-                        "Type": "Status",
-                        "Subtype": "Burn",
-                        "Variant": "DOT",
-                        "Parameters": {
-                            "Duration": 3,
-                            "DamagePerTurn": 5
+            "Usables": [
+                {
+                    "Id": "usable_ignite",
+                    "Targeter": {
+                        "TargetQuantity": "Count",
+                        "AllowedTargets": [
+                            "Enemy"
+                        ],
+                        "Count": 1
+                    },
+                    "Effects": [
+                        {
+                            "Id": "effect_burn_dot",
+                            "Type": "Status",
+                            "Subtype": "Burn",
+                            "Variant": "DOT",
+                            "Parameters": {
+                                "Duration": 3,
+                                "DamagePerTurn": 5
+                            }
                         }
-                    }
-                ]
-            }
+                    ]
+                }
+            ]
         }
     ]
 }
