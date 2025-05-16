@@ -1,6 +1,5 @@
 namespace GameLogic.Usables;
 
-using GameLobic.Usables;
 using GameLogic.Entities;
 
 public class Usable : IUsable

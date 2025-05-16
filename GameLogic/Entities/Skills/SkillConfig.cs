@@ -1,7 +1,7 @@
 namespace GameLogic.Entities.Skills;
 
 using System.Diagnostics.CodeAnalysis;
-using GameLobic.Usables;
+using GameLogic.Usables;
 using GameLogic.Targeting;
 
 public interface ISkillData

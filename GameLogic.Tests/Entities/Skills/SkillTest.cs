@@ -1,11 +1,10 @@
 namespace GameLogic.Tests;
 
 using System.Data;
-using System.Text.Json;
-using GameLobic.Usables;
 using GameLogic.Entities.Skills;
 using GameLogic.Targeting;
 using GameLogic.Usables;
+using GameLogic.Usables.Effects;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -60,7 +59,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         //     System.Text.Json.JsonSerializer.Serialize(ignite),
         //     new JsonSerializerOptions { WriteIndented = true }
         // );
-        IUsableEffect _effect = usableConfig.Effects[0];
+        IEffect _effect = usableConfig.Effects[0];
         BurnStatusEffect effect = (BurnStatusEffect)_effect;
         BurnStatusEffectConfig effectConfig = (BurnStatusEffectConfig)effect.Config;
         Assert.Equal("effect_burn_dot", effectConfig.Id);

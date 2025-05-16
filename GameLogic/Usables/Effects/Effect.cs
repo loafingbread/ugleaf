@@ -1,0 +1,1 @@
+namespace GameLogic.Usables.Effects;
