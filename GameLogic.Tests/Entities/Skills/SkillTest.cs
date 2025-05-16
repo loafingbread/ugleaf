@@ -1,18 +1,23 @@
 namespace GameLogic.Tests;
 
 using System.Data;
+using System.Text.Json;
 using GameLobic.Usables;
 using GameLogic.Entities.Skills;
 using GameLogic.Targeting;
+using GameLogic.Usables;
 using Xunit;
+using Xunit.Abstractions;
 
 public class SkillTest : IClassFixture<SkillTestFixture>
 {
     private readonly SkillTestFixture _fixture;
+    private readonly ITestOutputHelper _output;
 
-    public SkillTest(SkillTestFixture fixture)
+    public SkillTest(SkillTestFixture fixture, ITestOutputHelper output)
     {
         this._fixture = fixture;
+        this._output = output;
     }
 
     [Fact]
@@ -48,12 +53,21 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         Assert.Equal([EFactionRelationship.Enemy], usableConfig.Targeter?.AllowedTargets);
         Assert.Equal(1, usableConfig.Targeter?.Count);
 
-        EffectConfig effectConfig = usableConfig.Effects[0];
+        _output.WriteLine("\n\n\nTEST:::\n\n");
+        _output.WriteLine($"{usableConfig.Effects}");
+        _output.WriteLine($"{usableConfig.Effects.Count}");
+        // _output.WriteLine(
+        //     System.Text.Json.JsonSerializer.Serialize(ignite),
+        //     new JsonSerializerOptions { WriteIndented = true }
+        // );
+        IUsableEffect _effect = usableConfig.Effects[0];
+        BurnStatusEffect effect = (BurnStatusEffect)_effect;
+        BurnStatusEffectConfig effectConfig = (BurnStatusEffectConfig)effect.Config;
         Assert.Equal("effect_burn_dot", effectConfig.Id);
         Assert.Equal("Status", effectConfig.Type);
         Assert.Equal("Burn", effectConfig.Subtype);
         Assert.Equal("DOT", effectConfig.Variant);
-
-        // TODO: Assert on specific effects values
+        Assert.Equal(3, effectConfig.Duration);
+        Assert.Equal(5, effectConfig.DamagePerTurn);
     }
 }

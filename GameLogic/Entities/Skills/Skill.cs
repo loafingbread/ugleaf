@@ -1,12 +1,14 @@
 namespace GameLogic.Entities.Skills;
 
+using System.Diagnostics.CodeAnalysis;
 using GameLogic.Config;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
 public class Skill : IConfigurable<ISkillData>
 {
-    private ISkillData _config { get; set; }
+    private SkillConfig _config { get; set; }
+    private ISkillData _record { get; set; }
     public string Id { get; private set; } = "";
     public string Name { get; private set; } = "";
 
@@ -16,31 +18,37 @@ public class Skill : IConfigurable<ISkillData>
 
     public Skill() { }
 
-    public Skill(ISkillData config)
+    public Skill(ISkillData record)
     {
-        this._config = config;
-        this.ApplyConfig(config);
+        this.ApplyConfig(record);
     }
 
     public bool CanTarget() => this.Targeter != null;
 
     public bool CanUse() => this.Usable != null;
 
-    public void ApplyConfig(ISkillData config)
+    public void ApplyConfig(ISkillData record)
     {
-        this.Id = config.Id;
-        this.Name = config.Name;
+        this._config = new SkillConfig(record);
+        // TODO: Remove the record dep since we don't need it.
+        this._record = record;
 
-        if (config.Targeter != null)
+        this.Id = this._config.Id;
+        this.Name = this._config.Name;
+
+        if (this._config.Targeter != null)
         {
-            this.Targeter = new Targeter(config.Targeter);
+            this.Targeter = new Targeter(this._config.Targeter);
         }
 
-        if (config.Usable != null)
+        if (this._config.Usable != null)
         {
-            this.Usable = new Usable(config.Usable);
+            this.Usable = new Usable(this._config.Usable);
         }
     }
 
-    public ISkillData GetConfig() => this._config;
+    public ISkillData GetConfig() => this._record;
+
+    // TODO: fix this interface
+    public SkillConfig GetConfig1() => this._config;
 }

@@ -1,5 +1,6 @@
 namespace GameLogic.Entities.Skills;
 
+using System.Diagnostics.CodeAnalysis;
 using GameLobic.Usables;
 using GameLogic.Targeting;
 
@@ -7,16 +8,39 @@ public interface ISkillData
 {
     public string Id { get; }
     public string Name { get; }
-    // public string UsableTypeId { get; }
-    public TargeterConfig? Targeter { get; }
-    public UsableConfig? Usable { get; }
+    public TargeterRecord? Targeter { get; }
+    public UsableRecord? Usable { get; }
 }
 
-public record SkillConfig : ISkillData
+public record SkillRecord : ISkillData
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
-    // public required UsableConfig Usable { get; init; }
+    public TargeterRecord? Targeter { get; init; }
+    public UsableRecord? Usable { get; init; }
+}
+
+public class SkillConfig
+{
+    public required string Id { get; init; }
+    public required string Name { get; init; }
     public TargeterConfig? Targeter { get; init; }
     public UsableConfig? Usable { get; init; }
+
+    [SetsRequiredMembers]
+    public SkillConfig(ISkillData record)
+    {
+        this.Id = record.Id;
+        this.Name = record.Name;
+
+        if (record.Targeter != null)
+        {
+            this.Targeter = new TargeterConfig(record.Targeter);
+        }
+
+        if (record.Usable != null)
+        {
+            this.Usable = new UsableConfig(record.Usable);
+        }
+    }
 }

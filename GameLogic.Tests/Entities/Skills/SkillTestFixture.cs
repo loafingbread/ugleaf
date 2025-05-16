@@ -5,20 +5,20 @@ using GameLogic.Entities.Skills;
 
 public class SkillTestFixture
 {
-    public SkillConfig FacePalmConfig { get; }
-    public SkillConfig IgniteConfig { get; }
-    public SkillConfig MugConfig { get; }
-    public SkillConfig SprayAndPrayConfig { get; }
-    public SkillConfig StealConfig { get; }
+    public SkillRecord FacePalmConfig { get; }
+    public SkillRecord IgniteConfig { get; }
+    public SkillRecord MugConfig { get; }
+    public SkillRecord SprayAndPrayConfig { get; }
+    public SkillRecord StealConfig { get; }
 
     public SkillTestFixture()
     {
-        IgniteConfig = JsonConfigLoader.LoadFromFile<SkillConfig>(ConfigPaths.Skill.Ignite);
-        FacePalmConfig = JsonConfigLoader.LoadFromFile<SkillConfig>(ConfigPaths.Skill.FacePalm);
-        MugConfig = JsonConfigLoader.LoadFromFile<SkillConfig>(ConfigPaths.Skill.Mug);
-        SprayAndPrayConfig = JsonConfigLoader.LoadFromFile<SkillConfig>(
+        IgniteConfig = JsonConfigLoader.LoadFromFile<SkillRecord>(ConfigPaths.Skill.Ignite);
+        FacePalmConfig = JsonConfigLoader.LoadFromFile<SkillRecord>(ConfigPaths.Skill.FacePalm);
+        MugConfig = JsonConfigLoader.LoadFromFile<SkillRecord>(ConfigPaths.Skill.Mug);
+        SprayAndPrayConfig = JsonConfigLoader.LoadFromFile<SkillRecord>(
             ConfigPaths.Skill.SprayAndPray
         );
-        StealConfig = JsonConfigLoader.LoadFromFile<SkillConfig>(ConfigPaths.Skill.Steal);
+        StealConfig = JsonConfigLoader.LoadFromFile<SkillRecord>(ConfigPaths.Skill.Steal);
     }
 }

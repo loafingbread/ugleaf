@@ -6,7 +6,6 @@ using GameLogic.Entities;
 public class Usable : IUsable
 {
     private UsableConfig _config { get; set; }
-    private List<IUsableEffect> effects { get; set; } = new();
     public Usable(UsableConfig config)
     {
         this._config = config;

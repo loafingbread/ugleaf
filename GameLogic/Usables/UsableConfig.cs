@@ -1,4 +1,4 @@
-using System.Security.Cryptography.X509Certificates;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using GameLogic.Config;
 using GameLogic.Targeting;
@@ -6,15 +6,35 @@ using GameLogic.Usables;
 
 namespace GameLobic.Usables;
 
-public record UsableConfig
+public record UsableRecord
+{
+    public required string Id { get; init; }
+    public required TargeterRecord Targeter { get; init; }
+    public required List<EffectRecord> Effects { get; init; } = new();
+}
+
+public class UsableConfig
 {
     public required string Id { get; init; }
     public required TargeterConfig Targeter { get; init; }
-    public required List<EffectConfig> Effects { get; init; } = new();
+    public required List<IUsableEffect> Effects { get; init; } = new();
+
+    [SetsRequiredMembers]
+    public UsableConfig(UsableRecord record)
+    {
+        this.Id = record.Id;
+        this.Targeter = new TargeterConfig(record.Targeter);
+
+        foreach (EffectRecord effectRecord in record.Effects)
+        {
+            IUsableEffect effect = EffectConfigFactory.CreateFromRecord(effectRecord);
+            this.Effects.Add(effect);
+        }
+    }
 }
 
 // Stores json input file
-public record EffectConfig
+public record EffectRecord
 {
     public required string Id { get; init; }
     public required string Type { get; init; }
@@ -59,7 +79,13 @@ public abstract class StatusEffectConfigBase : EffectConfigBase
     }
 }
 
-class BurnStatusEffectConfig : StatusEffectConfigBase
+public record BurnStatusEffectRecord
+{
+    public required int Duration { get; init; }
+    public required int DamagePerTurn { get; init; }
+}
+
+public class BurnStatusEffectConfig : StatusEffectConfigBase
 {
     public int DamagePerTurn { get; init; }
 
@@ -77,7 +103,7 @@ class BurnStatusEffectConfig : StatusEffectConfigBase
     }
 }
 
-class PoisonStatusEffectConfig : StatusEffectConfigBase
+public class PoisonStatusEffectConfig : StatusEffectConfigBase
 {
     public int DamagePerTurn { get; init; }
 
@@ -129,25 +155,44 @@ public enum EEffectType
 
 public static class EffectConfigFactory
 {
-    public static IUsableEffect CreateFromConfig(EffectConfig config)
+    public static IUsableEffect CreateFromRecord(EffectRecord record)
     {
-        return config.Type switch
+        return record.Type switch
         {
-            "Burn" => CreateBurn(config),
-            "Poison" => CreatePoison(config),
-            _ => throw new NotSupportedException($"Effect type {config.Type} is not supported."),
+            "Status" => CreateStatusEffect(record),
+            _ => throw new NotSupportedException($"Effect type {record.Type} is not supported."),
         };
     }
 
-    private static IUsableEffect CreateBurn(EffectConfig effectConfig)
+    private static IUsableEffect CreateStatusEffect(EffectRecord record)
     {
-        var burnConfig = effectConfig.Parameters.Deserialize<BurnStatusEffectConfig>()!;
+        return record.Subtype switch
+        {
+            "Burn" => CreateBurn(record),
+            "Poison" => CreatePoison(record),
+            _ => throw new NotSupportedException(
+                $"Effect subtype {record.Subtype} is not supported."
+            ),
+        };
+    }
+
+    private static IUsableEffect CreateBurn(EffectRecord record)
+    {
+        var burnRecord = record.Parameters.Deserialize<BurnStatusEffectRecord>()!;
+        var burnConfig = new BurnStatusEffectConfig(
+            record.Id,
+            record.Type,
+            record.Subtype,
+            record.Variant,
+            burnRecord.Duration,
+            burnRecord.DamagePerTurn
+        );
         return new BurnStatusEffect(burnConfig);
     }
 
-    private static IUsableEffect CreatePoison(EffectConfig effectConfig)
+    private static IUsableEffect CreatePoison(EffectRecord record)
     {
-        var poisonConfig = effectConfig.Parameters.Deserialize<PoisonStatusEffectConfig>()!;
+        var poisonConfig = record.Parameters.Deserialize<PoisonStatusEffectConfig>()!;
         return new PoisonStatusEffect(poisonConfig);
     }
 }
