@@ -4,4 +4,5 @@ namespace GameLogic.Config;
 public interface IConfigurable<TConfig>
 {
     void ApplyConfig(TConfig config);
+    TConfig GetConfig();
 }

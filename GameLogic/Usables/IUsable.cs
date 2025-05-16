@@ -1,10 +1,11 @@
 namespace GameLogic.Usables;
 
 using GameLobic.Usables;
+using GameLogic.Config;
 using GameLogic.Entities;
 using GameLogic.Targeting;
 
-public interface IUsable
+public interface IUsable : IConfigurable<UsableConfig>
 {
     public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets);
 }

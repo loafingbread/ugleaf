@@ -1,21 +1,24 @@
 namespace GameLogic.Usables;
 
 using GameLobic.Usables;
-using GameLogic.Config;
 using GameLogic.Entities;
 
-public class Usable : IUsable, IConfigurable<UsableConfig>
+public class Usable : IUsable
 {
-    public UsableConfig Config { get; private set; }
+    private UsableConfig _config { get; set; }
+    private List<IUsableEffect> effects { get; set; } = new();
     public Usable(UsableConfig config)
     {
-        this.Config = config;
+        this._config = config;
+        this.ApplyConfig(config);
     }
 
     public void ApplyConfig(UsableConfig config)
     {
-        this.Config = config;
+        this._config = config;
     }
+
+    public UsableConfig GetConfig() => this._config;
 
     public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets)
     {

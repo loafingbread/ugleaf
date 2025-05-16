@@ -8,6 +8,7 @@ using GameLogic.Usables;
 
 public class Entity : ITargeter, ITargetable, IUser
 {
+    private TargeterConfig? _targeterConfig;
     private ITargeter? _targeter;
     private ITargetable? _targetable;
     private IUser? _user;
@@ -113,6 +114,18 @@ public class Entity : ITargeter, ITargetable, IUser
         return this._user.Use(usable, user, targets);
     }
 
+    public void ApplyConfig(TargeterConfig config)
+    {
+        this._targeterConfig = config;
+        this._targeter = new Targeter(config);
+    }
+
+    public TargeterConfig GetConfig()
+    {
+        return this._targeterConfig;
+    }
+
+    // TODO: Delete this if not needed. It's a good idea though
     public static explicit operator Entity(User v)
     {
         throw new NotImplementedException();

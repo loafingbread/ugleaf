@@ -1,17 +1,15 @@
 namespace GameLogic.Targeting;
 
-using GameLogic.Config;
 using GameLogic.Entities;
 
-
-public class Targeter : IConfigurable<TargeterConfig>, ITargeter
+public class Targeter : ITargeter
 {
     private List<ITargetable> _targets = new();
-    public TargeterConfig Config { get; private set; }
+    public TargeterConfig _config { get; private set; }
 
     public Targeter(TargeterConfig config)
     {
-        this.Config = config;
+        this._config = config;
     }
 
     /*********************************
@@ -19,8 +17,10 @@ public class Targeter : IConfigurable<TargeterConfig>, ITargeter
     *********************************/
     public void ApplyConfig(TargeterConfig config)
     {
-        this.Config = config;
+        this._config = config;
     }
+
+    public TargeterConfig GetConfig() => this._config;
 
     /*********************************
     * ITargeter
@@ -29,16 +29,16 @@ public class Targeter : IConfigurable<TargeterConfig>, ITargeter
 
     public bool CanTarget(ITargetable candidate)
     {
-        return this.Config.AllowedTargets.Contains(candidate.GetRelationTo(this));
+        return this._config.AllowedTargets.Contains(candidate.GetRelationTo(this));
     }
 
     // Get max number of eligibile targets
     public int GetMaxTargets(object source, IEnumerable<ITargetable> candidates)
     {
-        switch (this.Config.TargetQuantity)
+        switch (this._config.TargetQuantity)
         {
             case ETargetQuantity.Count:
-                return this.getMaxTargets(source, candidates, this.Config.Count);
+                return this.getMaxTargets(source, candidates, this._config.Count);
             case ETargetQuantity.All:
                 return this.getMaxTargets(source, candidates, int.MaxValue);
             default:

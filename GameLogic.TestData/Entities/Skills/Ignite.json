@@ -21,9 +21,9 @@
             {
                 "Id": "effect_burn_dot",
                 "Type": "Status",
+                "Subtype": "Burn",
+                "Variant": "DOT",
                 "Parameters": {
-                    "Subtype": "Burn",
-                    "Variant": "DOT",
                     "Duration": 3,
                     "DamagePerTurn": 5
                 }

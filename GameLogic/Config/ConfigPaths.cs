@@ -31,6 +31,7 @@ public static class ConfigPaths
             "GameLogic.TestData/Entities/Skills/"
         );
 
+        public static readonly string Ignite = Path.Combine(Folder, "Ignite.json");
         public static readonly string FacePalm = Path.Combine(Folder, "FacePalm.json");
         public static readonly string Steal = Path.Combine(Folder, "Steal.json");
         public static readonly string Mug = Path.Combine(Folder, "Mug.json");
