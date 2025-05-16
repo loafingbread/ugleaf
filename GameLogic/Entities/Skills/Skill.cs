@@ -21,12 +21,21 @@ public class Skill : IConfigurable<ISkillData>
         this.ApplyConfig(config);
     }
 
+    public bool CanTarget() => this.Targeter != null;
+
+    public bool CanUse() => this.Usable != null;
+
     public void ApplyConfig(ISkillData config)
     {
         this.Id = config.Id;
         this.Name = config.Name;
 
-        this.Targeter = new Targeter(config.Targeter);
-        this.Usable = new Usable(config.Usable);
+        if (config.Targeter != null) {
+            this.Targeter = new Targeter(config.Targeter);
+        }
+
+        if (config.Usable != null) {
+            this.Usable = new Usable(config.Usable);
+        }
     }
 }

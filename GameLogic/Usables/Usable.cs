@@ -23,7 +23,7 @@ public class Usable : IUsable, IConfigurable<UsableConfig>
         List<UsableResult> results = new();
         foreach (Entity target in targets)
         {
-            results.Add(new UsableResult(user, target, false, true, this, 5));
+            results.Add(new UsableResult(this, user, target));
         }
 
         return results;

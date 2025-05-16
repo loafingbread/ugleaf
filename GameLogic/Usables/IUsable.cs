@@ -11,31 +11,50 @@ public interface IUsable
 
 public interface IUsableEffect
 {
-    UsableResult Apply(IUser user, ITargetable target);
+    EffectResult Apply(IUser user, ITargetable target);
 }
-
 
 public class UsableResult
 {
+    public IUsable Usable { get; }
     public Entity User { get; }
     public Entity Target { get; }
+    public List <EffectResult> Results { get; } = new();
+
+    public UsableResult(IUsable usable, Entity user, Entity target)
+    {
+        this.Usable = usable;
+        this.User = user;
+        this.Target = target;
+    }
+}
+
+public class EffectResult
+{
+    public IUsableEffect Effect { get; }
+    public Entity User { get; }
+    public Entity Target { get; }
+    public int Value { get; }
     public bool DidCrit { get; }
     public bool DidHit { get; }
-    public IUsable Usable { get; }
-    public int Value { get; }
+    public int Resistance { get; }
 
-    public UsableResult(
-        Entity user, Entity target,
-        bool didCrit, bool didHit,
-        IUsable usable, int value
+    public EffectResult(
+        IUsableEffect effect,
+        Entity user,
+        Entity target,
+        int value,
+        bool didCrit,
+        bool didHit,
+        int resistance
     )
     {
         this.User = user;
         this.Target = target;
+        this.Effect = effect;
+        this.Value = value;
         this.DidCrit = didCrit;
         this.DidHit = didHit;
-        this.Usable = usable;
-        this.Value = value;
+        this.Resistance = resistance;
     }
-
 }

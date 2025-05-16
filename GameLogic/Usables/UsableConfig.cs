@@ -161,9 +161,9 @@ public abstract class StatusEffect : IUsableEffect
         this.Config = config;
     }
 
-    public UsableResult Apply(IUser user, ITargetable target)
+    public EffectResult Apply(IUser user, ITargetable target)
     {
-        return null;
+        return new EffectResult(this, user.GetEntity(), target.GetEntity(), 5, false, true, 0);
     }
 }
 

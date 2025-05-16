@@ -19,6 +19,12 @@ public class Entity : ITargeter, ITargetable, IUser
         this._user = user;
     }
 
+    public bool CanTarget() => this._targeter != null;
+
+    public bool CanBeTargeted() => this._targetable != null;
+
+    public bool CanUse() => this._user != null;
+
     /*****************
     * IEntity
     ******************/
