@@ -1,6 +1,5 @@
 namespace GameLogic.Tests;
 
-using System.Data;
 using GameLogic.Entities.Skills;
 using GameLogic.Targeting;
 using GameLogic.Usables;

@@ -37,4 +37,14 @@ public static class ConfigPaths
         public static readonly string Mug = Path.Combine(Folder, "Mug.json");
         public static readonly string SprayAndPray = Path.Combine(Folder, "SprayAndPray.json");
     }
+
+    public static class Stat
+    {
+        public static readonly string Folder = Path.Combine(
+            BasePath,
+            "GameLogic.TestData/Entities/Stats/"
+        );
+
+        public static readonly string Strength = Path.Combine(Folder, "Strength.json");
+    }
 }
