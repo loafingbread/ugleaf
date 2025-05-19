@@ -20,6 +20,15 @@
             },
             "Effects": [
                 {
+                    "Id": "effect_fire_damage",
+                    "Type": "Attack",
+                    "Subtype": "SingleHit",
+                    "Variant": "FireDamage",
+                    "Parameters": {
+                        "Damage": 10
+                    }
+                },
+                {
                     "Id": "effect_burn_dot",
                     "Type": "Status",
                     "Subtype": "Burn",

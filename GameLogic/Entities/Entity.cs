@@ -6,7 +6,7 @@ using System.Data;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
-public class Entity : ITargeter, ITargetable, IUser
+public class Entity : ITargeter, ITargetable, IAffectable, IUser
 {
     private TargeterConfig? _targeterConfig;
     private ITargeter? _targeter;
@@ -93,6 +93,15 @@ public class Entity : ITargeter, ITargetable, IUser
             throw new NoNullAllowedException("Cannot get relation to without targetable");
         }
         return this._targetable.GetRelationTo(targeter);
+    }
+
+    /*********************
+    * IAffectable
+    *********************/
+    public int ChangeHealth(int amount)
+    {
+        // TODO: Implement
+        return 0;
     }
 
     /*********************

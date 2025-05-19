@@ -9,6 +9,7 @@ public static class EffectFactory
         return record.Type switch
         {
             "Status" => CreateStatusEffect(record),
+            "Attack" => CreateAttackEffect(record),
             _ => throw new NotSupportedException($"Effect type {record.Type} is not supported."),
         };
     }
@@ -43,5 +44,18 @@ public static class EffectFactory
     {
         var poisonConfig = record.Parameters.Deserialize<PoisonStatusEffectConfig>()!;
         return new PoisonStatusEffect(poisonConfig);
+    }
+
+    private static IEffect CreateAttackEffect(IEffectRecord record)
+    {
+        var attackRecord = record.Parameters.Deserialize<AttackEffectParametersRecord>()!;
+        var attackConfig = new AttackEffectConfig(
+            record.Id,
+            record.Type,
+            record.Subtype,
+            record.Variant,
+            attackRecord.Damage
+        );
+        return new AttackEffect(attackConfig);
     }
 }

@@ -47,14 +47,14 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         Assert.Equal([EFactionRelationship.Enemy], usableConfig.Targeter?.AllowedTargets);
         Assert.Equal(1, usableConfig.Targeter?.Count);
 
-        IEffect _effect = usableConfig.Effects[0];
-        BurnStatusEffect effect = (BurnStatusEffect)_effect;
-        BurnStatusEffectConfig effectConfig = (BurnStatusEffectConfig)effect.GetConfig();
-        Assert.Equal("effect_burn_dot", effectConfig.Id);
-        Assert.Equal("Status", effectConfig.Type);
-        Assert.Equal("Burn", effectConfig.Subtype);
-        Assert.Equal("DOT", effectConfig.Variant);
-        Assert.Equal(3, effectConfig.Duration);
-        Assert.Equal(5, effectConfig.DamagePerTurn);
+        IEffect secondEffect = usableConfig.Effects[1];
+        BurnStatusEffect burnEffect = (BurnStatusEffect)secondEffect;
+        BurnStatusEffectConfig burnEffectConfig = (BurnStatusEffectConfig)burnEffect.GetConfig();
+        Assert.Equal("effect_burn_dot", burnEffectConfig.Id);
+        Assert.Equal("Status", burnEffectConfig.Type);
+        Assert.Equal("Burn", burnEffectConfig.Subtype);
+        Assert.Equal("DOT", burnEffectConfig.Variant);
+        Assert.Equal(3, burnEffectConfig.Duration);
+        Assert.Equal(5, burnEffectConfig.DamagePerTurn);
     }
 }
