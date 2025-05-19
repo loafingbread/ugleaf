@@ -24,30 +24,30 @@ public class Stat : IStat
     }
 }
 
-public class StatBlock : IConfigurable<List<Stat>>
+public class StatBlock : IConfigurable<StatBlockConfig>
 {
-    private StatBlockConfig _config { get; }
-    private List<Stat> _stats { get; } = new();
+    private StatBlockConfig _config { get; set; }
+    public List<Stat> Stats { get; } = new();
 
     public StatBlock(StatBlockConfig config)
     {
         this._config = config;
+        this.ApplyConfig(config);
+    }
 
-        foreach (StatConfig statConfig in config.Stats)
-        {
-            Stat stat = new(statConfig);
-            this._stats.Add(stat);
+    public void ApplyConfig(StatBlockConfig config)
+    {
+        this._config = config;
+
+        this.Stats.Clear();
+        foreach(StatConfig statConfig in config.Stats){
+            Stat stat = new (statConfig);
+            this.Stats.Add(stat);
         }
     }
 
-    public void ApplyConfig(List<Stat> stats)
+    public StatBlockConfig GetConfig()
     {
-        this._stats.Clear();
-        this._stats.AddRange(stats);
-    }
-
-    public List<Stat> GetConfig()
-    {
-        return _stats;
+        return _config;
     }
 }

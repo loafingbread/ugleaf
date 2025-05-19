@@ -1,0 +1,12 @@
+{
+    "Stats": [
+        {
+            "Id": "stat_strength",
+            "BaseValue": 10
+        },
+        {
+            "Id": "stat_vitality",
+            "BaseValue": 20
+        }
+    ]
+}

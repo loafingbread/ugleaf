@@ -46,5 +46,6 @@ public static class ConfigPaths
         );
 
         public static readonly string Strength = Path.Combine(Folder, "Strength.json");
+        public static readonly string TestStatBlock = Path.Combine(Folder, "TestStatBlock.json");
     }
 }

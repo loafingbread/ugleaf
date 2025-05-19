@@ -33,12 +33,12 @@ public class StatConfig
 
 public interface IStatBlockRecord
 {
-    public List<IStatRecord> Stats { get; }
+    public List<StatRecord> Stats { get; }
 }
 
-public record StatBlockRecord
+public record StatBlockRecord : IStatBlockRecord
 {
-    public required List<IStatRecord> Stats { get; init; } = new();
+    public required List<StatRecord> Stats { get; init; } = new();
 }
 
 public class StatBlockConfig
