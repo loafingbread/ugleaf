@@ -40,8 +40,9 @@ public class StatBlock : IConfigurable<StatBlockConfig>
         this._config = config;
 
         this.Stats.Clear();
-        foreach(StatConfig statConfig in config.Stats){
-            Stat stat = new (statConfig);
+        foreach (StatConfig statConfig in config.Stats)
+        {
+            Stat stat = new(statConfig);
             this.Stats.Add(stat);
         }
     }
