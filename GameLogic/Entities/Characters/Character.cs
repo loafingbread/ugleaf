@@ -5,6 +5,7 @@ using GameLogic.Config;
 public class Character : IConfigurable<CharacterConfig>
 {
     private CharacterConfig _config { get; set; }
+
     public Character() { }
 
     public Character(CharacterConfig config)
