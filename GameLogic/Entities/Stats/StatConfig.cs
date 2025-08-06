@@ -7,13 +7,52 @@ public interface IStatRecord
     public string Id { get; }
     public int BaseValue { get; }
     public int CurrentValue { get; }
+    public int MaxValue { get; }
 }
 
 public record StatRecord : IStatRecord
 {
     public required string Id { get; init; }
     public required int BaseValue { get; init; }
+    public int MaxValue { get; init; }
     public int CurrentValue { get; init; }
+}
+
+public ValueStatRecord: IStatRecord
+{
+    public required string Id { get; init; }
+    public required int BaseValue { get; init; }
+    public int CurrentValue { get; init; }
+}
+
+public record ResourceStatRecord : IStatRecord
+{
+    public required string Id { get; init; }
+    public required int BaseValue { get; init; }
+    public int CurrentValue { get; init; }
+    public required int MaxValue { get; init; }
+}
+
+public interface IStatConfig
+{
+    public string Id { get; }
+    public int BaseValue { get; }
+    public int CurrentValue { get; }
+}
+
+public class ValueStatConfig : IStatConfig
+{
+    public string Id { get; }
+    public int BaseValue { get; }
+    public int CurrentValue { get; }
+}
+
+public class ResourceStatConfig : IStatConfig
+{
+    public string Id { get; }
+    public int BaseValue { get; }
+    public int CurrentValue { get; }
+    public int MaxValue { get; }
 }
 
 public class StatConfig
@@ -30,6 +69,30 @@ public class StatConfig
         this.CurrentValue = record.CurrentValue;
     }
 }
+// 🔸 3. Modifier Condition Extensions (Later)
+// Your condition syntax is great. Eventually, consider extending:
+
+// StatAbove
+
+// HasStatus
+
+// TagPresent
+
+// IsInState (e.g. stance, biome, combat phase)
+
+// Just good to plan for flexibility.
+
+// 1. BaseValue
+// +  Sum of Flat Modifiers
+// +  (BaseValue * Sum of PercentAdd modifiers)
+// ×  Product of (1 + PercentMul modifiers)
+// = Final Value
+
+// enum StatModifierType {
+//     Flat,         // +X
+//     PercentAdd,   // +X% of base (additive)
+//     PercentMul    // *X% of final value (multiplicative)
+// }
 
 public interface IStatBlockRecord
 {

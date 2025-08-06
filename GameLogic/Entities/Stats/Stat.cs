@@ -4,11 +4,11 @@ namespace GameLogic.Entities.Stats;
 
 public interface IStat : IConfigurable<StatConfig> { }
 
-public class Stat : IStat
+public class ValueStat : IStat
 {
     private StatConfig _config { get; set; }
 
-    public Stat(StatConfig config)
+    public ValueStat(StatConfig config)
     {
         this._config = config;
     }
@@ -24,10 +24,15 @@ public class Stat : IStat
     }
 }
 
+public class ResourceStat : IStat
+{
+    private StatConfig _config { get; set; }
+}
+
 public class StatBlock : IConfigurable<StatBlockConfig>
 {
     private StatBlockConfig _config { get; set; }
-    public List<Stat> Stats { get; } = new();
+    public List<IStat> Stats { get; } = new();
 
     public StatBlock(StatBlockConfig config)
     {
