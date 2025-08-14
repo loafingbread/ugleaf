@@ -1,69 +1,95 @@
 {
-    "ValueStats": [
+    "StatBlock": [
         {
             "Id": "value_stat_strength",
             "DisplayName": "Strength",
-            "BaseValue": 10,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 10
+            },
             "ValueCap": 100,
             "Description": "Strength is a measure of your physical power.",
-            "Tags": ["physical", "strength"]
+            "Tags": ["physical", "strength"],
+            "Type": "Value"
         },
         {
             "Id": "value_stat_vitality",
             "DisplayName": "Vitality",
-            "BaseValue": 20,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 20
+            },
             "ValueCap": 100,
             "Description": "Vitality is a measure of your health.",
-            "Tags": ["physical", "vitality"]
+            "Tags": ["physical", "vitality"],
+            "Type": "Value"
         },
         {
             "Id": "value_stat_agility",
             "DisplayName": "Agility",
-            "BaseValue": 30,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 30
+            },
             "ValueCap": 100,
             "Description": "Agility is a measure of your movement speed.",
-            "Tags": ["physical", "agility"]
+            "Tags": ["physical", "agility"],
+            "Type": "Value"
         },
         {
             "Id": "value_stat_intelligence",
             "DisplayName": "Intelligence",
-            "BaseValue": 40,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 40
+            },
             "ValueCap": 100,
-            "Description": "Intelligence is a measure of your magical power."
+            "Description": "Intelligence is a measure of your magical power.",
+            "Type": "Value"
         },
         {
             "Id": "value_stat_luck",
             "DisplayName": "Luck",
-            "BaseValue": 50,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 50
+            },
             "ValueCap": 100,
             "Description": "Luck is a measure of your chance to succeed.",
-            "Tags": ["magical", "luck"]
+            "Tags": ["magical", "luck"],
+            "Type": "Value"
         },
         {
             "Id": "value_stat_fire_affinity",
             "DisplayName": "Fire Affinity",
-            "BaseValue": 60,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 60
+            },
             "ValueCap": 100,
             "Description": "Fire affinity is a measure of your ability to resist fire damage.",
-            "Tags": ["magical", "fire", "affinity"]
+            "Tags": ["magical", "fire", "affinity"],
+            "Type": "Value"
         },
         {
             "Id": "value_stat_damage_favorism_wolves",
-            "BaseValue": 70,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 70
+            },
             "ValueCap": 100,
             "Description": "Damage favorism to wolves is a measure of your ability to deal more damage to wolves.",
-            "Tags": ["physical", "damage", "favorism", "wolves"]
-        }
-    ],
-    "DerivedValueStats": [
+            "Tags": ["physical", "damage", "favorism", "wolves"],
+            "Type": "Value"
+        },
         {
             "Id": "Attack",
             "DisplayName": "Attack",
-            "BaseValue": 10,
             "ValueCap": 100,
             "Description": "Attack is a measure of your ability to deal damage.",
             "Tags": ["physical", "attack"],
-            "Formula": {
+            "Type": "Value",
+            "BaseValueFormula": {
                 "Type": "Add",
                 "Operands": [
                     {
@@ -80,11 +106,11 @@
         {
             "Id": "MovementSpeed",
             "DisplayName": "Movement Speed",
-            "BaseValue": 10,
             "ValueCap": 100,
             "Description": "Movement speed is a measure of your movement speed.",
             "Tags": ["physical", "movement_speed"],
-            "Formula": {
+            "Type": "Value",
+            "BaseValueFormula": {
                 "Type": "Add",
                 "Operands": [
                     {
@@ -101,11 +127,11 @@
         {
             "Id": "Defense",
             "DisplayName": "Defense",
-            "BaseValue": 10,
             "ValueCap": 100,
             "Description": "Defense is a measure of your ability to resist damage.",
             "Tags": ["physical", "defense"],
-            "Formula": {
+            "Type": "Value",
+            "BaseValueFormula": {
                 "Type": "Add",
                 "Operands": [
                     {
@@ -118,16 +144,84 @@
                     }
                 ]
             }
-        }
-    ],
-    "DerivedResourceStats": [
+        },
+        {
+            "Id": "resource_stat_health",
+            "DisplayName": "Health",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Health is a measure of your physical health.",
+            "Tags": ["physical", "health"]
+        },
+        {
+            "Id": "resource_stat_mana",
+            "DisplayName": "Mana",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Mana is a measure of your magical power.",
+            "Tags": ["magical", "mana"]
+        },
+        {
+            "Id": "resource_stat_stamina",
+            "DisplayName": "Stamina",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Stamina is a measure of your physical endurance.",
+            "Tags": ["physical", "stamina"]
+        },
+        {
+            "Id": "resource_stat_energy",
+            "DisplayName": "Energy",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Energy is a measure of your magical power.",
+            "Tags": ["magical", "energy"]
+        },
+        {
+            "Id": "resource_stat_frenzy_stack",
+            "DisplayName": "Frenzy Stack",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Frenzy is a measure of your ability to attack quickly.",
+            "Tags": ["stack", "frenzy"]
+        },
         {
             "Id": "Resource_Health",
-            "BaseValue": 10,
             "ValueCap": 100,
             "Description": "Health is a measure of your physical health.",
             "Tags": ["physical", "health"],
-            "Formula": {
+            "Type": "Resource",
+            "BaseValueFormula": {
                 "Type": "Add",
                 "Operands": [
                     {
@@ -143,11 +237,11 @@
         },
         {
             "Id": "Resource_Mana",
-            "BaseValue": 10,
             "ValueCap": 100,
             "Description": "Mana is a measure of your magical power.",
             "Tags": ["magical", "mana"],
-            "Formula": {
+            "Type": "Resource",
+            "BaseValueFormula": {
                 "Type": "Add",
                 "Operands": [
                     {
@@ -160,58 +254,6 @@
                     }
                 ]
             }
-        }
-    ],
-    "ResourceStats": [
-        {
-            "Id": "resource_stat_health",
-            "DisplayName": "Health",
-            "BaseMaxValue": 100,
-            "CurrentValue": 50,
-            "ValueCap": 1000,
-            "RegenRate": 10,
-            "Description": "Health is a measure of your physical health.",
-            "Tags": ["physical", "health"]
-        },
-        {
-            "Id": "resource_stat_mana",
-            "DisplayName": "Mana",
-            "BaseMaxValue": 100,
-            "CurrentValue": 50,
-            "ValueCap": 1000,
-            "RegenRate": 10,
-            "Description": "Mana is a measure of your magical power.",
-            "Tags": ["magical", "mana"]
-        },
-        {
-            "Id": "resource_stat_stamina",
-            "DisplayName": "Stamina",
-            "BaseMaxValue": 100,
-            "CurrentValue": 50,
-            "ValueCap": 1000,
-            "RegenRate": 10,
-            "Description": "Stamina is a measure of your physical endurance.",
-            "Tags": ["physical", "stamina"]
-        },
-        {
-            "Id": "resource_stat_energy",
-            "DisplayName": "Energy",
-            "BaseMaxValue": 100,
-            "CurrentValue": 50,
-            "ValueCap": 1000,
-            "RegenRate": 10,
-            "Description": "Energy is a measure of your magical power.",
-            "Tags": ["magical", "energy"]
-        },
-        {
-            "Id": "resource_stat_frenzy_stack",
-            "DisplayName": "Frenzy Stack",
-            "BaseMaxValue": 100,
-            "CurrentValue": 50,
-            "ValueCap": 1000,
-            "RegenRate": 10,
-            "Description": "Frenzy is a measure of your ability to attack quickly.",
-            "Tags": ["stack", "frenzy"]
         }
     ],
     "ModifierSources": [

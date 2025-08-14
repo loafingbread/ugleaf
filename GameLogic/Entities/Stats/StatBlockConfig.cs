@@ -1,7 +1,5 @@
 namespace GameLogic.Entities.Stats;
 
-public record 
-
 public interface IStatBlockRecord
 {
     public List<StatRecord> ValueStats { get; }
