@@ -1,7 +1,7 @@
+namespace GameLogic.Entities.Characters;
+
 using System.Diagnostics.CodeAnalysis;
 using GameLogic.Entities.Skills;
-
-namespace GameLogic.Entities.Characters;
 
 public interface ICharacterRecord
 {

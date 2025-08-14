@@ -1,26 +1,29 @@
 namespace GameLogic.Entities.Stats;
 
-public interface IStatBlockRecord
-{
-    public List<StatRecord> ValueStats { get; }
-}
+using System.Diagnostics.CodeAnalysis;
 
-public record StatBlockRecord : IStatBlockRecord
+public record StatBlockRecord
 {
-    public required List<StatRecord> ValueStats { get; init; } = new();
+    public required List<StatRecord> Stats { get; init; } = new();
 }
 
 public class StatBlockConfig
 {
-    public required List<StatConfig> Stats { get; init; } = new();
+    private readonly List<StatConfig> _configs;
 
     [SetsRequiredMembers]
-    public StatBlockConfig(IStatBlockRecord record)
+    public StatBlockConfig(StatBlockRecord record)
     {
-        foreach (StatRecord statRecord in record.Stats)
-        {
-            StatConfig statConfig = new(statRecord);
-            this.Stats.Add(statConfig);
-        }
+        this._configs = record.Stats.Select(stat => new StatConfig(stat)).ToList();
+    }
+
+    public List<StatConfig> GetAll()
+    {
+        return this._configs;
+    }
+
+    public StatConfig Get(string id)
+    {
+        return this._configs.FirstOrDefault(config => config.Id == id, null);
     }
 }

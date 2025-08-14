@@ -1,4 +1,12 @@
 {
-    "Id": "stat_strength",
-    "BaseValue": 10
+    "Id": "value_stat_strength",
+    "DisplayName": "Strength",
+    "Description": "Strength is a measure of your physical power.",
+    "Tags": ["physical", "strength"],
+    "Type": "Value",
+    "ValueCap": 100,
+    "BaseValueFormula": {
+        "Type": "Constant",
+        "Value": 10
+    }
 }

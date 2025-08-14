@@ -94,11 +94,11 @@
                 "Operands": [
                     {
                         "Type": "Multiply",
-                        "Operands": [0.5, { "Type": "Stat", "Id": "value_stat_strength" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_strength" }]
                     },
                     {
                         "Type": "Multiply",
-                        "Operands": [0.3, { "Type": "Stat", "Id": "value_stat_agility" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_agility" }]
                     }
                 ]
             }
@@ -115,11 +115,11 @@
                 "Operands": [
                     {
                         "Type": "Multiply",
-                        "Operands": [0.5, { "Type": "Stat", "Id": "value_stat_agility" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_agility" }]
                     },
                     {
                         "Type": "Multiply",
-                        "Operands": [0.3, { "Type": "Stat", "Id": "value_stat_strength" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
                     }
                 ]
             }   
@@ -136,11 +136,11 @@
                 "Operands": [
                     {
                         "Type": "Multiply",
-                        "Operands": [0.5, { "Type": "Stat", "Id": "value_stat_agility" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_agility" }]
                     },
                     {
                         "Type": "Multiply",
-                        "Operands": [0.3, { "Type": "Stat", "Id": "value_stat_strength" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
                     }
                 ]
             }
@@ -226,11 +226,11 @@
                 "Operands": [
                     {
                         "Type": "Multiply",
-                        "Operands": [0.5, { "Type": "Stat", "Id": "value_stat_vitality" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_vitality" }]
                     },
                     {
                         "Type": "Multiply",
-                        "Operands": [0.3, { "Type": "Stat", "Id": "value_stat_strength" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
                     }
                 ]
             }
@@ -246,11 +246,11 @@
                 "Operands": [
                     {
                         "Type": "Multiply",
-                        "Operands": [0.5, { "Type": "Stat", "Id": "value_stat_intelligence" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_intelligence" }]
                     },
                     {
                         "Type": "Multiply",
-                        "Operands": [0.3, { "Type": "Stat", "Id": "value_stat_strength" }]
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
                     }
                 ]
             }

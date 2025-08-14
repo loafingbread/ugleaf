@@ -1,4 +1,4 @@
-namespace GameLogic.Entities;
+namespace GameLogic.Entities.Stats;
 
 public interface IAffectable
 {

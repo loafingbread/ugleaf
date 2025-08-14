@@ -1,28 +1,28 @@
 {
-    "StatBlock": [
+    "Stats": [
         {
             "Id": "value_stat_strength",
             "DisplayName": "Strength",
+            "Description": "Strength is a measure of your physical power.",
+            "Tags": ["physical", "strength"],
+            "Type": "Value",
+            "ValueCap": 100,
             "BaseValueFormula": {
                 "Type": "Constant",
                 "Value": 10
-            },
-            "ValueCap": 100,
-            "Description": "Strength is a measure of your physical power.",
-            "Tags": ["physical", "strength"],
-            "Type": "Value"
+            }
         },
         {
             "Id": "value_stat_agility",
             "DisplayName": "Agility",
+            "Description": "Agility is a measure of your movement speed.",
+            "Tags": ["physical", "agility"],
+            "Type": "Value",
+            "ValueCap": 100,
             "BaseValueFormula": {
                 "Type": "Constant",
                 "Value": 30
-            },
-            "ValueCap": 100,
-            "Description": "Agility is a measure of your movement speed.",
-            "Tags": ["physical", "agility"],
-            "Type": "Value"
+            }
         }
     ]
 }

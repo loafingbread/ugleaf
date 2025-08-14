@@ -3,6 +3,7 @@ namespace GameLogic.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using GameLogic.Entities.Stats;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
@@ -99,6 +100,12 @@ public class Entity : ITargeter, ITargetable, IAffectable, IUser
     * IAffectable
     *********************/
     public int ChangeHealth(int amount)
+    {
+        // TODO: Implement
+        return 0;
+    }
+
+    public int ChangeResource(string resourceId, int amount)
     {
         // TODO: Implement
         return 0;

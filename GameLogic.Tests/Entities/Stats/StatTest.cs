@@ -15,10 +15,16 @@ public class StatTest : IClassFixture<StatTestFixture>
     [Fact]
     public void Stat_CanLoadFromFile()
     {
-        Stat stat = StatBlockFactory.CreateStatFromRecord(this._fixture.StrengthRecord);
+        IStat stat = StatBlockFactory.CreateStatFromRecord(this._fixture.StrengthRecord);
 
-        Assert.Equal("stat_strength", stat.GetConfig().Id);
-        Assert.Equal(10, stat.GetConfig().BaseValue);
+        Assert.Equal("value_stat_strength", stat.GetConfig().Id);
+        Assert.Equal("Strength", stat.GetConfig().DisplayName);
+        Assert.Equal("Strength is a measure of your physical power.", stat.GetConfig().Description);
+        Assert.Equal(["physical", "strength"], stat.GetConfig().Tags);
+        Assert.Equal(StatType.Value, stat.GetConfig().Type);
+        Assert.Equal(100, stat.GetConfig().ValueCap);
+        Assert.Equal(StatFormulaType.Constant, stat.GetConfig().BaseValueFormula.Type);
+        Assert.Equal(10, stat.GetConfig().BaseValueFormula.CalculateValue());
     }
 
     [Fact]
@@ -26,14 +32,30 @@ public class StatTest : IClassFixture<StatTestFixture>
     {
         StatBlock statBlock = StatBlockFactory.CreateFromRecord(this._fixture.TestStatBlockRecord);
 
-        Stat strengthStat = statBlock.Stats[0];
+        IStat strengthStat = statBlock.Stats[0];
+        Assert.Equal("value_stat_strength", strengthStat.GetConfig().Id);
+        Assert.Equal("Strength", strengthStat.GetConfig().DisplayName);
+        Assert.Equal(
+            "Strength is a measure of your physical power.",
+            strengthStat.GetConfig().Description
+        );
+        Assert.Equal(["physical", "strength"], strengthStat.GetConfig().Tags);
+        Assert.Equal(StatType.Value, strengthStat.GetConfig().Type);
+        Assert.Equal(100, strengthStat.GetConfig().ValueCap);
+        Assert.Equal(StatFormulaType.Constant, strengthStat.GetConfig().BaseValueFormula.Type);
+        Assert.Equal(10, strengthStat.GetConfig().BaseValueFormula.CalculateValue());
 
-        Stat vitalityStat = statBlock.Stats[1];
-
-        Assert.Equal("stat_strength", strengthStat.GetConfig().Id);
-        Assert.Equal(10, strengthStat.GetConfig().BaseValue);
-
-        Assert.Equal("stat_vitality", vitalityStat.GetConfig().Id);
-        Assert.Equal(20, vitalityStat.GetConfig().BaseValue);
+        IStat agilityStat = statBlock.Stats[1];
+        Assert.Equal("value_stat_agility", agilityStat.GetConfig().Id);
+        Assert.Equal("Agility", agilityStat.GetConfig().DisplayName);
+        Assert.Equal(
+            "Agility is a measure of your movement speed.",
+            agilityStat.GetConfig().Description
+        );
+        Assert.Equal(["physical", "agility"], agilityStat.GetConfig().Tags);
+        Assert.Equal(StatType.Value, agilityStat.GetConfig().Type);
+        Assert.Equal(100, agilityStat.GetConfig().ValueCap);
+        Assert.Equal(StatFormulaType.Constant, agilityStat.GetConfig().BaseValueFormula.Type);
+        Assert.Equal(30, agilityStat.GetConfig().BaseValueFormula.CalculateValue());
     }
 }

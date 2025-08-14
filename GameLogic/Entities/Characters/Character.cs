@@ -1,13 +1,13 @@
 namespace GameLogic.Entities.Characters;
 
+using System.Diagnostics.CodeAnalysis;
 using GameLogic.Config;
 
 public class Character : IConfigurable<CharacterConfig>
 {
     private CharacterConfig _config { get; set; }
 
-    public Character() { }
-
+    [SetsRequiredMembers]
     public Character(CharacterConfig config)
     {
         this.ApplyConfig(config);
