@@ -6,7 +6,7 @@ using GameLogic.Config;
 public class StatBlock : IConfigurable<StatBlockConfig>
 {
     private StatBlockConfig _config { get; set; }
-    public List<IStat> Stats { get; } = new();
+    private List<IStat> _stats { get; } = new();
 
     [SetsRequiredMembers]
     public StatBlock(StatBlockConfig config)
@@ -18,10 +18,10 @@ public class StatBlock : IConfigurable<StatBlockConfig>
     {
         this._config = config;
 
-        this.Stats.Clear();
+        this._stats.Clear();
         foreach (StatConfig statConfig in config.GetAll())
         {
-            this.Stats.Add((IStat)new Stat(statConfig));
+            this._stats.Add((IStat)new Stat(statConfig));
         }
     }
 
@@ -30,15 +30,9 @@ public class StatBlock : IConfigurable<StatBlockConfig>
         return this._config;
     }
 
-    public int GetStatValue(string id)
-    {
-        IStat stat = this.GetStat(id);
-        return stat.GetCurrentValue();
-    }
-
     public IStat GetStat(string id)
     {
-        return this.Stats.FirstOrDefault(stat => stat.GetConfig().Id == id, null);
+        return this._stats.FirstOrDefault(stat => stat.GetConfig().Id == id, null);
     }
 }
 

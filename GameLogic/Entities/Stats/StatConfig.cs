@@ -133,24 +133,24 @@ public class StatConfig
 
 public class Stat : IStat
 {
-    public StatConfig Config { get; private set; }
+    private StatConfig _config { get; set; }
     public int BaseValue { get; private set; }
 
-    [SetsRequiredMembers]
     public Stat(StatConfig config)
     {
         this.ApplyConfig(config);
+        this.BaseValue = this._config.BaseValueFormula.CalculateValue();
     }
 
     public void ApplyConfig(StatConfig config)
     {
-        this.Config = config;
-        this.BaseValue = this.Config.BaseValueFormula.CalculateValue();
+        this._config = config;
+        this.BaseValue = this._config.BaseValueFormula.CalculateValue();
     }
 
     public StatConfig GetConfig()
     {
-        return this.Config;
+        return this._config;
     }
 
     public int GetModifiedValue()

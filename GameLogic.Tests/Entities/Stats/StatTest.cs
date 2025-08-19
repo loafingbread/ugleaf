@@ -32,7 +32,7 @@ public class StatTest : IClassFixture<StatTestFixture>
     {
         StatBlock statBlock = StatBlockFactory.CreateFromRecord(this._fixture.TestStatBlockRecord);
 
-        IStat strengthStat = statBlock.Stats[0];
+        IStat strengthStat = statBlock.GetStat("value_stat_strength");
         Assert.Equal("value_stat_strength", strengthStat.GetConfig().Id);
         Assert.Equal("Strength", strengthStat.GetConfig().DisplayName);
         Assert.Equal(
@@ -45,7 +45,7 @@ public class StatTest : IClassFixture<StatTestFixture>
         Assert.Equal(StatFormulaType.Constant, strengthStat.GetConfig().BaseValueFormula.Type);
         Assert.Equal(10, strengthStat.GetConfig().BaseValueFormula.CalculateValue());
 
-        IStat agilityStat = statBlock.Stats[1];
+        IStat agilityStat = statBlock.GetStat("value_stat_agility");
         Assert.Equal("value_stat_agility", agilityStat.GetConfig().Id);
         Assert.Equal("Agility", agilityStat.GetConfig().DisplayName);
         Assert.Equal(

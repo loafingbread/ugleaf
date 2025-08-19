@@ -4,7 +4,6 @@ using GameLogic.Config;
 
 public interface IStat : IConfigurable<StatConfig>
 {
-    public StatConfig Config { get; }
     public int BaseValue { get; }
 
     public int GetModifiedValue();
