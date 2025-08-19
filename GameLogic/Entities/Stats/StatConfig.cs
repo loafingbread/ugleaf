@@ -89,23 +89,6 @@ public record StatRecord : IStatRecord
     public int CurrentValue { get; init; }
 }
 
-// TODO: Add resource and derived stats. Examples of extending the record:
-// public record ResourceStatRecord : StatRecord
-// {
-//     public required int RegenRate { get; init; }
-// }
-
-// public record DerivedStatRecord : StatRecord
-// {
-//     public required Formula Formula { get; init; }
-// }
-
-// public record DerivedResourceStatRecord : ResourceStatRecord
-// {
-//     public required int RegenRate { get; init; }
-//     public required Formula Formula { get; init; }
-// }
-
 public class StatConfig
 {
     public required string Id { get; init; }
@@ -128,39 +111,5 @@ public class StatConfig
             record.BaseValueFormula
             ?? new StatFormula(StatFormulaType.Constant, new List<StatFormulaRecord>(), 0);
         this.ValueCap = record.ValueCap;
-    }
-}
-
-public class Stat : IStat
-{
-    private StatConfig _config { get; set; }
-    public int BaseValue { get; private set; }
-
-    public Stat(StatConfig config)
-    {
-        this.ApplyConfig(config);
-        this.BaseValue = this._config.BaseValueFormula.CalculateValue();
-    }
-
-    public void ApplyConfig(StatConfig config)
-    {
-        this._config = config;
-        this.BaseValue = this._config.BaseValueFormula.CalculateValue();
-    }
-
-    public StatConfig GetConfig()
-    {
-        return this._config;
-    }
-
-    public int GetModifiedValue()
-    {
-        // TODO: Add modifiers to base value formula
-        return this.BaseValue;
-    }
-
-    public int GetCurrentValue()
-    {
-        return this.BaseValue;
     }
 }
