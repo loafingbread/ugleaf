@@ -23,7 +23,7 @@ public class AttackEffect : Effect
     public AttackEffect(EffectConfig config)
         : base(config) { }
 
-    public EffectResult Apply(IUser user, ITargetable target)
+    public new EffectResult Apply(IUser user, ITargetable target)
     {
         AttackEffectConfig config = (AttackEffectConfig)this._config;
         return new EffectResult(

@@ -1,0 +1,399 @@
+{
+    "StatBlock": [
+        {
+            "Id": "value_stat_strength",
+            "DisplayName": "Strength",
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 10
+            },
+            "ValueCap": 100,
+            "Description": "Strength is a measure of your physical power.",
+            "Tags": ["physical", "strength"],
+            "Type": "Value"
+        },
+        {
+            "Id": "value_stat_vitality",
+            "DisplayName": "Vitality",
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 20
+            },
+            "ValueCap": 100,
+            "Description": "Vitality is a measure of your health.",
+            "Tags": ["physical", "vitality"],
+            "Type": "Value"
+        },
+        {
+            "Id": "value_stat_agility",
+            "DisplayName": "Agility",
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 30
+            },
+            "ValueCap": 100,
+            "Description": "Agility is a measure of your movement speed.",
+            "Tags": ["physical", "agility"],
+            "Type": "Value"
+        },
+        {
+            "Id": "value_stat_intelligence",
+            "DisplayName": "Intelligence",
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 40
+            },
+            "ValueCap": 100,
+            "Description": "Intelligence is a measure of your magical power.",
+            "Type": "Value"
+        },
+        {
+            "Id": "value_stat_luck",
+            "DisplayName": "Luck",
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 50
+            },
+            "ValueCap": 100,
+            "Description": "Luck is a measure of your chance to succeed.",
+            "Tags": ["magical", "luck"],
+            "Type": "Value"
+        },
+        {
+            "Id": "value_stat_fire_affinity",
+            "DisplayName": "Fire Affinity",
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 60
+            },
+            "ValueCap": 100,
+            "Description": "Fire affinity is a measure of your ability to resist fire damage.",
+            "Tags": ["magical", "fire", "affinity"],
+            "Type": "Value"
+        },
+        {
+            "Id": "value_stat_damage_favorism_wolves",
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 70
+            },
+            "ValueCap": 100,
+            "Description": "Damage favorism to wolves is a measure of your ability to deal more damage to wolves.",
+            "Tags": ["physical", "damage", "favorism", "wolves"],
+            "Type": "Value"
+        },
+        {
+            "Id": "Attack",
+            "DisplayName": "Attack",
+            "ValueCap": 100,
+            "Description": "Attack is a measure of your ability to deal damage.",
+            "Tags": ["physical", "attack"],
+            "Type": "Value",
+            "BaseValueFormula": {
+                "Type": "Add",
+                "Operands": [
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_strength" }]
+                    },
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_agility" }]
+                    }
+                ]
+            }
+        },
+        {
+            "Id": "MovementSpeed",
+            "DisplayName": "Movement Speed",
+            "ValueCap": 100,
+            "Description": "Movement speed is a measure of your movement speed.",
+            "Tags": ["physical", "movement_speed"],
+            "Type": "Value",
+            "BaseValueFormula": {
+                "Type": "Add",
+                "Operands": [
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_agility" }]
+                    },
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
+                    }
+                ]
+            }   
+        },
+        {
+            "Id": "Defense",
+            "DisplayName": "Defense",
+            "ValueCap": 100,
+            "Description": "Defense is a measure of your ability to resist damage.",
+            "Tags": ["physical", "defense"],
+            "Type": "Value",
+            "BaseValueFormula": {
+                "Type": "Add",
+                "Operands": [
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_agility" }]
+                    },
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
+                    }
+                ]
+            }
+        },
+        {
+            "Id": "resource_stat_health",
+            "DisplayName": "Health",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Health is a measure of your physical health.",
+            "Tags": ["physical", "health"]
+        },
+        {
+            "Id": "resource_stat_mana",
+            "DisplayName": "Mana",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Mana is a measure of your magical power.",
+            "Tags": ["magical", "mana"]
+        },
+        {
+            "Id": "resource_stat_stamina",
+            "DisplayName": "Stamina",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Stamina is a measure of your physical endurance.",
+            "Tags": ["physical", "stamina"]
+        },
+        {
+            "Id": "resource_stat_energy",
+            "DisplayName": "Energy",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Energy is a measure of your magical power.",
+            "Tags": ["magical", "energy"]
+        },
+        {
+            "Id": "resource_stat_frenzy_stack",
+            "DisplayName": "Frenzy Stack",
+            "Type": "Resource",
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "CurrentValue": 50,
+            "ValueCap": 1000,
+            "RegenRate": 10,
+            "Description": "Frenzy is a measure of your ability to attack quickly.",
+            "Tags": ["stack", "frenzy"]
+        },
+        {
+            "Id": "Resource_Health",
+            "ValueCap": 100,
+            "Description": "Health is a measure of your physical health.",
+            "Tags": ["physical", "health"],
+            "Type": "Resource",
+            "BaseValueFormula": {
+                "Type": "Add",
+                "Operands": [
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_vitality" }]
+                    },
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
+                    }
+                ]
+            }
+        },
+        {
+            "Id": "Resource_Mana",
+            "ValueCap": 100,
+            "Description": "Mana is a measure of your magical power.",
+            "Tags": ["magical", "mana"],
+            "Type": "Resource",
+            "BaseValueFormula": {
+                "Type": "Add",
+                "Operands": [
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.5 }, { "Type": "Reference", "Id": "value_stat_intelligence" }]
+                    },
+                    {
+                        "Type": "Multiply",
+                        "Operands": [{ "Type": "Constant", "Value": 0.3 }, { "Type": "Reference", "Id": "value_stat_strength" }]
+                    }
+                ]
+            }
+        }
+    ],
+    "ModifierSources": [
+        {
+            "Id": "modifier_source_passive_big_boned",
+            "DisplayName": "Big Boned",
+            "Description": "I am not fat I am just big boned.",
+            "Tags": ["passive", "big_boned"],
+            "Modifiers": [
+                {
+                    "Id": "modifier_passive_big_boned_strength",
+                    "Description": "I am not fat I am just big boned.",
+                    "Tags": ["passive", "big_boned"],
+                    "Value": 10,
+                    "StatId": "value_stat_strength"
+                },
+                {
+                    "Id": "modifier_passive_big_boned_vitality",
+                    "Description": "I am not fat I am just big boned.",
+                    "Tags": ["passive", "big_boned"],
+                    "Value": 10,
+                    "StatId": "value_stat_vitality"
+                }
+            ]
+        },
+        {
+            "Id": "modifier_source_passive_berserker",
+            "DisplayName": "Berserker",
+            "Description": "Gain +10 STR when HP is below 50%, Gain +10 Defense when HP is below 50%",
+            "Tags": ["passive", "berserker"],
+            "Modifiers": [
+                {
+                    "Id": "modifier_passive_berserker_strength",
+                    "Description": "Gain +10 STR when HP is below 50%",
+                    "Tags": ["passive", "berserker"],
+                    "Value": 10,
+                    "Type": "Flat",
+                    "StatId": "value_stat_strength", 
+                    "Condition": {
+                        "Type": "StatBelow",
+                        "Stat": "resource_stat_health",
+                        "Threshold": 0.5,
+                        "UsePercentage": true
+                    }
+                },
+                {
+                    "Id": "modifier_passive_berserker_defense",
+                    "Description": "Gain +10 Defense when HP is below 50%",
+                    "Tags": ["passive", "berserker"],
+                    "Value": 10,
+                    "Type": "Flat",
+                    "StatId": "derived_stat_defense",
+                    "Condition": {
+                        "Type": "StatBelow",
+                        "Stat": "resource_stat_health",
+                        "Threshold": 0.5,
+                        "UsePercentage": true
+                    }   
+                }
+            ]
+        },
+        {
+            "Id": "modifier_source_equipment_sword_of_the_dead",
+            "DisplayName": "Sword of the Dead",
+            "Description": "I am a sword of the dead.",
+            "Tags": ["equipment", "sword", "dead"],
+            "Modifiers": [
+                {
+                    "Id": "modifier_equipment_sword_of_the_dead_strength",
+                    "Description": "I am a sword of the dead.",
+                    "Tags": ["equipment", "sword", "dead"],
+                    "Value": 10,
+                    "ModifierType": "Flat",
+                    "StatId": "value_stat_strength"
+                }
+            ]
+        },
+        {
+            "Id": "modifier_source_buff_strength_of_a_thousand_men",
+            "DisplayName": "Strength of a Thousand Men",
+            "Description": "I am one thousand doods all at once",
+            "Tags": ["buff", "strength"],
+            "Duration": 10,
+            "Modifiers": [
+                {
+                    "Id": "modifier_buff_strength_of_a_thousand_men_strength",
+                    "Description": "I am one thousand doods all at once",
+                    "Tags": ["buff", "strength"],
+                    "Value": 10,
+                    "ModifierType": "PercentAdd",
+                    "StatId": "value_stat_strength"
+                }
+            ]
+        },
+        {
+            "Id": "modifier_source_trait_super_stabby",
+            "DisplayName": "Super Stabby",
+            "Description": "I am super stabby.",
+            "Tags": ["trait", "super_stabby"],
+            "Modifiers": [
+                {
+                    "Id": "modifier_trait_super_stabby_attack",
+                    "Description": "I am super stabby.",
+                    "Tags": ["trait", "super_stabby"],
+                    "Value": 10,
+                    "ModifierType": "PercentMul",
+                    "StatId": "derived_stat_attack"
+                }
+            ]
+        },
+        {
+            "Id": "modifier_source_debuff_weakness_to_fire",
+            "DisplayName": "Weakness to Fire",
+            "Description": "I am weak to fire.",
+            "Tags": ["debuff", "weakness", "fire"],
+            "Duration": 10,
+            "Modifiers": [
+                {
+                    "Id": "modifier_debuff_weakness_to_fire_strength",
+                    "Description": "I am weak to fire.",
+                    "Tags": ["debuff", "weakness", "fire"],
+                    "Value": -10,
+                    "StatId": "value_stat_fire_affinity"
+                }
+            ]
+        },
+        {
+            "Id": "modifier_source_title_wolf_slayer",
+            "DisplayName": "Wolf Slayer",
+            "Description": "I am a wolf slayer.",
+            "Tags": ["title", "wolf_slayer"],
+            "Modifiers": [
+                {
+                    "Id": "modifier_title_wolf_slayer_strength",
+                    "Description": "I am a wolf slayer.",
+                    "Tags": ["title", "wolf_slayer"],
+                    "Value": 10,
+                    "StatId": "value_stat_damage_favorism_wolves"
+                }
+            ]
+        }
+    ]
+}

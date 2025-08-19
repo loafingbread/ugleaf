@@ -1,53 +1,33 @@
-using GameLogic.Config;
-
 namespace GameLogic.Entities.Stats;
 
-public interface IStat : IConfigurable<StatConfig> { }
+using GameLogic.Config;
 
-public class Stat : IStat
+public interface IStat : IConfigurable<StatConfig>
 {
-    private StatConfig _config { get; set; }
+    public StatConfig Config { get; }
+    public int BaseValue { get; }
 
-    public Stat(StatConfig config)
-    {
-        this._config = config;
-    }
-
-    public void ApplyConfig(StatConfig config)
-    {
-        this._config = config;
-    }
-
-    public StatConfig GetConfig()
-    {
-        return this._config;
-    }
+    public int GetModifiedValue();
+    public int GetCurrentValue();
 }
 
-public class StatBlock : IConfigurable<StatBlockConfig>
-{
-    private StatBlockConfig _config { get; set; }
-    public List<Stat> Stats { get; } = new();
+// public class ValueStat : IStat
+// {
+//     private StatConfig _config { get; set; }
+//     public string Id { get; private set; } = "";
 
-    public StatBlock(StatBlockConfig config)
-    {
-        this._config = config;
-        this.ApplyConfig(config);
-    }
+//     public ValueStat(StatConfig config)
+//     {
+//         this._config = config;
+//     }
 
-    public void ApplyConfig(StatBlockConfig config)
-    {
-        this._config = config;
+//     public void ApplyConfig(StatConfig config)
+//     {
+//         this._config = config;
+//     }
 
-        this.Stats.Clear();
-        foreach(StatConfig statConfig in config.Stats){
-            Stat stat = new (statConfig);
-            this.Stats.Add(stat);
-        }
-    }
-
-    public StatBlockConfig GetConfig()
-    {
-        return _config;
-    }
-}
+//     public StatConfig GetConfig()
+//     {
+//         return this._config;
+//     }
+// }
