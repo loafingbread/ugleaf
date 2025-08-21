@@ -4,26 +4,23 @@ using System.Diagnostics.CodeAnalysis;
 
 public record StatBlockRecord
 {
-    public required List<StatRecord> Stats { get; init; } = new();
+    public required List<ValueStatRecord> ValueStats { get; init; } = new();
+    public required List<ResourceStatRecord> ResourceStats { get; init; } = new();
 }
 
 public class StatBlockConfig
 {
-    private readonly List<StatConfig> _configs;
+    private readonly List<StatConfig> _configs { get; } = new();
 
     [SetsRequiredMembers]
     public StatBlockConfig(StatBlockRecord record)
     {
-        this._configs = record.Stats.Select(stat => new StatConfig(stat)).ToList();
+        this._configs.AddRange(record.ValueStats.Select(stat => new ValueStatConfig(stat)));
+        this._configs.AddRange(record.ResourceStats.Select(stat => new ResourceStatConfig(stat)));
     }
 
     public List<StatConfig> GetAll()
     {
         return this._configs;
-    }
-
-    public StatConfig Get(string id)
-    {
-        return this._configs.FirstOrDefault(config => config.Id == id, null);
     }
 }

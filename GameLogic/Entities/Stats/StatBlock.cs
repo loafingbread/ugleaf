@@ -22,7 +22,7 @@ public class StatBlock : IConfigurable<StatBlockConfig>
         this._stats.Clear();
         foreach (StatConfig statConfig in config.GetAll())
         {
-            this._stats.Add((IStat)new Stat(statConfig));
+            this._stats.Add(statConfig.CreateStat());
         }
     }
 

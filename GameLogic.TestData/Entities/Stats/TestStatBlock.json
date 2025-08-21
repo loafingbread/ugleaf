@@ -1,15 +1,16 @@
 {
-    "Stats": [
+    "ValueStats": [
         {
             "Id": "value_stat_strength",
             "DisplayName": "Strength",
             "Description": "Strength is a measure of your physical power.",
             "Tags": ["physical", "strength"],
             "Type": "Value",
-            "ValueCap": 100,
+            "BaseValueCap": 50,
+            "CurrentValueCap": 70,
             "BaseValueFormula": {
                 "Type": "Constant",
-                "Value": 10
+                "Value": 20
             }
         },
         {
@@ -18,11 +19,28 @@
             "Description": "Agility is a measure of your movement speed.",
             "Tags": ["physical", "agility"],
             "Type": "Value",
-            "ValueCap": 100,
+            "BaseValueCap": 60,
+            "CurrentValueCap": 80,
             "BaseValueFormula": {
                 "Type": "Constant",
                 "Value": 30
             }
+        }
+    ],
+    "ResourceStats": [
+        {
+            "Id": "resource_stat_health",
+            "DisplayName": "Health",
+            "Description": "Health is a measure of your healthiness. You die when it reaches 0.",
+            "Tags": ["physical", "health"],
+            "Type": "Resource",
+            "BaseMaxValueCap": 200,
+            "CurrentMaxValueCap": 300,
+            "BaseMaxValueFormula": {
+                "Type": "Constant",
+                "Value": 100
+            },
+            "StartingCurrentValue": 80
         }
     ]
 }

@@ -18,20 +18,12 @@ public interface IStatRecord
 
     // Type of the stat
     public StatType Type { get; }
-
-    // Value cap for the stat
-    public int ValueCap { get; }
-
-    // Base value formula for the stat
-    public StatFormula BaseValueFormula { get; }
 }
 
 public enum StatType
 {
     Value,
     Resource,
-    Add,
-    Multiply,
 }
 
 public record StatFormulaRecord
@@ -77,16 +69,29 @@ public enum StatFormulaType
     Derived,
 }
 
-public record StatRecord : IStatRecord
+public record ValueStatRecord : IStatRecord
 {
     public required string Id { get; init; }
     public required string DisplayName { get; init; }
     public required string Description { get; init; }
     public required List<string> Tags { get; init; }
     public required StatType Type { get; init; }
-    public required int ValueCap { get; init; }
+    public required int BaseValueCap { get; init; }
+    public required int CurrentValueCap { get; init; }
     public required StatFormula BaseValueFormula { get; init; }
-    public int CurrentValue { get; init; }
+}
+
+public record ResourceStatRecord : IStatRecord
+{
+    public required string Id { get; init; }
+    public required string DisplayName { get; init; }
+    public required string Description { get; init; }
+    public required List<string> Tags { get; init; }
+    public required StatType Type { get; init; }
+    public required int BaseMaxValueCap { get; init; }
+    public required int CurrentMaxValueCap { get; init; }
+    public required StatFormula BaseMaxValueFormula { get; init; }
+    public required int StartingCurrentValue { get; init; }
 }
 
 public class StatConfig
@@ -96,8 +101,11 @@ public class StatConfig
     public required string Description { get; init; }
     public required List<string> Tags { get; init; }
     public required StatType Type { get; init; }
+    public required int BaseValueCap { get; init; }
+    public required int CurrentValueCap { get; init; }
     public required StatFormula BaseValueFormula { get; init; }
-    public required int ValueCap { get; init; }
+    public required StatFormula BaseMaxValueFormula { get; init; }
+    public required int StartingCurrentValue { get; init; }
 
     [SetsRequiredMembers]
     public StatConfig(IStatRecord record)
@@ -107,9 +115,54 @@ public class StatConfig
         this.Description = record.Description;
         this.Tags = record.Tags ?? new List<string>();
         this.Type = record.Type;
-        this.BaseValueFormula =
-            record.BaseValueFormula
-            ?? new StatFormula(StatFormulaType.Constant, new List<StatFormulaRecord>(), 0);
-        this.ValueCap = record.ValueCap;
+        this.BaseValueCap = record.BaseValueCap;
+        this.CurrentValueCap = record.CurrentValueCap;
+        this.BaseValueFormula = record.BaseValueFormula;
+        this.BaseMaxValueFormula = record.BaseMaxValueFormula;
+        this.StartingCurrentValue = record.StartingCurrentValue;
+    }
+
+    public IStat CreateStat()
+    {
+        switch (this.Type)
+        {
+            case StatType.Value:
+                return new ValueStat(this);
+            case StatType.Resource:
+                return new ResourceStat(this);
+            default:
+                throw new Exception($"Invalid stat type: {this.Type}");
+        }
+    }
+}
+
+public class ValueStatConfig : StatConfig
+{
+    public required StatFormula BaseValueFormula { get; init; }
+    public required int BaseValueCap { get; init; }
+
+    [SetsRequiredMembers]
+    public ValueStatConfig(ValueStatRecord record)
+        : base(record)
+    {
+        this.BaseValueFormula = record.BaseValueFormula;
+        this.BaseValueCap = record.BaseValueCap;
+    }
+}
+
+public class ResourceStatConfig : StatConfig
+{
+    public required StatFormula BaseMaxValueFormula { get; init; }
+    public required int BaseMaxValueCap { get; init; }
+    public required int CurrentMaxValueCap { get; init; }
+    public required int StartingCurrentValue { get; init; }
+
+    [SetsRequiredMembers]
+    public ResourceStatConfig(ResourceStatRecord record)
+        : base(record)
+    {
+        this.BaseMaxValueFormula = record.BaseMaxValueFormula;
+        this.BaseMaxValueCap = record.BaseMaxValueCap;
+        this.CurrentValue = record.CurrentValue;
     }
 }
