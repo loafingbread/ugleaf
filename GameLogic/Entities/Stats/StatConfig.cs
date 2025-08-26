@@ -94,6 +94,23 @@ public record ResourceStatRecord : IStatRecord
     public required int StartingCurrentValue { get; init; }
 }
 
+public class StatMetadata
+{
+    public required string Id { get; init; }
+    public required string DisplayName { get; init; }
+    public required string Description { get; init; }
+    public required List<string> Tags { get; init; }
+    public required StatType Type { get; init; }
+
+    public StatMetadata(IStatRecord record)
+    {
+        this.Id = record.Id;
+        this.DisplayName = record.DisplayName;
+        this.Description = record.Description;
+        this.Tags = record.Tags ?? new List<string>();
+    }
+}
+
 public class StatConfig
 {
     public required string Id { get; init; }
