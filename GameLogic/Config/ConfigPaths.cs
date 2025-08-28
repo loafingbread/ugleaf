@@ -55,4 +55,14 @@ public static class ConfigPaths
         );
         public static readonly string TestStatBlock = Path.Combine(Folder, "TestStatBlock.json");
     }
+
+    public static class GameState
+    {
+        public static readonly string Folder = Path.Combine(
+            BasePath,
+            "GameLogic.TestData/Entities/GameState/"
+        );
+
+        public static readonly string Simple = Path.Combine(Folder, "Simple.json");
+    }
 }

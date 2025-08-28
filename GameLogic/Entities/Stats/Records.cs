@@ -3,7 +3,12 @@ namespace GameLogic.Entities.Stats;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-public record StatBlockRecord
+public interface IStatBlockRecord
+{
+    public List<StatRecord> Stats { get; init; }
+}
+
+public record StatBlockRecord : IStatBlockRecord
 {
     public required List<StatRecord> Stats { get; init; } = new();
 }

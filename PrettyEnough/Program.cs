@@ -1,6 +1,7 @@
 namespace PrettyEnough;
 
 using GameLogic.Config;
+using GameLogic.Entities;
 using GameLogic.Entities.Stats;
 using PrettyEnough.Commands;
 using PrettyEnough.UI;
@@ -34,20 +35,19 @@ class Program
         try
         {
             // Load test stat block
-            var statBlockRecord = await Task.Run(() =>
-                JsonConfigLoader.LoadFromFile<StatBlockRecord>(ConfigPaths.Stat.TestStatBlock)
+            var gameStateRecord = await Task.Run(() =>
+                JsonConfigLoader.LoadFromFile<GameStateRecord>(ConfigPaths.GameState.Simple)
             );
 
-            gameState = new GameState
-            {
-                StatBlock = StatFactory.CreateStatBlockFromRecord(statBlockRecord),
-            };
+            gameState = GameStateFactory.CreateFromRecord(gameStateRecord);
+            if (gameState == null)
+                throw new Exception("Game state failed to be created");
 
             ui.PrintSuccess("✅ Game initialized successfully!");
-            ui.PrintInfo($"📊 Loaded {gameState.StatBlock.Stats.Count} stats");
+            ui.PrintInfo($"📊 Loaded {gameState.PlayerState.Characters.Count} characters");
 
-            // Display initial stats
-            DisplayStats();
+            // Display initial player state
+            CharactersCommand.DisplayCharacters(gameState.PlayerState.Characters, ui);
         }
         catch (Exception ex)
         {
@@ -100,27 +100,26 @@ class Program
         }
     }
 
-    private static void DisplayStats()
+    private static void DisplayPlayerState()
     {
-        if (gameState?.StatBlock == null)
+        if (gameState?.PlayerState == null)
             return;
 
-        ui.PrintSection("📊 Current Stats");
+        ui.PrintSection("📊 Current Player State");
 
-        foreach (var stat in gameState.StatBlock.Stats)
+        foreach (var character in gameState.PlayerState.Characters)
         {
-            var statType = stat.Type switch
-            {
-                StatType.Value => "📈",
-                StatType.Resource => "💧",
-                _ => "❓",
-            };
+            ui.PrintInfo($"{character.GetConfig().Name} ({character.GetConfig().Id})");
 
-            ui.PrintInfo($"{statType} {stat.Metadata.DisplayName} ({stat.Metadata.Name})");
-            ui.PrintInfo($"   Current: {stat.CurrentValue}");
-            ui.PrintInfo($"   Base: {stat.BaseValue}");
-            ui.PrintInfo($"   Description: {stat.Metadata.Description}");
-            ui.PrintInfo($"   Tags: {string.Join(", ", stat.Metadata.Tags)}");
+            Stat strengthStat = character.Stats.GetStat("value_stat_strength", StatType.Value);
+            ui.PrintInfo($"   {strengthStat?.Metadata.DisplayName}: {strengthStat?.CurrentValue}");
+
+            Stat agilityStat = character.Stats.GetStat("value_stat_agility", StatType.Value);
+            ui.PrintInfo($"   {agilityStat?.Metadata.DisplayName}: {agilityStat?.CurrentValue}");
+
+            Stat healthStat = character.Stats.GetStat("resource_stat_health", StatType.Resource);
+            ui.PrintInfo($"   {healthStat?.Metadata.DisplayName}: {healthStat?.CurrentValue}");
+
             ui.PrintInfo("");
         }
     }

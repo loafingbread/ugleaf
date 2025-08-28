@@ -1,3 +1,4 @@
+using GameLogic.Entities;
 using PrettyEnough.UI;
 
 namespace PrettyEnough.Commands;

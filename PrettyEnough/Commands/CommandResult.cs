@@ -12,16 +12,12 @@ public class CommandResult
         {
             Success = true,
             Message = message,
-            Data = data
+            Data = data,
         };
     }
 
     public static CommandResult Error(string message)
     {
-        return new CommandResult
-        {
-            Success = false,
-            Message = message
-        };
+        return new CommandResult { Success = false, Message = message };
     }
 }

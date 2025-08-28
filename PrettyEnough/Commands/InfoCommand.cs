@@ -1,3 +1,4 @@
+using GameLogic.Entities;
 using GameLogic.Entities.Stats;
 using PrettyEnough.UI;
 
@@ -11,35 +12,20 @@ public class InfoCommand : ICommand
 
     public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)
     {
-        if (gameState?.StatBlock == null)
-            return CommandResult.Error("No game state available");
+        if (gameState?.PlayerState?.Characters == null)
+            return CommandResult.Error("No player characters state available");
 
         ui.PrintSection("ℹ️  Game State Information");
 
-        // Stat block info
-        ui.PrintInfo($"📦 Stat Block: {gameState.StatBlock.Stats.Count} stats loaded");
+        // Characters info
+        ui.PrintInfo($"📦 Characters: {gameState.PlayerState.Characters.Count} characters loaded");
 
-        // Stat breakdown
-        var valueStats = gameState.StatBlock.Stats.Where(s => s.Type == StatType.Value).Count();
-        var resourceStats = gameState
-            .StatBlock.Stats.Where(s => s.Type == StatType.Resource)
-            .Count();
-
-        ui.PrintInfo($"📈 Value Stats: {valueStats}");
-        ui.PrintInfo($"💧 Resource Stats: {resourceStats}");
-
-        // Available stat names
+        // Available characters
         ui.PrintInfo("");
-        ui.PrintInfo("📋 Available Stats:");
-        foreach (var stat in gameState.StatBlock.Stats)
+        ui.PrintInfo("📋 Available Characters:");
+        foreach (var character in gameState.PlayerState.Characters)
         {
-            var typeIcon = stat.Type switch
-            {
-                StatType.Value => "📈",
-                StatType.Resource => "💧",
-                _ => "❓",
-            };
-            ui.PrintInfo($"   {typeIcon} {stat.Metadata.Name} ({stat.Metadata.DisplayName})");
+            ui.PrintInfo($"   {character.GetConfig().Name} ({character.GetConfig().Id})");
         }
 
         return await Task.FromResult(CommandResult.Ok());

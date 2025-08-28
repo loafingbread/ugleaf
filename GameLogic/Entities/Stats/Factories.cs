@@ -15,7 +15,7 @@ public static class StatFactory
         }
     }
 
-    public static StatBlock CreateStatBlockFromRecord(StatBlockRecord record)
+    public static StatBlock CreateStatBlockFromRecord(IStatBlockRecord record)
     {
         return new StatBlock(record);
     }

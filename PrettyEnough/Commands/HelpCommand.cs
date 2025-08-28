@@ -1,3 +1,4 @@
+using GameLogic.Entities;
 using PrettyEnough.UI;
 
 namespace PrettyEnough.Commands;
@@ -49,9 +50,9 @@ public class HelpCommand : ICommand
         return new ICommand[]
         {
             new HelpCommand(),
-            new StatsCommand(),
-            new ModifyStatCommand(),
-            new SetStatCommand(),
+            new CharactersCommand(),
+            // new ModifyStatCommand(),
+            // new SetStatCommand(),
             new InfoCommand(),
             new ClearCommand(),
         };
