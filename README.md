@@ -13,6 +13,7 @@ dotnet build
 ```
 
 **Clean**
+Warnings are only shown the first time a build is run. If you want to see them again you'll need to run a clean first.
 ```bash
 dotnet clean
 ```

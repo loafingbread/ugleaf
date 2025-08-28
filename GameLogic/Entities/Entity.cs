@@ -136,6 +136,9 @@ public class Entity : ITargeter, ITargetable, IAffectable, IUser
         this._targeter = new Targeter(config);
     }
 
+    // TODO: Need to make this nullable. But cannot do that without breaking changes.
+    // Need to fix Configurable interface to allow for nullable configs. Fix this
+    // everywhere else
     public TargeterConfig GetConfig()
     {
         return this._targeterConfig;

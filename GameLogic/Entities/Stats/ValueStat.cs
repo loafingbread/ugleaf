@@ -1,39 +1,40 @@
 namespace GameLogic.Entities.Stats;
 
-public class ValueStat
+/// <summary>
+/// A value stat is a stat that has a base value and a current value.
+/// The base value is the value of the stat with no modifiers.
+/// The current value is the value of the stat with modifiers.
+/// </summary>
+public class ValueStat : Stat
 {
-    public ValueStatMetadata Metadata { get; init; }
-
-    public int BaseValue { get; private set; }
-    public int CurrentValue { get; private set; }
-
-    private StatModifiers _modifiers { get; init; }
-
-    public ValueStat(ValueStatMetadata metadata, StatModifiers modifiers)
+    public ValueStat(StatRecord record)
+        : base(record)
     {
-        this.Metadata = metadata;
-
-        this.BaseValue = metadata.BaseValueFormula.CalculateValue();
+        this.BaseValue = this.GetConfig().BaseValueFormula.CalculateValue();
         this.CurrentValue = this.BaseValue;
-
-        this._modifiers = modifiers;
     }
 
-    /// <summary>
-    /// Checks if the stat is derived from a formula or a constant.
-    ///
-    /// If the stat is derived from a formula, the base value should be calculated using the formula
-    /// every time the stat is refreshed.
-    /// 
-    /// If the stat is a constant, the base value should be set using the constant formula and
-    /// updated with ChangeBaseValue method. Formula should never be used except during initialization.
-    /// </summary>
-    /// <returns>
-    /// <c>true</c> if the stat is derived from a formula, <c>false</c> if it is a constant.
-    /// </returns>
-    public bool IsFormulaCalculated()
+    public ValueStatConfigRecord GetConfig()
     {
-        return this.Metadata.BaseValueFormula.Type == StatFormulaType.Constant ? false : true;
+        return (ValueStatConfigRecord)this.Config;
+    }
+
+    public override bool IsFormulaCalculated()
+    {
+        return this.GetConfig().BaseValueFormula.Type == StatFormulaType.Constant ? false : true;
+    }
+
+    public override void OnUpdate()
+    {
+        if (this.IsFormulaCalculated())
+        {
+            this.BaseValue = this.GetConfig().BaseValueFormula.CalculateValue();
+        }
+
+        this.CurrentValue = this.Modifiers.GetModifiedValueFromBase(
+            this.Metadata.Name,
+            this.BaseValue
+        );
     }
 
     /// <summary>
@@ -53,34 +54,10 @@ public class ValueStat
             return;
         }
 
-        this.BaseValue = System.Math.Clamp(this.BaseValue + amount, 0, this.Metadata.BaseValueCap);
-    }
-
-    /// <summary>
-    /// Refreshes stat value to reflect the current base value and current modifiers.
-    ///
-    /// Recalculates the base value if the stat is derived from a formula otherwise
-    /// it uses the current base value.
-    ///
-    /// Should be called before reading the stat to get latest value.
-    /// </summary>
-    public void Refresh()
-    {
-        if (this.IsFormulaCalculated())
-        {
-            this.BaseValue = this.Metadata.BaseValueFormula.CalculateValue();
-        }
-
-        this.CurrentValue = this._modifiers.GetModifiedValueFromBase(
-            this.Metadata.Id,
-            this.BaseValue
+        this.BaseValue = System.Math.Clamp(
+            this.BaseValue + amount,
+            0,
+            this.GetConfig().BaseValueCap
         );
     }
-}
-
-public class ValueStatMetadata : StatMetadata
-{
-    public required int BaseValueCap { get; init; }
-    public required StatFormula BaseValueFormula { get; init; }
-    public required int CurrentValueCap { get; init; }
 }

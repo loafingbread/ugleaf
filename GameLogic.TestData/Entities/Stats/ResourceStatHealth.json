@@ -1,0 +1,19 @@
+
+        {
+            "Type": "Resource",
+            "Metadata": {
+                "Name": "resource_stat_health",
+                "DisplayName": "Health",
+                "Description": "Health is a measure of your healthiness. You die when it reaches 0.",
+                "Tags": ["physical", "health"]
+            },
+            "Config": {
+                "BaseCapacityCap": 200,
+                "CurrentCapacityCap": 300,
+                "StartingCurrentValue": 80,
+                "BaseCapacityFormula": {
+                    "Type": "Constant",
+                    "Value": 100
+                }
+            }
+        }

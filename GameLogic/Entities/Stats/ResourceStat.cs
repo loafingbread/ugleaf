@@ -1,40 +1,42 @@
 namespace GameLogic.Entities.Stats;
 
-class ResourceStat
+/// <summary>
+/// A resource stat is a stat that has a base capacity and a current capacity.
+/// The base capacity is the maximum value of the resource with no modifiers.
+/// The current capacity is the maximum value of the resource with modifiers.
+/// </summary>
+public class ResourceStat : Stat
 {
-    public ResourceStatMetadata Metadata { get; init; }
     public int BaseCapacity { get; private set; }
     public int CurrentCapacity { get; private set; }
-    public int BaseValue { get; private set; }
-    public int CurrentValue { get; private set; }
 
-    private StatModifiers _modifiers { get; init; }
-
-    public ResourceStat(ResourceStatMetadata metadata, StatModifiers modifiers)
+    public ResourceStat(StatRecord record)
+        : base(record)
     {
-        this.Metadata = metadata;
-
-        this.BaseCapacity = metadata.BaseCapacityFormula.CalculateValue();
+        this.BaseCapacity = this.GetConfig().BaseCapacityFormula.CalculateValue();
         this.CurrentCapacity = this.BaseCapacity;
-        this.CurrentValue = this.SetCurrentValue(metadata.StartingCurrentValue);
-
-        this._modifiers = modifiers;
+        this.SetCurrentValue(this.GetConfig().StartingCurrentValue);
     }
 
-    void IsFormulaCalculated()
+    public ResourceStatConfigRecord GetConfig()
     {
-        return this.Metadata.BaseCapacityFormula.Type == StatFormulaType.Constant ? false : true;
+        return (ResourceStatConfigRecord)this.Config;
     }
 
-    public void Refresh()
+    public override bool IsFormulaCalculated()
+    {
+        return this.GetConfig().BaseCapacityFormula.Type == StatFormulaType.Constant ? false : true;
+    }
+
+    public override void OnUpdate()
     {
         if (this.IsFormulaCalculated())
         {
-            this.BaseCapacity = this.Metadata.BaseCapacityFormula.CalculateValue();
+            this.BaseCapacity = this.GetConfig().BaseCapacityFormula.CalculateValue();
         }
 
-        this.CurrentCapacity = this._modifiers.GetModifiedValueFromBase(
-            this.Metadata.Id,
+        this.CurrentCapacity = this.Modifiers.GetModifiedValueFromBase(
+            this.Metadata.Name,
             this.BaseCapacity
         );
 
@@ -42,6 +44,12 @@ class ResourceStat
         this.SetCurrentValue(this.CurrentValue);
     }
 
+    /// <summary>
+    /// Sets the base capacity of the stat and updates the current capacity to match.
+    /// Base capacity should be the same as the current capacity.
+    /// </summary>
+    /// <param name="value">
+    /// The value to set the base capacity to.
     public void SetBaseCapacity(int value)
     {
         if (this.IsFormulaCalculated())
@@ -52,11 +60,7 @@ class ResourceStat
             return;
         }
 
-        this.BaseCapacity = System.Math.Clamp(
-            this.BaseCapacity + amount,
-            0,
-            this.Metadata.BaseCapacityCap
-        );
+        this.BaseCapacity = System.Math.Clamp(value, 0, this.GetConfig().BaseCapacityCap);
     }
 
     /// <summary>
@@ -72,12 +76,4 @@ class ResourceStat
         this.CurrentValue = System.Math.Clamp(value, 0, this.CurrentCapacity);
         this.BaseValue = this.CurrentValue;
     }
-}
-
-class ResourceStatMetadata : StatMetadata
-{
-    public required int BaseCapacityCap { get; init; }
-    public required int CurrentCapacityCap { get; init; }
-    public required StatFormula BaseCapacityFormula { get; init; }
-    public required int StartingCurrentValue { get; init; }
 }

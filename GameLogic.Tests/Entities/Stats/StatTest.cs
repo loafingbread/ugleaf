@@ -13,49 +13,48 @@ public class StatTest : IClassFixture<StatTestFixture>
     }
 
     [Fact]
-    public void Stat_CanLoadFromFile()
+    public void ValueStat_CanLoadFromFile()
     {
-        IStat stat = StatBlockFactory.CreateStatFromRecord(this._fixture.StrengthRecord);
+        Stat stat = StatFactory.CreateStatFromRecord(this._fixture.ValueStatStrengthRecord);
 
-        Assert.Equal("value_stat_strength", stat.GetConfig().Id);
-        Assert.Equal("Strength", stat.GetConfig().DisplayName);
-        Assert.Equal("Strength is a measure of your physical power.", stat.GetConfig().Description);
-        Assert.Equal(["physical", "strength"], stat.GetConfig().Tags);
-        Assert.Equal(StatType.Value, stat.GetConfig().Type);
-        Assert.Equal(100, stat.GetConfig().ValueCap);
-        Assert.Equal(StatFormulaType.Constant, stat.GetConfig().BaseValueFormula.Type);
-        Assert.Equal(10, stat.GetConfig().BaseValueFormula.CalculateValue());
+        Assert.IsType<ValueStat>(stat);
+        Assert.Equal(StatType.Value, stat.Type);
+
+        Assert.Equal("value_stat_strength", stat.Metadata.Name);
+        Assert.Equal("Strength", stat.Metadata.DisplayName);
+        Assert.Equal("Strength is a measure of your physical power.", stat.Metadata.Description);
+        Assert.Equal(["physical", "strength"], stat.Metadata.Tags);
+
+        ValueStatConfigRecord valueStatConfig = ((ValueStat)stat).GetConfig()!;
+        Assert.Equal(50, valueStatConfig.BaseValueCap);
+        Assert.Equal(70, valueStatConfig.CurrentValueCap);
+        Assert.Equal(StatFormulaType.Constant, valueStatConfig.BaseValueFormula.Type);
+        Assert.Equal(20, valueStatConfig.BaseValueFormula.CalculateValue());
     }
 
     [Fact]
-    public void StatBlock_CanLoadFromFile()
+    public void ResourceStat_CanLoadFromFile()
     {
-        StatBlock statBlock = StatBlockFactory.CreateFromRecord(this._fixture.TestStatBlockRecord);
+        Stat stat = StatFactory.CreateStatFromRecord(this._fixture.ResourceStatHealthRecord);
 
-        IStat strengthStat = statBlock.GetStat("value_stat_strength");
-        Assert.Equal("value_stat_strength", strengthStat.GetConfig().Id);
-        Assert.Equal("Strength", strengthStat.GetConfig().DisplayName);
-        Assert.Equal(
-            "Strength is a measure of your physical power.",
-            strengthStat.GetConfig().Description
-        );
-        Assert.Equal(["physical", "strength"], strengthStat.GetConfig().Tags);
-        Assert.Equal(StatType.Value, strengthStat.GetConfig().Type);
-        Assert.Equal(100, strengthStat.GetConfig().ValueCap);
-        Assert.Equal(StatFormulaType.Constant, strengthStat.GetConfig().BaseValueFormula.Type);
-        Assert.Equal(10, strengthStat.GetConfig().BaseValueFormula.CalculateValue());
+        Assert.IsType<ResourceStat>(stat);
+        Assert.Equal(StatType.Resource, stat.Type);
 
-        IStat agilityStat = statBlock.GetStat("value_stat_agility");
-        Assert.Equal("value_stat_agility", agilityStat.GetConfig().Id);
-        Assert.Equal("Agility", agilityStat.GetConfig().DisplayName);
+        Assert.Equal("resource_stat_health", stat.Metadata.Name);
+        Assert.Equal("Health", stat.Metadata.DisplayName);
         Assert.Equal(
-            "Agility is a measure of your movement speed.",
-            agilityStat.GetConfig().Description
+            "Health is a measure of your healthiness. You die when it reaches 0.",
+            stat.Metadata.Description
         );
-        Assert.Equal(["physical", "agility"], agilityStat.GetConfig().Tags);
-        Assert.Equal(StatType.Value, agilityStat.GetConfig().Type);
-        Assert.Equal(100, agilityStat.GetConfig().ValueCap);
-        Assert.Equal(StatFormulaType.Constant, agilityStat.GetConfig().BaseValueFormula.Type);
-        Assert.Equal(30, agilityStat.GetConfig().BaseValueFormula.CalculateValue());
+        Assert.Equal(["physical", "health"], stat.Metadata.Tags);
+
+        ResourceStatConfigRecord resourceStatConfig = ((ResourceStat)stat).GetConfig()!;
+        Assert.Equal(200, resourceStatConfig.BaseCapacityCap);
+        Assert.Equal(300, resourceStatConfig.CurrentCapacityCap);
+        Assert.Equal(80, resourceStatConfig.StartingCurrentValue);
+        Assert.Equal(StatFormulaType.Constant, resourceStatConfig.BaseCapacityFormula.Type);
+        Assert.Equal(100, resourceStatConfig.BaseCapacityFormula.CalculateValue());
+
+        Assert.Equal(resourceStatConfig.StartingCurrentValue, stat.CurrentValue);
     }
 }

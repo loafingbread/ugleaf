@@ -6,14 +6,34 @@ public class StatModifiers
 
     public StatModifiers() { }
 
-    public void AddModifier(StatModifier modifier)
+    /// <summary>
+    /// Adds a modifier to the stat modifiers.
+    /// </summary>
+    /// <param name="modifier">The modifier to add.</param>
+    /// <returns>True if the modifier was added, false if the modifier already exists and was updated.</returns>
+    public bool AddModifier(StatModifier modifier)
     {
-        this.Modifiers.Add(modifier);
+        StatModifier? existingModifier = this.Modifiers.FirstOrDefault(
+            (StatModifier? m) => m?.StatId == modifier.StatId && m?.Type == modifier.Type
+        );
+        if (existingModifier == null)
+        {
+            this.Modifiers.Add(modifier);
+            return true;
+        }
+
+        // If the modifier already exists, update it by either:
+        // 1. Adding the value to the existing modifier and extending the duration
+        // 2. Just extending the duration
+        // 3. Overwriting the existing modifier
+        // 4. Some unique or other way to evolve the modifier
+
+        return false;
     }
 
     public bool RemoveModifier(StatModifier modifier)
     {
-        this.Modifiers.Remove(modifier);
+        return this.Modifiers.Remove(modifier);
     }
 
     public int GetModifiedValueFromBase(string statId, int baseValue)

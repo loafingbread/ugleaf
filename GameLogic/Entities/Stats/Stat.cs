@@ -1,51 +1,47 @@
 namespace GameLogic.Entities.Stats;
 
-using GameLogic.Config;
-public class Stat : IConfigurable<StatConfig>
+/// <summary>
+/// A stat is a value that can be modified by modifiers.
+/// </summary>
+public abstract class Stat
 {
-    public StatConfig Config { get; }
-    public StatModifiers Modifiers { get; } = new StatModifiers();
-    public int BaseValue { get; }
-    public int CurrentValue { get; }
-    public int BaseMaxValue { get; }
-    public int CurrentMaxValue { get; }
+    public StatMetadataRecord Metadata { get; init; }
+    public IStatConfigRecord Config { get; init; }
+    public StatType Type { get; init; }
 
-    public Stat(StatConfig config)
+    public StatModifiers Modifiers { get; private set; } = new();
+    public int BaseValue { get; protected set; }
+    public int CurrentValue { get; protected set; }
+
+    public Stat(StatRecord record)
     {
-        this.Config = config;
-        this.BaseValue = config.BaseValueFormula?.CalculateValue() ?? -1;
-        this.CurrentValue = config.StartingCurrentValue;
-        this.BaseMaxValue = config.BaseMaxValueFormula?.CalculateValue() ?? -1;
+        this.Metadata = record.Metadata;
+        this.Config = record.Config;
+        this.Type = record.Type;
+        this.Modifiers = new StatModifiers();
     }
 
-    protected int UpdateCurrentValue(int startingValue, StatModifier modifier)
-    {
-        if (startingValue >= 0)
-        {
-            this.CurrentValue = startingValue;
-        }
-        else
-        {
-            this.CurrentValue = this.BaseValue;
-        }
-    }
+    /// <summary>
+    /// Checks if the stat is derived from a formula or a constant.
+    ///
+    /// If the stat is derived from a formula, the base value should be calculated using the formula
+    /// every time the stat is refreshed.
+    ///
+    /// If the stat is a constant, the base value should be set using the constant formula and
+    /// updated with ChangeBaseValue method. Formula should never be used except during initialization.
+    /// </summary>
+    /// <returns>
+    /// <c>true</c> if the stat is derived from a formula, <c>false</c> if it is a constant.
+    /// </returns>
+    public abstract bool IsFormulaCalculated();
 
-
-
-    public int UpdateCurrentValue(int amount)
-    {
-        this.CurrentValue = System.Math.
-    }
-    public int GetCurrentMaxValue()
-    {
-        return this._currentMaxValue;
-    }
-
-    public int UpdateBaseValue(int amount);
-
-    public int GetCurrentMaxValue();
-    public int UpdateCurrentMaxValue(int amount);
-
-    public int GetCurrentValue();
-    public int UpdateCurrentValue(int amount);
+    /// <summary>
+    /// Updates the stat value to reflect the current base value and current modifiers.
+    ///
+    /// Recalculates the base value if the stat is derived from a formula otherwise
+    /// it uses the current base value.
+    ///
+    /// Should be called when the stat is updated.
+    /// </summary>
+    public abstract void OnUpdate();
 }

@@ -1,0 +1,17 @@
+{
+    "Type": "Value",
+    "Metadata": {
+        "Name": "value_stat_strength",
+        "DisplayName": "Strength",
+        "Description": "Strength is a measure of your physical power.",
+        "Tags": ["physical", "strength"]
+    },
+    "Config": {
+        "BaseValueCap": 50,
+        "CurrentValueCap": 70,
+        "BaseValueFormula": {
+            "Type": "Constant",
+            "Value": 20
+        }
+    }
+}

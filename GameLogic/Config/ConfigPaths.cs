@@ -45,7 +45,14 @@ public static class ConfigPaths
             "GameLogic.TestData/Entities/Stats/"
         );
 
-        public static readonly string Strength = Path.Combine(Folder, "Strength.json");
+        public static readonly string ValueStatStrength = Path.Combine(
+            Folder,
+            "ValueStatStrength.json"
+        );
+        public static readonly string ResourceStatHealth = Path.Combine(
+            Folder,
+            "ResourceStatHealth.json"
+        );
         public static readonly string TestStatBlock = Path.Combine(Folder, "TestStatBlock.json");
     }
 }
