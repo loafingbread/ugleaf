@@ -22,3 +22,20 @@ Just good to plan for flexibility.
 ---
 
 ### StatModifierType
+
+// TODO: Add resource and derived stats. Examples of extending the record:
+// public record ResourceStatRecord : StatRecord
+// {
+//     public required int RegenRate { get; init; }
+// }
+
+// public record DerivedStatRecord : StatRecord
+// {
+//     public required Formula Formula { get; init; }
+// }
+
+// public record DerivedResourceStatRecord : ResourceStatRecord
+// {
+//     public required int RegenRate { get; init; }
+//     public required Formula Formula { get; init; }
+// }

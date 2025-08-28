@@ -1,58 +1,83 @@
 namespace GameLogic.Entities.Stats;
 
 using System.Diagnostics.CodeAnalysis;
-using GameLogic.Config;
 
-public class StatBlock : IConfigurable<StatBlockConfig>
+public class StatBlock
 {
-    private StatBlockConfig _config { get; set; }
-    public List<IStat> Stats { get; } = new();
+    public List<Stat> Stats { get; private set; } = new();
+    public StatModifiers Modifiers { get; private set; } = new();
 
-    [SetsRequiredMembers]
-    public StatBlock(StatBlockConfig config)
+    public StatBlock(StatBlockRecord record)
     {
-        this.ApplyConfig(config);
-    }
-
-    public void ApplyConfig(StatBlockConfig config)
-    {
-        this._config = config;
-
-        this.Stats.Clear();
-        foreach (StatConfig statConfig in config.GetAll())
+        foreach (StatRecord statRecord in record.Stats)
         {
-            this.Stats.Add((IStat)new Stat(statConfig));
+            this.Stats.Add(StatFactory.CreateStatFromRecord(statRecord));
         }
     }
 
-    public StatBlockConfig GetConfig()
+    public void AddModifier(StatModifier modifier)
     {
-        return this._config;
+        this.Modifiers.AddModifier(modifier);
     }
 
-    public int GetStatValue(string id)
+    /// <summary>
+    /// Removes a modifier from the stat block.
+    /// </summary>
+    /// <param name="modifier">The modifier to remove.</param>
+    public void RemoveModifier(StatModifier modifier)
     {
-        IStat stat = this.GetStat(id);
-        return stat.GetCurrentValue();
+        this.Modifiers.RemoveModifier(modifier);
     }
 
-    public IStat GetStat(string id)
+    /// <summary>
+    /// Gets a stat from the stat block by name and type. If type is Any, any stat with the given name will be returned.
+    /// </summary>
+    /// <param name="name">The name of the stat to get.</param>
+    /// <param name="type">The type of the stat to get. If Any, any stat with the given name will be returned.</param>
+    /// <returns>The stat with the given name and type, or null if no stat with the given name and type is found.</returns>
+    public Stat? GetStat(string name, StatType type)
     {
-        return this.Stats.FirstOrDefault(stat => stat.GetConfig().Id == id, null);
-    }
-}
+        Func<Stat?, bool> filter =
+            type == StatType.Any
+                ? (Stat? stat) => stat?.Metadata.Name == name
+                : (Stat? stat) => stat?.Metadata.Name == name && stat?.Type == type;
 
-public static class StatBlockFactory
-{
-    public static StatBlock CreateFromRecord(StatBlockRecord record)
-    {
-        StatBlockConfig config = new StatBlockConfig(record);
-        return new StatBlock(config);
+        return this.Stats.FirstOrDefault(filter, null);
     }
 
-    public static Stat CreateStatFromRecord(IStatRecord record)
+    /// <summary>
+    /// Sets the current value of a resource stat.
+    /// </summary>
+    /// <param name="name">The name of the resource stat to set.</param>
+    /// <param name="value">The value to set the resource stat to.</param>
+    /// <returns>The resource stat with the given name, or null if no resource stat with the given name is found.</returns>
+    public ResourceStat? SetResourceStat(string name, int value)
     {
-        StatConfig config = new StatConfig(record);
-        return new Stat(config);
+        ResourceStat? resourceStat = this.GetStat(name, StatType.Resource) as ResourceStat;
+        if (resourceStat == null)
+        {
+            return null;
+        }
+
+        resourceStat.SetCurrentValue(value);
+        return resourceStat;
+    }
+
+    /// <summary>
+    /// Modifies the current value of a resource stat.
+    /// </summary>
+    /// <param name="name">The name of the resource stat to modify.</param>
+    /// <param name="amount">The amount to modify the resource stat by. Positive values increase, negative values decrease.</param>
+    /// <returns>The resource stat with the given name, or null if no resource stat with the given name is found.</returns>
+    public ResourceStat? ModifyResourceStat(string name, int amount)
+    {
+        ResourceStat? resourceStat = this.GetStat(name, StatType.Resource) as ResourceStat;
+        if (resourceStat == null)
+        {
+            return null;
+        }
+
+        resourceStat.SetCurrentValue(resourceStat.CurrentValue + amount);
+        return resourceStat;
     }
 }

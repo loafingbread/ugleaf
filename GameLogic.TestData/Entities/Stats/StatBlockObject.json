@@ -1,0 +1,40 @@
+{
+    "StatBlock": {
+        "Stats": [
+            {
+                "BaseValue": 20,
+                "CurrentValue": 20,
+                "Config": {
+                    "Id": "value_stat_strength",
+                    "DisplayName": "Strength",
+                    "Description": "Strength is a measure of your physical power.",
+                    "Tags": ["physical", "strength"],
+                    "Type": "Value",
+                    "ValueCap": 50,
+                    "BaseValueFormula": {
+                        "Type": "Constant",
+                        "Value": 20
+                    }
+                }
+            },
+            {
+                "BaseMaxValue": 100,
+                "CurrentMaxValue": 100,
+                "CurrentValue": 80,
+                "Config": {
+                    "Id": "resource_stat_health",
+                    "DisplayName": "Health",
+                    "Description": "Health is a measure of your healthiness. You die when it reaches 0.",
+                    "Tags": ["physical", "health"],
+                    "Type": "Resource",
+                    "ValueCap": 200,
+                    "CurrentValue": 80,
+                    "BaseMaxValueFormula": {
+                        "Type": "Constant",
+                        "Value": 100
+                    }
+                }
+            }
+        ]
+    }
+}

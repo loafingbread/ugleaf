@@ -5,12 +5,18 @@ using GameLogic.Entities.Stats;
 
 public class StatTestFixture
 {
-    public StatRecord StrengthRecord { get; }
+    public StatRecord ValueStatStrengthRecord { get; }
+    public StatRecord ResourceStatHealthRecord { get; }
     public StatBlockRecord TestStatBlockRecord { get; }
 
     public StatTestFixture()
     {
-        this.StrengthRecord = JsonConfigLoader.LoadFromFile<StatRecord>(ConfigPaths.Stat.Strength);
+        this.ValueStatStrengthRecord = JsonConfigLoader.LoadFromFile<StatRecord>(
+            ConfigPaths.Stat.ValueStatStrength
+        );
+        this.ResourceStatHealthRecord = JsonConfigLoader.LoadFromFile<StatRecord>(
+            ConfigPaths.Stat.ResourceStatHealth
+        );
         this.TestStatBlockRecord = JsonConfigLoader.LoadFromFile<StatBlockRecord>(
             ConfigPaths.Stat.TestStatBlock
         );
