@@ -7,22 +7,56 @@ Whether you're building something new or expanding on an existing game, you can 
 
 Build the systems. Define the rules. Hook it up to anything.
 
-**Build**
+# Scripts
+CLI (command line interface) tool commands to manage the project.
+
+## Dev Tooling
+
+### Build/Compile project
 ```bash
-dotnet build
+dotnet build # Build project
 ```
 
-**Clean**
+### Clean up dependencies
 Warnings are only shown the first time a build is run. If you want to see them again you'll need to run a clean first.
 ```bash
 dotnet clean
 ```
 
-**Test**
+### Testing
 ```bash
-/* All tests */
+# Run all tests
 dotnet test
 
-/* Specific test */
+# Run specific test
 dotnet test --filter "{TestName}"
+```
+
+### Create new projects
+#### Create new project folder
+```bash
+# Create a new class library
+dotnet new classlib -n YourProjectName
+
+# Create a new console application
+dotnet new console -n YourProjectName
+
+# Create a new test project
+dotnet new xunit -n YourProjectName.Tests
+
+# Create a new MSTest project
+dotnet new mstest -n YourProjectName.Tests
+
+# Create a new Godot C# project
+dotnet new godot -n YourProjectName
+```
+
+#### Add it to the solution:
+```bash
+dotnet sln add YourProjectName/YourProjectName.csproj
+```
+
+#### Add references between projects (if needed):
+```bash
+dotnet add YourProjectName/YourProjectName.csproj reference GameLogic/GameLogic.csproj
 ```
