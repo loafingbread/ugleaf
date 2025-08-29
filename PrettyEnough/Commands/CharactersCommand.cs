@@ -16,30 +16,78 @@ public class CharactersCommand : ICommand
         if (gameState?.PlayerState?.Characters == null)
             return CommandResult.Error("No player characters available");
 
-        DisplayCharacters(gameState.PlayerState.Characters, ui);
-
-        return await Task.FromResult(CommandResult.Ok());
+        if (args.Length == 0)
+        {
+            return await Task.FromResult(DisplayCharacters(gameState.PlayerState.Characters, ui));
+        }
+        else
+        {
+            string characterId = args[0];
+            return await Task.FromResult(DisplayCharacterById(characterId, gameState, ui));
+        }
     }
 
-    public static void DisplayCharacters(List<Character> characters, ConsoleUI ui)
+    public static CommandResult DisplayCharacters(List<Character> characters, ConsoleUI ui)
     {
         ui.PrintSection("📊 Current Characters");
 
         foreach (var character in characters)
         {
-            ui.PrintInfo($"{character.GetConfig().Name} ({character.GetConfig().Id})");
-
-            Stat strengthStat = character.Stats.GetStat("value_stat_strength", StatType.Value);
-            ui.PrintInfo($"   {strengthStat?.Metadata.DisplayName}: {strengthStat?.CurrentValue}");
-
-            Stat agilityStat = character.Stats.GetStat("value_stat_agility", StatType.Value);
-            ui.PrintInfo($"   {agilityStat?.Metadata.DisplayName}: {agilityStat?.CurrentValue}");
-
-            Stat healthStat = character.Stats.GetStat("resource_stat_health", StatType.Resource);
-            ui.PrintInfo($"   {healthStat?.Metadata.DisplayName}: {healthStat?.CurrentValue}");
-
-            ui.PrintInfo("");
+            DisplayCharacter(character, ui);
         }
+
+        return CommandResult.Ok();
+    }
+
+    public static CommandResult DisplayCharacterById(
+        string characterId,
+        GameState gameState,
+        ConsoleUI ui
+    )
+    {
+        Character? character = gameState.PlayerState.Characters.FirstOrDefault(c =>
+            c.GetConfig().Id == characterId
+        );
+        if (character == null)
+            return CommandResult.Error($"Character not found: {characterId}");
+
+        DisplayCharacter(character, ui);
+        return CommandResult.Ok();
+    }
+
+    public static void DisplayCharacter(Character character, ConsoleUI ui)
+    {
+        ui.PrintSection($"📊 {character.GetConfig().Name} ({character.GetConfig().Id})");
+
+        Stat strengthStat = character.Stats.GetStat("value_stat_strength", StatType.Value);
+        ui.PrintInfo($"   {strengthStat?.Metadata.DisplayName}: {strengthStat?.CurrentValue}");
+
+        Stat constitutionStat = character.Stats.GetStat("value_stat_constitution", StatType.Value);
+        ui.PrintInfo(
+            $"   {constitutionStat?.Metadata.DisplayName}: {constitutionStat?.CurrentValue}"
+        );
+
+        Stat intelligenceStat = character.Stats.GetStat("value_stat_intelligence", StatType.Value);
+        ui.PrintInfo(
+            $"   {intelligenceStat?.Metadata.DisplayName}: {intelligenceStat?.CurrentValue}"
+        );
+
+        Stat agilityStat = character.Stats.GetStat("value_stat_agility", StatType.Value);
+        ui.PrintInfo($"   {agilityStat?.Metadata.DisplayName}: {agilityStat?.CurrentValue}");
+
+        ResourceStat healthStat =
+            character.Stats.GetStat("resource_stat_health", StatType.Resource) as ResourceStat;
+        ui.PrintInfo(
+            $"   {healthStat?.Metadata.DisplayName}: {healthStat?.CurrentValue} / {healthStat?.CurrentCapacity}"
+        );
+
+        ResourceStat manaStat =
+            character.Stats.GetStat("resource_stat_mana", StatType.Resource) as ResourceStat;
+        ui.PrintInfo(
+            $"   {manaStat?.Metadata.DisplayName}: {manaStat?.CurrentValue} / {manaStat?.CurrentCapacity}"
+        );
+
+        ui.PrintInfo("");
     }
 
     // private void DisplayCharacterStats(Character character, ConsoleUI ui)

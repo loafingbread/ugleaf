@@ -2,6 +2,7 @@ namespace GameLogic.Tests;
 
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
+using GameLogic.Entities.Stats;
 using GameLogic.Targeting;
 using Xunit;
 
@@ -22,9 +23,17 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
         CharacterConfig config = goblin.GetConfig();
         Assert.Equal("char_npc_goblin", config.Id);
         Assert.Equal("Goblin", config.Name);
-        Assert.Equal(50, config.Health);
-        Assert.Equal(20, config.Attack);
-        Assert.Equal(10, config.Defense);
+        Assert.Equal(
+            80,
+            (
+                goblin.Stats.GetStat("resource_stat_health", StatType.Resource) as ResourceStat
+            ).CurrentCapacity
+        );
+        Assert.Equal(20, goblin.Stats.GetStat("value_stat_strength", StatType.Value).CurrentValue);
+        Assert.Equal(
+            10,
+            goblin.Stats.GetStat("value_stat_constitution", StatType.Value).CurrentValue
+        );
     }
 
     [Fact]

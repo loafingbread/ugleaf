@@ -1,9 +1,6 @@
 {
     "Id": "char_pc_goblinslayer",
     "Name": "Goblin Slayer",
-    "Health": 200,
-    "Attack": 50,
-    "Defense": 15,
     "Stats": [
         {
             "Type": "Value",
@@ -15,10 +12,27 @@
             },
             "Config": {
                 "BaseValueCap": 50,
-                "CurrentValueCap": 70,
+                "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 20
+                    "Value": 25
+                }
+            }
+        },
+        {
+            "Type": "Value",
+            "Metadata": {
+                "Name": "value_stat_constitution",
+                "DisplayName": "Constitution",
+                "Description": "Constitution is a measure of your physical health.",
+                "Tags": ["physical", "constitution"]
+            },
+            "Config": {
+                "BaseValueCap": 50,
+                "CurrentValueCap": 100,
+                "BaseValueFormula": {
+                    "Type": "Constant",
+                    "Value": 30
                 }
             }
         },
@@ -31,11 +45,28 @@
                 "Tags": ["physical", "agility"]
             },
             "Config": {
-                "BaseValueCap": 60,
-                "CurrentValueCap": 80,
+                "BaseValueCap": 50,
+                "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 30
+                    "Value": 25
+                }
+            }
+        },
+        {
+            "Type": "Value",
+            "Metadata": {
+                "Name": "value_stat_intelligence",
+                "DisplayName": "Intelligence",
+                "Description": "Intelligence is a measure of your mental power.",
+                "Tags": ["mental", "intelligence"]
+            },
+            "Config": {
+                "BaseValueCap": 50,
+                "CurrentValueCap": 100,
+                "BaseValueFormula": {
+                    "Type": "Constant",
+                    "Value": 20
                 }
             }
         },
@@ -54,6 +85,24 @@
                 "BaseCapacityFormula": {
                     "Type": "Constant",
                     "Value": 100
+                }
+            }
+        },
+        {
+            "Type": "Resource",
+            "Metadata": {
+                "Name": "resource_stat_mana",
+                "DisplayName": "Mana",
+                "Description": "Mana is a measure of your magical power.",
+                "Tags": ["mental", "mana"]
+            },
+            "Config": {
+                "BaseCapacityCap": 200,
+                "CurrentCapacityCap": 300,
+                "StartingCurrentValue": 40,
+                "BaseCapacityFormula": {
+                    "Type": "Constant",
+                    "Value": 50
                 }
             }
         }

@@ -1,9 +1,112 @@
 {
     "Id": "char_pc_ash",
     "Name": "Ash",
-    "Health": 100,
-    "Attack": 30,
-    "Defense": 10,
+    "Stats": [
+        {
+            "Type": "Value",
+            "Metadata": {
+                "Name": "value_stat_strength",
+                "DisplayName": "Strength",
+                "Description": "Strength is a measure of your physical power.",
+                "Tags": ["physical", "strength"]
+            },
+            "Config": {
+                "BaseValueCap": 50,
+                "CurrentValueCap": 100,
+                "BaseValueFormula": {
+                    "Type": "Constant",
+                    "Value": 20
+                }
+            }
+        },
+        {
+            "Type": "Value",
+            "Metadata": {
+                "Name": "value_stat_constitution",
+                "DisplayName": "Constitution",
+                "Description": "Constitution is a measure of your physical health.",
+                "Tags": ["physical", "constitution"]
+            },
+            "Config": {
+                "BaseValueCap": 50,
+                "CurrentValueCap": 100,
+                "BaseValueFormula": {
+                    "Type": "Constant",
+                    "Value": 25
+                }
+            }
+        },
+        {
+            "Type": "Value",
+            "Metadata": {
+                "Name": "value_stat_agility",
+                "DisplayName": "Agility",
+                "Description": "Agility is a measure of your movement speed.",
+                "Tags": ["physical", "agility"]
+            },
+            "Config": {
+                "BaseValueCap": 50,
+                "CurrentValueCap": 100,
+                "BaseValueFormula": {
+                    "Type": "Constant",
+                    "Value": 25
+                }
+            }
+        },
+        {
+            "Type": "Value",
+            "Metadata": {
+                "Name": "value_stat_intelligence",
+                "DisplayName": "Intelligence",
+                "Description": "Intelligence is a measure of your mental power.",
+                "Tags": ["mental", "intelligence"]
+            },
+            "Config": {
+                "BaseValueCap": 50,
+                "CurrentValueCap": 100,
+                "BaseValueFormula": {
+                    "Type": "Constant",
+                    "Value": 30
+                }
+            }
+        },
+        {
+            "Type": "Resource",
+            "Metadata": {
+                "Name": "resource_stat_health",
+                "DisplayName": "Health",
+                "Description": "Health is a measure of your healthiness. You die when it reaches 0.",
+                "Tags": ["physical", "health"]
+            },
+            "Config": {
+                "BaseCapacityCap": 200,
+                "CurrentCapacityCap": 300,
+                "StartingCurrentValue": 80,
+                "BaseCapacityFormula": {
+                    "Type": "Constant",
+                    "Value": 80
+                }
+            }
+        },
+        {
+            "Type": "Resource",
+            "Metadata": {
+                "Name": "resource_stat_mana",
+                "DisplayName": "Mana",
+                "Description": "Mana is a measure of your magical power.",
+                "Tags": ["mental", "mana"]
+            },
+            "Config": {
+                "BaseCapacityCap": 200,
+                "CurrentCapacityCap": 300,
+                "StartingCurrentValue": 50,
+                "BaseCapacityFormula": {
+                    "Type": "Constant",
+                    "Value": 60
+                }
+            }
+        }
+    ],
     "Skills": [
         {
             "Id": "skill_ignite",
