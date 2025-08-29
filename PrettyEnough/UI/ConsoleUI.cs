@@ -108,6 +108,16 @@ public class ConsoleUI
         ResetColor();
     }
 
+    public void PrintIndentedNewLine(int indentLevel = 1)
+    {
+        var indent = new System.Text.StringBuilder();
+        for (int i = 0; i <= indentLevel - 1; i++)
+        {
+            indent.Append("│   ");
+        }
+        Console.WriteLine($"{indent}");
+    }
+
     public void PrintTable(string[] headers, string[][] rows)
     {
         if (rows.Length == 0)
