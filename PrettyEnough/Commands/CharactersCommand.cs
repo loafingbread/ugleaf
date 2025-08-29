@@ -37,7 +37,7 @@ public class CharactersCommand : ICommand
         int indentLevel = 0
     )
     {
-        ui.PrintSubsection($"Characters ({characters.Count})", indentLevel);
+        ui.PrintIndentedSection($"Characters ({characters.Count})", indentLevel);
 
         for (int i = 0; i < characters.Count; i++)
         {
@@ -72,7 +72,7 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{character.GetConfig().Name} ({character.GetConfig().Id})",
             indentLevel,
             isLast
@@ -84,7 +84,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplayStats(Character character, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{character.GetConfig().Name} Stats ({character.Stats.Stats.Count})",
             indentLevel
         );
@@ -130,7 +130,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplaySkills(Character character, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{character.GetConfig().Name} Skills ({character.GetConfig().Skills.Count})",
             indentLevel
         );
@@ -149,7 +149,7 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{skill.GetConfig().Name} ({skill.GetConfig().Id})",
             indentLevel,
             isLast
@@ -164,7 +164,7 @@ public class CharactersCommand : ICommand
         if (targeter == null)
             return;
 
-        ui.PrintSubsection("Targeter", indentLevel);
+        ui.PrintIndentedSection("Targeter", indentLevel);
 
         ui.PrintIndentedInfo($"Target Quantity Type: {targeter.TargetQuantity}", indentLevel + 1);
         ui.PrintIndentedInfo(
@@ -176,7 +176,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplayUsables(List<IUsable> usables, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection($"Usables ({usables.Count})", indentLevel);
+        ui.PrintIndentedSection($"Usables ({usables.Count})", indentLevel);
 
         for (int i = 0; i < usables.Count; i++)
         {
@@ -192,7 +192,7 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection($"{usable.GetConfig().Id}", indentLevel, isLast);
+        ui.PrintIndentedSection($"{usable.GetConfig().Id}", indentLevel, isLast);
 
         TargeterConfig usableTargeter = usable.GetConfig().Targeter;
         DisplayTargeter(usableTargeter, ui, indentLevel + 1);
@@ -201,7 +201,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplayEffects(List<IEffect> effects, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection($"Effects ({effects.Count})", indentLevel);
+        ui.PrintIndentedSection($"Effects ({effects.Count})", indentLevel);
 
         for (int i = 0; i < effects.Count; i++)
         {
@@ -217,104 +217,10 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection($"{effect.GetConfig().Id}", indentLevel, isLast);
+        ui.PrintIndentedSection($"{effect.GetConfig().Id}", indentLevel, isLast);
 
         ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
         ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
         ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1, isLast);
     }
-
-    // private void DisplayCharacterStats(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterResources(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterSkills(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterInventory(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterEquipment(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
 }
-
-// public class StatsCommand : ICommand
-// {
-//     public string Name => "stats";
-//     public string Description => "Display all current stats in a pretty format";
-//     public string Usage => "stats [stat_name]";
-
-//     public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)
-//     {
-//         if (gameState?.StatBlock == null)
-//             return CommandResult.Error("No game state available");
-
-//         if (args.Length > 0)
-//         {
-//             // Show specific stat
-//             var statName = args[0];
-//             var stat = gameState.StatBlock.GetStat(statName, StatType.Any);
-
-//             if (stat == null)
-//                 return CommandResult.Error($"Stat not found: {statName}");
-
-//             DisplayStat(stat, ui);
-//             return CommandResult.Ok();
-//         }
-
-//         // Show all stats
-//         ui.PrintSection("📊 Current Stats");
-
-//         if (gameState.StatBlock.Stats.Count == 0)
-//         {
-//             ui.PrintWarning("No stats available");
-//             return CommandResult.Ok();
-//         }
-
-//         foreach (var stat in gameState.StatBlock.Stats)
-//         {
-//             DisplayStat(stat, ui);
-//         }
-
-//         return await Task.FromResult(CommandResult.Ok());
-//     }
-
-//     private void DisplayStat(Stat stat, ConsoleUI ui)
-//     {
-//         var statType = stat.Type switch
-//         {
-//             StatType.Value => "📈",
-//             StatType.Resource => "💧",
-//             _ => "❓",
-//         };
-
-//         ui.PrintInfo($"{statType} {stat.Metadata.DisplayName} ({stat.Metadata.Name})");
-//         ui.PrintInfo($"   Current: {stat.CurrentValue}");
-//         ui.PrintInfo($"   Base: {stat.BaseValue}");
-//         ui.PrintInfo($"   Type: {stat.Type}");
-//         ui.PrintInfo($"   Description: {stat.Metadata.Description}");
-//         ui.PrintInfo($"   Tags: {string.Join(", ", stat.Metadata.Tags)}");
-
-//         // Show additional info for resource stats
-//         if (stat is ResourceStat resourceStat)
-//         {
-//             ui.PrintInfo(
-//                 $"   Capacity: {resourceStat.CurrentValue}/{resourceStat.GetConfig().CurrentCapacityCap}"
-//             );
-//         }
-
-//         ui.PrintInfo("");
-//     }
-// }

@@ -66,7 +66,7 @@ public class ConsoleUI
         ResetColor();
     }
 
-    public void PrintSubsection(string title, int indentLevel = 1)
+    public void PrintIndentedSection(string title, int indentLevel = 1)
     {
         string indent = CreateIndentWithLines(indentLevel);
         SetColor(sectionColor);
@@ -75,7 +75,7 @@ public class ConsoleUI
         ResetColor();
     }
 
-    public void PrintSubsection(string title, int indentLevel, bool isLast)
+    public void PrintIndentedSection(string title, int indentLevel, bool isLast)
     {
         string indent = CreateIndentWithLines(indentLevel, isLast);
         SetColor(sectionColor);
