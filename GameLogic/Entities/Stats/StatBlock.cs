@@ -7,7 +7,7 @@ public class StatBlock
     public List<Stat> Stats { get; private set; } = new();
     public StatModifiers Modifiers { get; private set; } = new();
 
-    public StatBlock(StatBlockRecord record)
+    public StatBlock(IStatBlockRecord record)
     {
         foreach (StatRecord statRecord in record.Stats)
         {

@@ -39,6 +39,27 @@
                     }
                 }
             ]
+        },
+        {
+            "Id": "usable_overheat",
+            "Targeter": {
+                "TargetQuantity": "Count",
+                "AllowedTargets": [
+                    "Self"
+                ],
+                "Count": 1
+            },
+            "Effects": [
+                {
+                    "Id": "effect_overheat",
+                    "Type": "Attack",
+                    "Subtype": "SingleHit",
+                    "Variant": "FireDamage",
+                    "Parameters": {
+                        "Damage": 5
+                    }
+                }
+            ]
         }
     ]
 }
