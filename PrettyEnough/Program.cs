@@ -44,7 +44,7 @@ class Program
                 throw new Exception("Game state failed to be created");
 
             ui.PrintSuccess("✅ Game initialized successfully!");
-            ui.PrintInfo($"📊 Loaded {gameState.PlayerState.Characters.Count} characters");
+            ui.PrintIndentedInfo($"Loaded {gameState.PlayerState.Characters.Count} characters", 0);
 
             // Display initial player state
             CharactersCommand.DisplayCharacters(gameState.PlayerState.Characters, ui);

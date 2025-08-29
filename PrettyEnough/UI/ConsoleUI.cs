@@ -66,6 +66,23 @@ public class ConsoleUI
         ResetColor();
     }
 
+    public void PrintSubsection(string title, int indentLevel = 1)
+    {
+        string indent = new string(' ', indentLevel * 3); // 3 spaces per indent level
+        SetColor(sectionColor);
+        Console.WriteLine($"{indent}📋 {title}");
+        Console.WriteLine($"{indent}{new string('-', title.Length + 2)}");
+        ResetColor();
+    }
+
+    public void PrintIndentedInfo(string message, int indentLevel = 1)
+    {
+        string indent = new string(' ', indentLevel * 3); // 3 spaces per indent level
+        SetColor(infoColor);
+        Console.WriteLine($"{indent}ℹ️  {message}");
+        ResetColor();
+    }
+
     public void PrintTable(string[] headers, string[][] rows)
     {
         if (rows.Length == 0) return;

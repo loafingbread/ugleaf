@@ -2,6 +2,9 @@ using GameLogic.Entities;
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
+using GameLogic.Targeting;
+using GameLogic.Usables;
+using GameLogic.Usables.Effects;
 using PrettyEnough.UI;
 
 namespace PrettyEnough.Commands;
@@ -28,13 +31,17 @@ public class CharactersCommand : ICommand
         }
     }
 
-    public static CommandResult DisplayCharacters(List<Character> characters, ConsoleUI ui)
+    public static CommandResult DisplayCharacters(
+        List<Character> characters,
+        ConsoleUI ui,
+        int indentLevel = 0
+    )
     {
-        ui.PrintSection("📊 Current Characters");
+        ui.PrintSubsection($"Characters ({characters.Count})", indentLevel);
 
         foreach (var character in characters)
         {
-            DisplayCharacter(character, ui);
+            DisplayCharacter(character, ui, indentLevel + 1);
         }
 
         return CommandResult.Ok();
@@ -43,7 +50,8 @@ public class CharactersCommand : ICommand
     public static CommandResult DisplayCharacterById(
         string characterId,
         GameState gameState,
-        ConsoleUI ui
+        ConsoleUI ui,
+        int indentLevel = 0
     )
     {
         Character? character = gameState.PlayerState.Characters.FirstOrDefault(c =>
@@ -52,54 +60,139 @@ public class CharactersCommand : ICommand
         if (character == null)
             return CommandResult.Error($"Character not found: {characterId}");
 
-        DisplayCharacter(character, ui);
+        DisplayCharacter(character, ui, indentLevel);
         return CommandResult.Ok();
     }
 
-    public static void DisplayCharacter(Character character, ConsoleUI ui)
+    public static void DisplayCharacter(Character character, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSection($"📊 {character.GetConfig().Name} ({character.GetConfig().Id})");
-
-        Stat strengthStat = character.Stats.GetStat("value_stat_strength", StatType.Value);
-        ui.PrintInfo($"   {strengthStat?.Metadata.DisplayName}: {strengthStat?.CurrentValue}");
-
-        Stat constitutionStat = character.Stats.GetStat("value_stat_constitution", StatType.Value);
-        ui.PrintInfo(
-            $"   {constitutionStat?.Metadata.DisplayName}: {constitutionStat?.CurrentValue}"
+        ui.PrintSubsection(
+            $"{character.GetConfig().Name} ({character.GetConfig().Id})",
+            indentLevel
         );
 
-        Stat intelligenceStat = character.Stats.GetStat("value_stat_intelligence", StatType.Value);
-        ui.PrintInfo(
-            $"   {intelligenceStat?.Metadata.DisplayName}: {intelligenceStat?.CurrentValue}"
-        );
-
-        Stat agilityStat = character.Stats.GetStat("value_stat_agility", StatType.Value);
-        ui.PrintInfo($"   {agilityStat?.Metadata.DisplayName}: {agilityStat?.CurrentValue}");
-
-        ResourceStat healthStat =
-            character.Stats.GetStat("resource_stat_health", StatType.Resource) as ResourceStat;
-        ui.PrintInfo(
-            $"   {healthStat?.Metadata.DisplayName}: {healthStat?.CurrentValue} / {healthStat?.CurrentCapacity}"
-        );
-
-        ResourceStat manaStat =
-            character.Stats.GetStat("resource_stat_mana", StatType.Resource) as ResourceStat;
-        ui.PrintInfo(
-            $"   {manaStat?.Metadata.DisplayName}: {manaStat?.CurrentValue} / {manaStat?.CurrentCapacity}"
-        );
-
-        DisplaySkills(character, ui);
-
-        ui.PrintInfo("");
+        DisplayStats(character, ui, indentLevel + 1);
+        DisplaySkills(character, ui, indentLevel + 1);
     }
 
-    public static void DisplaySkills(Character character, ConsoleUI ui)
+    public static void DisplayStats(Character character, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSection($"📊 {character.GetConfig().Name} Skills");
+        ui.PrintSubsection(
+            $"{character.GetConfig().Name} Stats ({character.Stats.Stats.Count})",
+            indentLevel
+        );
+
+        Stat? strengthStat = character.Stats.GetStat("value_stat_strength", StatType.Value);
+        ui.PrintIndentedInfo(
+            $"{strengthStat?.Metadata.DisplayName}: {strengthStat?.CurrentValue}",
+            indentLevel + 1
+        );
+
+        Stat? constitutionStat = character.Stats.GetStat("value_stat_constitution", StatType.Value);
+        ui.PrintIndentedInfo(
+            $"{constitutionStat?.Metadata.DisplayName}: {constitutionStat?.CurrentValue}",
+            indentLevel + 1
+        );
+
+        Stat? intelligenceStat = character.Stats.GetStat("value_stat_intelligence", StatType.Value);
+        ui.PrintIndentedInfo(
+            $"{intelligenceStat?.Metadata.DisplayName}: {intelligenceStat?.CurrentValue}",
+            indentLevel + 1
+        );
+
+        Stat? agilityStat = character.Stats.GetStat("value_stat_agility", StatType.Value);
+        ui.PrintIndentedInfo(
+            $"{agilityStat?.Metadata.DisplayName}: {agilityStat?.CurrentValue}",
+            indentLevel + 1
+        );
+
+        ResourceStat? healthStat =
+            character.Stats.GetStat("resource_stat_health", StatType.Resource) as ResourceStat;
+        ui.PrintIndentedInfo(
+            $"{healthStat?.Metadata.DisplayName}: {healthStat?.CurrentValue} / {healthStat?.CurrentCapacity}",
+            indentLevel + 1
+        );
+
+        ResourceStat? manaStat =
+            character.Stats.GetStat("resource_stat_mana", StatType.Resource) as ResourceStat;
+        ui.PrintIndentedInfo(
+            $"{manaStat?.Metadata.DisplayName}: {manaStat?.CurrentValue} / {manaStat?.CurrentCapacity}",
+            indentLevel + 1
+        );
+    }
+
+    public static void DisplaySkills(Character character, ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintSubsection(
+            $"{character.GetConfig().Name} Skills ({character.GetConfig().Skills.Count})",
+            indentLevel
+        );
         foreach (Skill skill in character.GetConfig().Skills)
         {
-            ui.PrintInfo($"   {skill.GetConfig().Name} ({skill.GetConfig().Id})");
+            DisplaySkill(skill, ui, indentLevel + 1);
         }
+    }
+
+    public static void DisplaySkill(Skill skill, ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintSubsection($"{skill.GetConfig().Name} ({skill.GetConfig().Id})", indentLevel);
+
+        DisplayTargeter(skill.Targeter?.GetConfig(), ui, indentLevel + 1);
+
+        DisplayUsables(skill.Usables, ui, indentLevel + 1);
+    }
+
+    public static void DisplayTargeter(TargeterConfig? targeter, ConsoleUI ui, int indentLevel = 0)
+    {
+        if (targeter == null)
+            return;
+
+        ui.PrintSubsection("Targeter", indentLevel);
+
+        ui.PrintIndentedInfo($"Target Quantity Type: {targeter.TargetQuantity}", indentLevel + 1);
+        ui.PrintIndentedInfo(
+            $"Allowed Target Types: {string.Join(", ", targeter.AllowedTargets)}",
+            indentLevel + 1
+        );
+        ui.PrintIndentedInfo($"Target Count: {targeter.Count}", indentLevel + 1);
+    }
+
+    public static void DisplayUsables(List<IUsable> usables, ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintSubsection($"Usables ({usables.Count})", indentLevel);
+        foreach (IUsable usable in usables)
+        {
+            DisplayUsable(usable, ui, indentLevel + 1);
+        }
+    }
+
+    public static void DisplayUsable(IUsable usable, ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintSubsection($"{usable.GetConfig().Id}", indentLevel);
+
+        TargeterConfig usableTargeter = usable.GetConfig().Targeter;
+        DisplayTargeter(usableTargeter, ui, indentLevel + 1);
+
+        DisplayEffects(usable.GetConfig().Effects, ui, indentLevel + 1);
+    }
+
+    public static void DisplayEffects(List<IEffect> effects, ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintSubsection($"Effects ({effects.Count})", indentLevel);
+
+        foreach (IEffect effect in effects)
+        {
+            DisplayEffect(effect, ui, indentLevel + 1);
+        }
+    }
+
+    public static void DisplayEffect(IEffect effect, ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintSubsection($"{effect.GetConfig().Id}", indentLevel);
+
+        ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1);
     }
 
     // private void DisplayCharacterStats(Character character, ConsoleUI ui)

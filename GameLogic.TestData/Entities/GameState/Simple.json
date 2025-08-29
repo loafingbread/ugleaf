@@ -133,6 +133,15 @@
                                 },
                                 "Effects": [
                                     {
+                                        "Id": "effect_fire_damage",
+                                        "Type": "Attack",
+                                        "Subtype": "SingleHit",
+                                        "Variant": "FireDamage",
+                                        "Parameters": {
+                                            "Damage": 10
+                                        }
+                                    },
+                                    {
                                         "Id": "effect_burn_dot",
                                         "Type": "Status",
                                         "Subtype": "Burn",
@@ -140,6 +149,59 @@
                                         "Parameters": {
                                             "Duration": 3,
                                             "DamagePerTurn": 5
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "Id": "usable_overheat",
+                                "Targeter": {
+                                    "TargetQuantity": "Count",
+                                    "AllowedTargets": [
+                                        "Self"
+                                    ],
+                                    "Count": 1
+                                },
+                                "Effects": [
+                                    {
+                                        "Id": "effect_overheat",
+                                        "Type": "Attack",
+                                        "Subtype": "SingleHit",
+                                        "Variant": "FireDamage",
+                                        "Parameters": {
+                                            "Damage": 5
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Id": "skill_facepalm",
+                        "Name": "Face Palm",
+                        "Targeter": {
+                            "TargetQuantity": "Count",
+                            "AllowedTargets": ["Self"],
+                            "Count": 1
+                        },
+                        "Usables": [
+                            {
+                                "Id": "usable_facepalm",
+                                "Targeter": {
+                                    "TargetQuantity": "Count",
+                                    "AllowedTargets": [
+                                        "Self"
+                                    ],
+                                    "Count": 1
+                                },
+                                "Effects": [
+                                    {
+                                        "Id": "effect_physical_damage",
+                                        "Type": "Attack",
+                                        "Subtype": "SingleHit",
+                                        "Variant": "PhysicalDamage",
+                                        "Parameters": {
+                                            "Damage": 777
                                         }
                                     }
                                 ]
