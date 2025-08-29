@@ -39,9 +39,10 @@ public class CharactersCommand : ICommand
     {
         ui.PrintSubsection($"Characters ({characters.Count})", indentLevel);
 
-        foreach (var character in characters)
+        for (int i = 0; i < characters.Count; i++)
         {
-            DisplayCharacter(character, ui, indentLevel + 1);
+            bool isLast = i == characters.Count - 1;
+            DisplayCharacter(characters[i], ui, indentLevel + 1, isLast);
         }
 
         return CommandResult.Ok();
@@ -64,11 +65,17 @@ public class CharactersCommand : ICommand
         return CommandResult.Ok();
     }
 
-    public static void DisplayCharacter(Character character, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplayCharacter(
+        Character character,
+        ConsoleUI ui,
+        int indentLevel = 0,
+        bool isLast = false
+    )
     {
         ui.PrintSubsection(
             $"{character.GetConfig().Name} ({character.GetConfig().Id})",
-            indentLevel
+            indentLevel,
+            isLast
         );
 
         DisplayStats(character, ui, indentLevel + 1);
@@ -127,18 +134,28 @@ public class CharactersCommand : ICommand
             $"{character.GetConfig().Name} Skills ({character.GetConfig().Skills.Count})",
             indentLevel
         );
-        foreach (Skill skill in character.GetConfig().Skills)
+
+        for (int i = 0; i < character.GetConfig().Skills.Count; i++)
         {
-            DisplaySkill(skill, ui, indentLevel + 1);
+            bool isLast = i == character.GetConfig().Skills.Count - 1;
+            DisplaySkill(character.GetConfig().Skills[i], ui, indentLevel + 1, isLast);
         }
     }
 
-    public static void DisplaySkill(Skill skill, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplaySkill(
+        Skill skill,
+        ConsoleUI ui,
+        int indentLevel = 0,
+        bool isLast = false
+    )
     {
-        ui.PrintSubsection($"{skill.GetConfig().Name} ({skill.GetConfig().Id})", indentLevel);
+        ui.PrintSubsection(
+            $"{skill.GetConfig().Name} ({skill.GetConfig().Id})",
+            indentLevel,
+            isLast
+        );
 
         DisplayTargeter(skill.Targeter?.GetConfig(), ui, indentLevel + 1);
-
         DisplayUsables(skill.Usables, ui, indentLevel + 1);
     }
 
@@ -160,19 +177,25 @@ public class CharactersCommand : ICommand
     public static void DisplayUsables(List<IUsable> usables, ConsoleUI ui, int indentLevel = 0)
     {
         ui.PrintSubsection($"Usables ({usables.Count})", indentLevel);
-        foreach (IUsable usable in usables)
+
+        for (int i = 0; i < usables.Count; i++)
         {
-            DisplayUsable(usable, ui, indentLevel + 1);
+            bool isLast = i == usables.Count - 1;
+            DisplayUsable(usables[i], ui, indentLevel + 1, isLast);
         }
     }
 
-    public static void DisplayUsable(IUsable usable, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplayUsable(
+        IUsable usable,
+        ConsoleUI ui,
+        int indentLevel = 0,
+        bool isLast = false
+    )
     {
-        ui.PrintSubsection($"{usable.GetConfig().Id}", indentLevel);
+        ui.PrintSubsection($"{usable.GetConfig().Id}", indentLevel, isLast);
 
         TargeterConfig usableTargeter = usable.GetConfig().Targeter;
         DisplayTargeter(usableTargeter, ui, indentLevel + 1);
-
         DisplayEffects(usable.GetConfig().Effects, ui, indentLevel + 1);
     }
 
@@ -180,19 +203,25 @@ public class CharactersCommand : ICommand
     {
         ui.PrintSubsection($"Effects ({effects.Count})", indentLevel);
 
-        foreach (IEffect effect in effects)
+        for (int i = 0; i < effects.Count; i++)
         {
-            DisplayEffect(effect, ui, indentLevel + 1);
+            bool isLast = i == effects.Count - 1;
+            DisplayEffect(effects[i], ui, indentLevel + 1, isLast);
         }
     }
 
-    public static void DisplayEffect(IEffect effect, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplayEffect(
+        IEffect effect,
+        ConsoleUI ui,
+        int indentLevel = 0,
+        bool isLast = false
+    )
     {
-        ui.PrintSubsection($"{effect.GetConfig().Id}", indentLevel);
+        ui.PrintSubsection($"{effect.GetConfig().Id}", indentLevel, isLast);
 
         ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
         ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
-        ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1, isLast);
     }
 
     // private void DisplayCharacterStats(Character character, ConsoleUI ui)

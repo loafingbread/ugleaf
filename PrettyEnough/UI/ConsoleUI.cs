@@ -68,7 +68,16 @@ public class ConsoleUI
 
     public void PrintSubsection(string title, int indentLevel = 1)
     {
-        string indent = new string(' ', indentLevel * 3); // 3 spaces per indent level
+        string indent = CreateIndentWithLines(indentLevel);
+        SetColor(sectionColor);
+        Console.WriteLine($"{indent}📋 {title}");
+        Console.WriteLine($"{indent}{new string('-', title.Length + 2)}");
+        ResetColor();
+    }
+
+    public void PrintSubsection(string title, int indentLevel, bool isLast)
+    {
+        string indent = CreateIndentWithLines(indentLevel, isLast);
         SetColor(sectionColor);
         Console.WriteLine($"{indent}📋 {title}");
         Console.WriteLine($"{indent}{new string('-', title.Length + 2)}");
@@ -77,7 +86,15 @@ public class ConsoleUI
 
     public void PrintIndentedInfo(string message, int indentLevel = 1)
     {
-        string indent = new string(' ', indentLevel * 3); // 3 spaces per indent level
+        string indent = CreateIndentWithLines(indentLevel);
+        SetColor(infoColor);
+        Console.WriteLine($"{indent}ℹ️  {message}");
+        ResetColor();
+    }
+
+    public void PrintIndentedInfo(string message, int indentLevel, bool isLast)
+    {
+        string indent = CreateIndentWithLines(indentLevel, isLast);
         SetColor(infoColor);
         Console.WriteLine($"{indent}ℹ️  {message}");
         ResetColor();
@@ -85,7 +102,8 @@ public class ConsoleUI
 
     public void PrintTable(string[] headers, string[][] rows)
     {
-        if (rows.Length == 0) return;
+        if (rows.Length == 0)
+            return;
 
         // Calculate column widths
         var columnWidths = new int[headers.Length];
@@ -132,5 +150,24 @@ public class ConsoleUI
     private void ResetColor()
     {
         Console.ForegroundColor = defaultColor;
+    }
+
+    private string CreateIndentWithLines(int indentLevel)
+    {
+        return CreateIndentWithLines(indentLevel, false);
+    }
+
+    private string CreateIndentWithLines(int indentLevel, bool isLast)
+    {
+        if (indentLevel <= 0)
+            return "";
+
+        var indent = new System.Text.StringBuilder();
+        for (int i = 0; i < indentLevel - 1; i++)
+        {
+            indent.Append("│   "); // Vertical line + 3 spaces
+        }
+        indent.Append(isLast ? "└── " : "├── "); // Tree connector + 2 spaces
+        return indent.ToString();
     }
 }
