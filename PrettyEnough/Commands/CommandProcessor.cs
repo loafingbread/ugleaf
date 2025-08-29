@@ -16,12 +16,12 @@ public class CommandProcessor
     private void RegisterCommands()
     {
         commands["help"] = new HelpCommand();
-        // commands["stats"] = new StatsCommand();
         commands["characters"] = new CharactersCommand();
-        // commands["modify"] = new ModifyStatCommand();
-        // commands["set"] = new SetStatCommand();
         commands["info"] = new InfoCommand();
         commands["clear"] = new ClearCommand();
+        // commands["stats"] = new StatsCommand();
+        // commands["modify"] = new ModifyStatCommand();
+        // commands["set"] = new SetStatCommand();
     }
 
     public async Task<CommandResult> ProcessCommand(string input, GameState? gameState)

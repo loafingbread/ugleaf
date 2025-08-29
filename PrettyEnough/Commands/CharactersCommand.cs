@@ -12,7 +12,7 @@ namespace PrettyEnough.Commands;
 public class CharactersCommand : ICommand
 {
     public string Name => "characters";
-    public string Description => "Display all current characters in a pretty format";
+    public string Description => "Display all player characters in a pretty format";
     public string Usage => "characters";
 
     public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)

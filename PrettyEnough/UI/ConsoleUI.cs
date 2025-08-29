@@ -58,6 +58,14 @@ public class ConsoleUI
         ResetColor();
     }
 
+    public void PrintIndentedWarning(string message, int indentLevel = 1)
+    {
+        string indent = CreateIndentWithLines(indentLevel);
+        SetColor(warningColor);
+        Console.WriteLine($"{indent}⚠️  {message}");
+        ResetColor();
+    }
+
     public void PrintSection(string title)
     {
         SetColor(sectionColor);
