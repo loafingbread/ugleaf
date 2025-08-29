@@ -1,5 +1,6 @@
 using GameLogic.Entities;
 using GameLogic.Entities.Characters;
+using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
 using PrettyEnough.UI;
 
@@ -87,7 +88,18 @@ public class CharactersCommand : ICommand
             $"   {manaStat?.Metadata.DisplayName}: {manaStat?.CurrentValue} / {manaStat?.CurrentCapacity}"
         );
 
+        DisplaySkills(character, ui);
+
         ui.PrintInfo("");
+    }
+
+    public static void DisplaySkills(Character character, ConsoleUI ui)
+    {
+        ui.PrintSection($"📊 {character.GetConfig().Name} Skills");
+        foreach (Skill skill in character.GetConfig().Skills)
+        {
+            ui.PrintInfo($"   {skill.GetConfig().Name} ({skill.GetConfig().Id})");
+        }
     }
 
     // private void DisplayCharacterStats(Character character, ConsoleUI ui)

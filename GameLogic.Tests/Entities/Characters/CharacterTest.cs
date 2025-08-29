@@ -31,7 +31,7 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
         );
         Assert.Equal(20, goblin.Stats.GetStat("value_stat_strength", StatType.Value).CurrentValue);
         Assert.Equal(
-            10,
+            25,
             goblin.Stats.GetStat("value_stat_constitution", StatType.Value).CurrentValue
         );
     }

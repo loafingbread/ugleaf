@@ -16,7 +16,7 @@ public interface ICharacterRecord
     public List<SkillRecord> Skills { get; }
 }
 
-public record CharacterRecord : ICharacterRecord
+public record CharacterRecord : ICharacterRecord, IStatBlockRecord
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
