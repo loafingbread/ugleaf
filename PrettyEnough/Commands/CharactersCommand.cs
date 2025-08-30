@@ -6,29 +6,118 @@ using GameLogic.Targeting;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
 using PrettyEnough.UI;
+using PrettyEnough.Utils;
 
 namespace PrettyEnough.Commands;
 
-public class CharactersCommand : ICommand
+public class CharactersCommand : BaseCommand
 {
-    public string Name => "characters";
-    public string Description => "Display all player characters in a pretty format";
-    public string Usage => "characters";
+    public override string Name => "characters";
+    public override string Description => "Display all player characters in a pretty format";
+    public override string Usage => "characters";
 
-    public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)
+    public override string DetailedHelp =>
+        "The characters command displays information about all player characters in the game. "
+        + "It can be used to list all characters, show a summary of all characters, or display a specific character. "
+        + "The command also supports various flags to filter the output, such as showing only a specific character or displaying detailed information.";
+
+    public override Dictionary<string, string> Subcommands =>
+        new()
+        {
+            { "list", "List all characters" },
+            { "summary", "Show a summary of all characters" },
+        };
+
+    public override Dictionary<string, string> Flags =>
+        new()
+        {
+            { "--help, -h", "Show detailed help for this command" },
+            { "--character, -c", "Show a specific character" },
+        };
+
+    protected override async Task<CommandResult> ExecuteCommand(
+        ArgParser argParser,
+        GameState? gameState,
+        ConsoleUI ui
+    )
     {
         if (gameState?.PlayerState?.Characters == null)
             return CommandResult.Error("No player characters available");
 
-        if (args.Length == 0)
+        if (argParser.PositionalArgs.Count == 0)
         {
-            return await Task.FromResult(DisplayCharacters(gameState.PlayerState.Characters, ui));
+            return CharactersCommand.DefaultSubcommand(gameState, ui, argParser);
         }
-        else
+
+        string subcommand = argParser.PositionalArgs[0].ToLower();
+        argParser.PositionalArgs.RemoveAt(0);
+
+        return subcommand switch
         {
-            string characterId = args[0];
-            return await Task.FromResult(DisplayCharacterById(characterId, gameState, ui));
+            "list" => CharactersCommand.ListSubcommand(gameState, ui, 0),
+            "summary" => CharactersCommand.SummarySubcommand(gameState, ui, 0),
+            _ => CommandResult.Error(
+                $"Unknown subcommand: {subcommand}. Use 'characters --help' for available options."
+            ),
+        };
+    }
+
+    private static CommandResult DefaultSubcommand(
+        GameState gameState,
+        ConsoleUI ui,
+        ArgParser argParser
+    )
+    {
+        if (argParser.HasFlag("character", "c"))
+        {
+            string characterId = argParser.GetFlag("character", "c");
+            return CharactersCommand.DisplayCharacterById(characterId, gameState, ui);
         }
+
+        return CharactersCommand.DisplayCharacters(gameState.PlayerState.Characters, ui);
+    }
+
+    private static CommandResult ListSubcommand(
+        GameState gameState,
+        ConsoleUI ui,
+        int indentLevel = 0
+    )
+    {
+        ui.PrintIndentedSection(
+            $"Characters List ({gameState.PlayerState.Characters.Count})",
+            indentLevel
+        );
+
+        for (int i = 0; i < gameState.PlayerState.Characters.Count; i++)
+        {
+            Character character = gameState.PlayerState.Characters[i];
+            bool isLast = i == gameState.PlayerState.Characters.Count - 1;
+            ui.PrintIndentedInfo(
+                $"{character.GetConfig().Name} ({character.GetConfig().Id})",
+                indentLevel + 1,
+                isLast
+            );
+        }
+
+        return CommandResult.Ok();
+    }
+
+    private static CommandResult SummarySubcommand(
+        GameState gameState,
+        ConsoleUI ui,
+        int indentLevel = 0
+    )
+    {
+        ui.PrintIndentedSection(
+            $"Characters Summary ({gameState.PlayerState.Characters.Count})",
+            indentLevel
+        );
+
+        return CharactersCommand.DisplayCharacters(
+            gameState.PlayerState.Characters,
+            ui,
+            indentLevel
+        );
     }
 
     public static CommandResult DisplayCharacters(
@@ -37,12 +126,10 @@ public class CharactersCommand : ICommand
         int indentLevel = 0
     )
     {
-        ui.PrintIndentedSection($"Characters ({characters.Count})", indentLevel);
-
         for (int i = 0; i < characters.Count; i++)
         {
             bool isLast = i == characters.Count - 1;
-            DisplayCharacter(characters[i], ui, indentLevel + 1, isLast);
+            CharactersCommand.DisplayCharacter(characters[i], ui, indentLevel + 1, isLast);
         }
 
         return CommandResult.Ok();
@@ -61,7 +148,7 @@ public class CharactersCommand : ICommand
         if (character == null)
             return CommandResult.Error($"Character not found: {characterId}");
 
-        DisplayCharacter(character, ui, indentLevel);
+        CharactersCommand.DisplayCharacter(character, ui, indentLevel);
         return CommandResult.Ok();
     }
 
@@ -222,5 +309,20 @@ public class CharactersCommand : ICommand
         ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
         ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
         ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1, isLast);
+    }
+
+    protected override List<string> GetExamples()
+    {
+        return new List<string>
+        {
+            "characters                    # Show all characters",
+            "characters list               # Show all characters",
+            "characters summary            # Show a summary of all characters",
+            "characters --help                   # Show detailed help for this command",
+            "characters --character char_pc_ash        # Show specific character",
+            "characters --character=char_pc_ash        # Show specific character",
+            "characters -c char_pc_ash        # Show specific character",
+            "characters -c=char_pc_ash        # Show specific character",
+        };
     }
 }

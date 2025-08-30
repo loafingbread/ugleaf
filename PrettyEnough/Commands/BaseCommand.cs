@@ -1,7 +1,8 @@
+namespace PrettyEnough.Commands;
+
 using GameLogic.Entities;
 using PrettyEnough.UI;
-
-namespace PrettyEnough.Commands;
+using PrettyEnough.Utils;
 
 /// <summary>
 /// Base class for all commands that provides common functionality
@@ -28,22 +29,44 @@ public abstract class BaseCommand : ICommand
     public virtual Dictionary<string, string> Flags =>
         new() { { "--help, -h", "Show detailed help for this command" } };
 
-    public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)
+    public async Task<CommandResult> Execute(
+        ArgParser argParser,
+        GameState? gameState,
+        ConsoleUI ui
+    )
     {
-        // Check for help flags first
-        if (IsHelpRequest(args))
+        CommandResult? helpResult = HelpCommand(ui, argParser);
+        if (helpResult != null)
+        {
+            return helpResult;
+        }
+
+        return await ExecuteCommand(argParser, gameState, ui);
+    }
+
+    private CommandResult? HelpCommand(ConsoleUI ui, ArgParser argParser)
+    {
+        bool isHelpFlagForCurrentCommand =
+            argParser.PositionalArgs.Count == 0 && argParser.HasFlag("help", "h");
+        if (isHelpFlagForCurrentCommand)
         {
             return DisplayHelp(ui);
         }
 
-        return await ExecuteCommand(args, gameState, ui);
+        bool isHelpFlagSubcommand = argParser.PositionalArgs.Count > 0 && argParser.PositionalArgs[0] == "help";
+        if (isHelpFlagSubcommand)
+        {
+            return DisplayHelp(ui);
+        }
+
+        return null;
     }
 
     /// <summary>
     /// Main command execution logic to be implemented by derived classes
     /// </summary>
     protected abstract Task<CommandResult> ExecuteCommand(
-        string[] args,
+        ArgParser argParser,
         GameState? gameState,
         ConsoleUI ui
     );
@@ -53,7 +76,7 @@ public abstract class BaseCommand : ICommand
     /// </summary>
     protected bool IsHelpRequest(string[] args)
     {
-        return args.Length > 0 && (args[0] == "--help" || args[0] == "-h" || args[0] == "help");
+        return (new ArgParser(args)).IsHelpRequest();
     }
 
     /// <summary>
@@ -61,28 +84,17 @@ public abstract class BaseCommand : ICommand
     /// </summary>
     protected virtual CommandResult DisplayHelp(ConsoleUI ui)
     {
-        ui.PrintSection($"📖 {Name.ToUpper()} Command Help");
+        ui.PrintIndentedSection($"📖 {Name.ToUpper()} Command Help", 0);
 
-        // Description
-        ui.PrintInfo(Description);
+        this.DisplayDescription(ui, 1);
         ui.PrintIndentedNewLine(1);
 
-        // Usage
-        ui.PrintIndentedSection("Usage", 1);
-        ui.PrintIndentedInfo(Usage, 2);
+        this.DisplayUsage(ui, 1);
         ui.PrintIndentedNewLine(1);
 
         // Subcommands
-        if (Subcommands.Any())
-        {
-            ui.PrintIndentedSection("Subcommands", 1);
-            foreach (var subcommand in Subcommands)
-            {
-                ui.PrintIndentedInfo($"{subcommand.Key}: {subcommand.Value}", 2);
-            }
-            ui.PrintIndentedNewLine(1);
-        }
-
+        this.DisplaySubcommands(ui, 1);
+        ui.PrintIndentedNewLine(1);
         // Flags
         if (Flags.Any())
         {
@@ -116,6 +128,31 @@ public abstract class BaseCommand : ICommand
         return CommandResult.Ok();
     }
 
+    protected virtual void DisplayDescription(ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintIndentedSection("Description", indentLevel);
+        ui.PrintIndentedInfo(this.Description, indentLevel + 1);
+    }
+
+    protected virtual void DisplayUsage(ConsoleUI ui, int indentLevel = 0)
+    {
+        ui.PrintIndentedSection("Usage", indentLevel);
+        ui.PrintIndentedInfo(this.Usage, indentLevel + 1);
+    }
+
+    protected virtual void DisplaySubcommands(ConsoleUI ui, int indentLevel = 0)
+    {
+        if (!this.Subcommands.Any())
+            return;
+
+        ui.PrintIndentedSection("Subcommands", indentLevel);
+
+        foreach (KeyValuePair<string, string> subcommand in Subcommands)
+        {
+            ui.PrintIndentedInfo($"{subcommand.Key}: {subcommand.Value}", indentLevel + 1);
+        }
+    }
+
     /// <summary>
     /// Get example usage for this command
     /// </summary>
@@ -127,59 +164,11 @@ public abstract class BaseCommand : ICommand
     /// <summary>
     /// Parse command line arguments and handle common patterns
     /// </summary>
-    protected (string[] positionalArgs, Dictionary<string, string> flags) ParseArgs(string[] args)
+    protected ArgParser ParseArgs(string[] args)
     {
-        var positionalArgs = new List<string>();
-        var flags = new Dictionary<string, string>();
+        ArgParser argParser = new ArgParser(args);
 
-        for (int i = 0; i < args.Length; i++)
-        {
-            var arg = args[i];
-
-            if (arg.StartsWith("--"))
-            {
-                // Long flag: --flag=value or --flag value
-                var flagName = arg.Substring(2);
-                if (flagName.Contains('='))
-                {
-                    var parts = flagName.Split('=', 2);
-                    flags[parts[0]] = parts[1];
-                }
-                else if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
-                {
-                    flags[flagName] = args[i + 1];
-                    i++; // Skip the next argument
-                }
-                else
-                {
-                    flags[flagName] = "true";
-                }
-            }
-            else if (arg.StartsWith("-") && arg.Length > 1)
-            {
-                // Short flag: -f=value or -f value
-                var flagName = arg.Substring(1);
-                if (flagName.Contains('='))
-                {
-                    var parts = flagName.Split('=', 2);
-                    flags[parts[0]] = parts[1];
-                }
-                else if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
-                {
-                    flags[flagName] = args[i + 1];
-                    i++; // Skip the next argument
-                }
-                else
-                {
-                    flags[flagName] = "true";
-                }
-            }
-            else
-            {
-                positionalArgs.Add(arg);
-            }
-        }
-
-        return (positionalArgs.ToArray(), flags);
+        argParser.Parse();
+        return argParser;
     }
 }

@@ -1,5 +1,6 @@
 using GameLogic.Entities;
 using PrettyEnough.UI;
+using PrettyEnough.Utils;
 
 namespace PrettyEnough.Commands;
 
@@ -16,7 +17,6 @@ public class CommandProcessor
     private void RegisterCommands()
     {
         commands["help"] = new HelpCommand();
-        commands["characters"] = new CharactersCommand();
         commands["info"] = new InfoCommand();
         commands["clear"] = new ClearCommand();
         // commands["stats"] = new StatsCommand();
@@ -33,14 +33,17 @@ public class CommandProcessor
         var commandName = parts[0].ToLower();
         var args = parts.Skip(1).ToArray();
 
-        if (!commands.ContainsKey(commandName))
+        if (!this.commands.ContainsKey(commandName))
             return CommandResult.Error(
                 $"Unknown command: {commandName}. Type 'help' for available commands."
             );
 
         try
         {
-            return await commands[commandName].Execute(args, gameState, ui);
+            ArgParser argParser = new ArgParser(args);
+            argParser.Parse();
+
+            return await this.commands[commandName].Execute(argParser, gameState, ui);
         }
         catch (Exception ex)
         {

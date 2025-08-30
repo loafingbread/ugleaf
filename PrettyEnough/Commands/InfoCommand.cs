@@ -2,6 +2,7 @@ using GameLogic.Entities;
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Stats;
 using PrettyEnough.UI;
+using PrettyEnough.Utils;
 
 namespace PrettyEnough.Commands;
 
@@ -10,7 +11,8 @@ public class InfoCommand : BaseCommand
     public override string Name => "info";
     public override string Description =>
         "Show detailed information about the game state and its components";
-    public override string Usage => "info                    # Show game state summary\ninfo [subcommand] [options] # Show specific information";
+    public override string Usage =>
+        "info                    # Show game state summary\ninfo [subcommand] [options] # Show specific information";
 
     public override string DetailedHelp =>
         "The info command provides detailed information about the current game state. "
@@ -20,7 +22,7 @@ public class InfoCommand : BaseCommand
     public override Dictionary<string, string> Subcommands =>
         new()
         {
-            { "default", "Show a summary of the game state (default when no subcommand given)" },
+            { "summary", "Show a summary of the game state (default when no subcommand given)" },
             { "characters", "Show detailed information about all characters" },
         };
 
@@ -29,54 +31,52 @@ public class InfoCommand : BaseCommand
         {
             { "--help, -h", "Show detailed help for this command" },
             { "--verbose, -v", "Show more detailed information" },
-            { "--format", "Output format (text, json, table)" },
         };
 
     protected override async Task<CommandResult> ExecuteCommand(
-        string[] args,
+        ArgParser argParser,
         GameState? gameState,
         ConsoleUI ui
     )
     {
-        var (positionalArgs, flags) = ParseArgs(args);
-
-        if (positionalArgs.Length == 0)
+        if (argParser.PositionalArgs.Count == 0)
         {
-            return DisplaySummary(gameState, ui, flags);
+            return InfoCommand.DefaultSubcommand(gameState, ui, argParser);
         }
 
-        var subcommand = positionalArgs[0].ToLower();
-        var subcommandArgs = positionalArgs.Skip(1).ToArray();
+        string subcommand = argParser.PositionalArgs[0].ToLower();
+        argParser.PositionalArgs.RemoveAt(0);
 
         return subcommand switch
         {
-            "characters" => await HandleCharactersSubcommand(subcommandArgs, gameState, ui, flags),
-            "default" => DisplaySummary(gameState, ui, flags),
-            "summary" => DisplaySummary(gameState, ui, flags),
+            "characters" => await InfoCommand.CharactersSubcommand(gameState, ui, argParser),
+            "summary" => InfoCommand.SummarySubcommand(gameState, ui, argParser),
             _ => CommandResult.Error(
                 $"Unknown subcommand: {subcommand}. Use 'info --help' for available options."
             ),
         };
     }
 
-    private async Task<CommandResult> HandleCharactersSubcommand(
-        string[] args,
+    private static CommandResult DefaultSubcommand(
         GameState? gameState,
         ConsoleUI ui,
-        Dictionary<string, string> flags
+        ArgParser argParser
     )
     {
-        // Check if the user wants help for the characters subcommand
-        if (args.Length > 0 && (args[0] == "--help" || args[0] == "-h"))
-        {
-            return DisplayCharactersHelp(ui);
-        }
-
-        // Delegate to CharactersCommand
-        return await new CharactersCommand().Execute(args, gameState, ui);
+        return SummarySubcommand(gameState, ui, argParser);
     }
 
-    private CommandResult DisplayCharactersHelp(ConsoleUI ui)
+    private static async Task<CommandResult> CharactersSubcommand(
+        GameState? gameState,
+        ConsoleUI ui,
+        ArgParser argParser
+    )
+    {
+        // Delegate to CharactersCommand
+        return await (new CharactersCommand()).Execute(argParser, gameState, ui);
+    }
+
+    private static CommandResult HelpSubcommand(ConsoleUI ui)
     {
         ui.PrintSection("📖 INFO CHARACTERS Subcommand Help");
 
@@ -96,15 +96,12 @@ public class InfoCommand : BaseCommand
         return CommandResult.Ok();
     }
 
-    public static CommandResult DisplaySummary(
+    private static CommandResult SummarySubcommand(
         GameState? gameState,
         ConsoleUI ui,
-        Dictionary<string, string> flags = null
+        ArgParser argParser
     )
     {
-        flags ??= new Dictionary<string, string>();
-        var verbose = flags.ContainsKey("verbose") || flags.ContainsKey("v");
-
         ui.PrintSection("ℹ️  Game State Summary");
 
         if (gameState == null)
@@ -113,7 +110,8 @@ public class InfoCommand : BaseCommand
             return CommandResult.Ok();
         }
 
-        DisplayCharactersSummary(gameState, ui, verbose);
+        bool verbose = argParser.HasFlag("verbose", "v");
+        InfoCommand.DisplayCharactersSummary(gameState, ui, verbose);
 
         if (verbose)
         {
@@ -129,7 +127,7 @@ public class InfoCommand : BaseCommand
         return CommandResult.Ok();
     }
 
-    public static CommandResult DisplayCharactersSummary(
+    private static CommandResult DisplayCharactersSummary(
         GameState? gameState,
         ConsoleUI ui,
         bool verbose = false,
@@ -174,12 +172,11 @@ public class InfoCommand : BaseCommand
     {
         return new List<string>
         {
-            "info                    # Show game state summary (default)",
-            "info default            # Same as 'info' - show summary",
-            "info --verbose          # Show detailed summary",
-            "info characters         # Show all characters",
-            "info characters alice   # Show specific character",
-            "info --help             # Show this help message",
+            "info                         # Show game state summary (default)",
+            "info summary                 # Show game state summary",
+            "info characters              # Show all characters",
+            "info --verbose               # Show detailed summary",
+            "info --help                  # Show this help message",
         };
     }
 }
