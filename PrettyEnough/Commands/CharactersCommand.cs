@@ -309,6 +309,14 @@ public class CharactersCommand : BaseCommand
         ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
         ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
         ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1, isLast);
+
+        if (effect.GetConfig().Type == "Attack")
+        {
+            ui.PrintIndentedInfo(
+                $"Damage: {(effect.GetConfig() as AttackEffectConfig)?.Damage}",
+                indentLevel + 1
+            );
+        }
     }
 
     protected override List<string> GetExamples()

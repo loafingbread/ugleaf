@@ -31,7 +31,7 @@ public class EffectConfig
     public string Subtype { get; init; }
     public string Variant { get; init; }
 
-    protected EffectConfig(string id, string type, string subtype, string variant)
+    protected EffectConfig(string id, string type, string subtype, string variant, int damage = 0)
     {
         this.Id = id;
         this.Type = type;
