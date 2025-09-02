@@ -1,8 +1,8 @@
 namespace GameLogic.Config;
 
 // Associate configs with runtime classes
-public interface IConfigurable<TConfig>
+public interface IConfigurable<TConfig, TMetadata>
 {
-    void ApplyConfig(TConfig config);
-    TConfig GetConfig();
+    public TMetadata Metadata { get; }
+    public TConfig Config { get; }
 }

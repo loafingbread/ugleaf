@@ -1,46 +1,69 @@
 namespace GameLogic.Entities.Skills;
 
 using GameLogic.Config;
+using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
-public class Skill : IConfigurable<SkillConfig>
+public class SkillTemplate : IConfigurable<SkillConfigRecord, SkillMetadataRecord>, ITemplate
 {
-    private SkillConfig _config { get; set; }
-    public string Id { get; private set; } = "";
-    public string Name { get; private set; } = "";
+    public TemplateId Id { get; private set; }
+    public SkillMetadataRecord Metadata { get; private set; }
+    public SkillConfigRecord Config { get; private set; }
 
-    // public IUsable Usable { get; }
+    public SkillTemplate(SkillTemplateRecord record)
+    {
+        this.Id = new TemplateId(record.Id);
+        this.Metadata = record.Metadata;
+        this.Config = record.Config;
+    }
+
+    public Skill CreateSkill()
+    {
+        return SkillFactory.CreateSkillFromTemplate(this);
+    }
+}
+
+public class Skill
+{
+    public InstanceId Id { get; private set; }
+    public TemplateId TemplateId { get; private set; }
+    public string Name { get; private set; } = "";
+    public string Description { get; private set; } = "";
+    public List<string> Tags { get; private set; } = new();
+
     public ITargeter? Targeter { get; private set; } = null;
     public List<IUsable> Usables { get; private set; } = new();
 
-    public Skill(SkillConfig config)
+    public Skill(
+        GameLogic.Registry.InstanceId id,
+        GameLogic.Registry.TemplateId templateId,
+        string name,
+        string description,
+        List<string> tags,
+        TargeterConfig? targeter,
+        List<UsableConfig> usables
+    )
     {
-        this._config = config;
-        this.ApplyConfig(config);
-    }
+        this.Id = id;
+        this.TemplateId = templateId;
 
-    public bool CanTarget() => this.Targeter != null;
+        this.Name = name;
+        this.Description = description;
+        this.Tags = [.. tags];
 
-    public bool CanUse() => this.Usables.Count > 0;
-
-    public void ApplyConfig(SkillConfig config)
-    {
-        this._config = config;
-
-        this.Id = config.Id;
-        this.Name = config.Name;
-
-        if (config.Targeter != null)
+        if (targeter is not null)
         {
-            this.Targeter = new Targeter(config.Targeter);
+            this.Targeter = new Targeter(targeter);
         }
 
-        foreach (UsableConfig usableConfig in config.Usables)
+        foreach (UsableConfig usableConfig in usables)
         {
             this.Usables.Add(new Usable(usableConfig));
         }
     }
 
-    public SkillConfig GetConfig() => this._config;
+    public bool CanTarget() => this.Targeter != null;
+
+    public bool CanUse() => this.Usables.Count > 0;
 }

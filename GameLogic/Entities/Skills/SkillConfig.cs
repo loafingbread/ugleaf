@@ -4,43 +4,35 @@ using System.Diagnostics.CodeAnalysis;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
-public interface ISkillRecord
+public record SkillRecord
 {
-    public string Id { get; }
-    public string Name { get; }
-    public TargeterRecord? Targeter { get; }
-    public List<UsableRecord> Usables { get; }
+    public required string InstanceId { get; init; }
+    public required string TemplateId { get; init; }
+
+    public required string Name { get; init; }
+    public required string Description { get; init; }
+    public required List<string> Tags { get; init; }
+
+    public required TargeterConfig Targeter { get; init; }
+    public required List<UsableConfig> Usables { get; init; }
 }
 
-public record SkillRecord : ISkillRecord
+public record SkillTemplateRecord
 {
     public required string Id { get; init; }
-    public required string Name { get; init; }
-    public TargeterRecord? Targeter { get; init; }
-    public List<UsableRecord> Usables { get; init; } = new();
+    public required SkillMetadataRecord Metadata { get; init; }
+    public required SkillConfigRecord Config { get; init; }
 }
 
-public class SkillConfig
+public record SkillMetadataRecord
 {
-    public required string Id { get; init; }
-    public required string Name { get; init; }
-    public TargeterConfig? Targeter { get; init; }
-    public List<UsableConfig> Usables { get; init; } = new();
+    public required string DisplayName { get; init; }
+    public required string Description { get; init; }
+    public required List<string> Tags { get; init; }
+}
 
-    [SetsRequiredMembers]
-    public SkillConfig(ISkillRecord record)
-    {
-        this.Id = record.Id;
-        this.Name = record.Name;
-
-        if (record.Targeter != null)
-        {
-            this.Targeter = new TargeterConfig(record.Targeter);
-        }
-
-        foreach (IUsableRecord usableRecord in record.Usables)
-        {
-            this.Usables.Add(new UsableConfig(usableRecord));
-        }
-    }
+public record SkillConfigRecord
+{
+    public required TargeterConfig? Targeter { get; init; }
+    public required List<UsableConfig> Usables { get; init; }
 }

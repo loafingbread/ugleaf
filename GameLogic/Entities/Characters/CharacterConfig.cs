@@ -14,6 +14,15 @@ public interface ICharacterRecord
     public int Defense { get; }
     public List<StatRecord> Stats { get; }
     public List<SkillRecord> Skills { get; }
+    public List<SkillTemplate> SkillRefs { get; }
+}
+
+public record CharacterMetadataRecord
+{
+    public required string TemplateId { get; init; }
+    public required string DisplayName { get; init; }
+    public required string Description { get; init; }
+    public required List<string> Tags { get; init; }
 }
 
 public record CharacterRecord : ICharacterRecord, IStatBlockRecord
@@ -25,6 +34,7 @@ public record CharacterRecord : ICharacterRecord, IStatBlockRecord
     public int Defense { get; init; }
     public List<StatRecord> Stats { get; init; } = new();
     public List<SkillRecord> Skills { get; init; } = new();
+    public List<SkillTemplate> SkillRefs { get; init; } = new();
 }
 
 public class CharacterConfig : IStatBlockRecord
@@ -36,6 +46,7 @@ public class CharacterConfig : IStatBlockRecord
     public int Defense { get; init; }
     public List<StatRecord> Stats { get; init; } = new();
     public List<Skill> Skills { get; init; } = new();
+    public List<SkillTemplate> SkillRefs { get; init; } = new();
 
     [SetsRequiredMembers]
     public CharacterConfig(ICharacterRecord record)
