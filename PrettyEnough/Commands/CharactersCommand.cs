@@ -6,29 +6,118 @@ using GameLogic.Targeting;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
 using PrettyEnough.UI;
+using PrettyEnough.Utils;
 
 namespace PrettyEnough.Commands;
 
-public class CharactersCommand : ICommand
+public class CharactersCommand : BaseCommand
 {
-    public string Name => "characters";
-    public string Description => "Display all current characters in a pretty format";
-    public string Usage => "characters";
+    public override string Name => "characters";
+    public override string Description => "Display all player characters in a pretty format";
+    public override string Usage => "characters";
 
-    public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)
+    public override string DetailedHelp =>
+        "The characters command displays information about all player characters in the game. "
+        + "It can be used to list all characters, show a summary of all characters, or display a specific character. "
+        + "The command also supports various flags to filter the output, such as showing only a specific character or displaying detailed information.";
+
+    public override Dictionary<string, string> Subcommands =>
+        new()
+        {
+            { "list", "List all characters" },
+            { "summary", "Show a summary of all characters" },
+        };
+
+    public override Dictionary<string, string> Flags =>
+        new()
+        {
+            { "--help, -h", "Show detailed help for this command" },
+            { "--character, -c", "Show a specific character" },
+        };
+
+    protected override async Task<CommandResult> ExecuteCommand(
+        ArgParser argParser,
+        GameState? gameState,
+        ConsoleUI ui
+    )
     {
         if (gameState?.PlayerState?.Characters == null)
             return CommandResult.Error("No player characters available");
 
-        if (args.Length == 0)
+        if (argParser.PositionalArgs.Count == 0)
         {
-            return await Task.FromResult(DisplayCharacters(gameState.PlayerState.Characters, ui));
+            return CharactersCommand.DefaultSubcommand(gameState, ui, argParser);
         }
-        else
+
+        string subcommand = argParser.PositionalArgs[0].ToLower();
+        argParser.PositionalArgs.RemoveAt(0);
+
+        return subcommand switch
         {
-            string characterId = args[0];
-            return await Task.FromResult(DisplayCharacterById(characterId, gameState, ui));
+            "list" => CharactersCommand.ListSubcommand(gameState, ui, 0),
+            "summary" => CharactersCommand.SummarySubcommand(gameState, ui, 0),
+            _ => CommandResult.Error(
+                $"Unknown subcommand: {subcommand}. Use 'characters --help' for available options."
+            ),
+        };
+    }
+
+    private static CommandResult DefaultSubcommand(
+        GameState gameState,
+        ConsoleUI ui,
+        ArgParser argParser
+    )
+    {
+        if (argParser.HasFlag("character", "c"))
+        {
+            string characterId = argParser.GetFlag("character", "c");
+            return CharactersCommand.DisplayCharacterById(characterId, gameState, ui);
         }
+
+        return CharactersCommand.DisplayCharacters(gameState.PlayerState.Characters, ui);
+    }
+
+    private static CommandResult ListSubcommand(
+        GameState gameState,
+        ConsoleUI ui,
+        int indentLevel = 0
+    )
+    {
+        ui.PrintIndentedSection(
+            $"Characters List ({gameState.PlayerState.Characters.Count})",
+            indentLevel
+        );
+
+        for (int i = 0; i < gameState.PlayerState.Characters.Count; i++)
+        {
+            Character character = gameState.PlayerState.Characters[i];
+            bool isLast = i == gameState.PlayerState.Characters.Count - 1;
+            ui.PrintIndentedInfo(
+                $"{character.GetConfig().Name} ({character.GetConfig().Id})",
+                indentLevel + 1,
+                isLast
+            );
+        }
+
+        return CommandResult.Ok();
+    }
+
+    private static CommandResult SummarySubcommand(
+        GameState gameState,
+        ConsoleUI ui,
+        int indentLevel = 0
+    )
+    {
+        ui.PrintIndentedSection(
+            $"Characters Summary ({gameState.PlayerState.Characters.Count})",
+            indentLevel
+        );
+
+        return CharactersCommand.DisplayCharacters(
+            gameState.PlayerState.Characters,
+            ui,
+            indentLevel
+        );
     }
 
     public static CommandResult DisplayCharacters(
@@ -37,12 +126,10 @@ public class CharactersCommand : ICommand
         int indentLevel = 0
     )
     {
-        ui.PrintSubsection($"Characters ({characters.Count})", indentLevel);
-
         for (int i = 0; i < characters.Count; i++)
         {
             bool isLast = i == characters.Count - 1;
-            DisplayCharacter(characters[i], ui, indentLevel + 1, isLast);
+            CharactersCommand.DisplayCharacter(characters[i], ui, indentLevel + 1, isLast);
         }
 
         return CommandResult.Ok();
@@ -61,7 +148,7 @@ public class CharactersCommand : ICommand
         if (character == null)
             return CommandResult.Error($"Character not found: {characterId}");
 
-        DisplayCharacter(character, ui, indentLevel);
+        CharactersCommand.DisplayCharacter(character, ui, indentLevel);
         return CommandResult.Ok();
     }
 
@@ -72,7 +159,7 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{character.GetConfig().Name} ({character.GetConfig().Id})",
             indentLevel,
             isLast
@@ -84,7 +171,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplayStats(Character character, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{character.GetConfig().Name} Stats ({character.Stats.Stats.Count})",
             indentLevel
         );
@@ -130,7 +217,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplaySkills(Character character, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{character.GetConfig().Name} Skills ({character.GetConfig().Skills.Count})",
             indentLevel
         );
@@ -149,7 +236,7 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection(
+        ui.PrintIndentedSection(
             $"{skill.GetConfig().Name} ({skill.GetConfig().Id})",
             indentLevel,
             isLast
@@ -164,7 +251,7 @@ public class CharactersCommand : ICommand
         if (targeter == null)
             return;
 
-        ui.PrintSubsection("Targeter", indentLevel);
+        ui.PrintIndentedSection("Targeter", indentLevel);
 
         ui.PrintIndentedInfo($"Target Quantity Type: {targeter.TargetQuantity}", indentLevel + 1);
         ui.PrintIndentedInfo(
@@ -176,7 +263,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplayUsables(List<IUsable> usables, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection($"Usables ({usables.Count})", indentLevel);
+        ui.PrintIndentedSection($"Usables ({usables.Count})", indentLevel);
 
         for (int i = 0; i < usables.Count; i++)
         {
@@ -192,7 +279,7 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection($"{usable.GetConfig().Id}", indentLevel, isLast);
+        ui.PrintIndentedSection($"{usable.GetConfig().Id}", indentLevel, isLast);
 
         TargeterConfig usableTargeter = usable.GetConfig().Targeter;
         DisplayTargeter(usableTargeter, ui, indentLevel + 1);
@@ -201,7 +288,7 @@ public class CharactersCommand : ICommand
 
     public static void DisplayEffects(List<IEffect> effects, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintSubsection($"Effects ({effects.Count})", indentLevel);
+        ui.PrintIndentedSection($"Effects ({effects.Count})", indentLevel);
 
         for (int i = 0; i < effects.Count; i++)
         {
@@ -217,104 +304,33 @@ public class CharactersCommand : ICommand
         bool isLast = false
     )
     {
-        ui.PrintSubsection($"{effect.GetConfig().Id}", indentLevel, isLast);
+        ui.PrintIndentedSection($"{effect.GetConfig().Id}", indentLevel, isLast);
 
         ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
         ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
         ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1, isLast);
+
+        if (effect.GetConfig().Type == "Attack")
+        {
+            ui.PrintIndentedInfo(
+                $"Damage: {(effect.GetConfig() as AttackEffectConfig)?.Damage}",
+                indentLevel + 1
+            );
+        }
     }
 
-    // private void DisplayCharacterStats(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterResources(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterSkills(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterInventory(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
-
-    // private void DisplayCharacterEquipment(Character character, ConsoleUI ui)
-    // {
-    //     ui.PrintInfo($"{character.Name} ({character.Id})");
-    // }
+    protected override List<string> GetExamples()
+    {
+        return new List<string>
+        {
+            "characters                    # Show all characters",
+            "characters list               # Show all characters",
+            "characters summary            # Show a summary of all characters",
+            "characters --help                   # Show detailed help for this command",
+            "characters --character char_pc_ash        # Show specific character",
+            "characters --character=char_pc_ash        # Show specific character",
+            "characters -c char_pc_ash        # Show specific character",
+            "characters -c=char_pc_ash        # Show specific character",
+        };
+    }
 }
-
-// public class StatsCommand : ICommand
-// {
-//     public string Name => "stats";
-//     public string Description => "Display all current stats in a pretty format";
-//     public string Usage => "stats [stat_name]";
-
-//     public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)
-//     {
-//         if (gameState?.StatBlock == null)
-//             return CommandResult.Error("No game state available");
-
-//         if (args.Length > 0)
-//         {
-//             // Show specific stat
-//             var statName = args[0];
-//             var stat = gameState.StatBlock.GetStat(statName, StatType.Any);
-
-//             if (stat == null)
-//                 return CommandResult.Error($"Stat not found: {statName}");
-
-//             DisplayStat(stat, ui);
-//             return CommandResult.Ok();
-//         }
-
-//         // Show all stats
-//         ui.PrintSection("📊 Current Stats");
-
-//         if (gameState.StatBlock.Stats.Count == 0)
-//         {
-//             ui.PrintWarning("No stats available");
-//             return CommandResult.Ok();
-//         }
-
-//         foreach (var stat in gameState.StatBlock.Stats)
-//         {
-//             DisplayStat(stat, ui);
-//         }
-
-//         return await Task.FromResult(CommandResult.Ok());
-//     }
-
-//     private void DisplayStat(Stat stat, ConsoleUI ui)
-//     {
-//         var statType = stat.Type switch
-//         {
-//             StatType.Value => "📈",
-//             StatType.Resource => "💧",
-//             _ => "❓",
-//         };
-
-//         ui.PrintInfo($"{statType} {stat.Metadata.DisplayName} ({stat.Metadata.Name})");
-//         ui.PrintInfo($"   Current: {stat.CurrentValue}");
-//         ui.PrintInfo($"   Base: {stat.BaseValue}");
-//         ui.PrintInfo($"   Type: {stat.Type}");
-//         ui.PrintInfo($"   Description: {stat.Metadata.Description}");
-//         ui.PrintInfo($"   Tags: {string.Join(", ", stat.Metadata.Tags)}");
-
-//         // Show additional info for resource stats
-//         if (stat is ResourceStat resourceStat)
-//         {
-//             ui.PrintInfo(
-//                 $"   Capacity: {resourceStat.CurrentValue}/{resourceStat.GetConfig().CurrentCapacityCap}"
-//             );
-//         }
-
-//         ui.PrintInfo("");
-//     }
-// }

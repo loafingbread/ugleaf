@@ -99,28 +99,4 @@ class Program
             ui.PrintError($"❌ {result.Message}");
         }
     }
-
-    private static void DisplayPlayerState()
-    {
-        if (gameState?.PlayerState == null)
-            return;
-
-        ui.PrintSection("📊 Current Player State");
-
-        foreach (var character in gameState.PlayerState.Characters)
-        {
-            ui.PrintInfo($"{character.GetConfig().Name} ({character.GetConfig().Id})");
-
-            Stat strengthStat = character.Stats.GetStat("value_stat_strength", StatType.Value);
-            ui.PrintInfo($"   {strengthStat?.Metadata.DisplayName}: {strengthStat?.CurrentValue}");
-
-            Stat agilityStat = character.Stats.GetStat("value_stat_agility", StatType.Value);
-            ui.PrintInfo($"   {agilityStat?.Metadata.DisplayName}: {agilityStat?.CurrentValue}");
-
-            Stat healthStat = character.Stats.GetStat("resource_stat_health", StatType.Resource);
-            ui.PrintInfo($"   {healthStat?.Metadata.DisplayName}: {healthStat?.CurrentValue}");
-
-            ui.PrintInfo("");
-        }
-    }
 }

@@ -1,20 +1,33 @@
 using GameLogic.Entities;
 using PrettyEnough.UI;
+using PrettyEnough.Utils;
 
 namespace PrettyEnough.Commands;
 
-public class HelpCommand : ICommand
+public class HelpCommand : BaseCommand
 {
-    public string Name => "help";
-    public string Description => "Show available commands and their usage";
-    public string Usage => "help [command]";
+    public override string Name => "help";
+    public override string Description => "Show available commands and their usage";
+    public override string Usage => "help [command]";
 
-    public async Task<CommandResult> Execute(string[] args, GameState? gameState, ConsoleUI ui)
+    public override string DetailedHelp => "The help command shows available commands and their usage. "
+        + "If a command is provided, it shows detailed help for that command. "
+        + "If no command is provided, it shows a list of all commands.";
+
+    public override Dictionary<string, string> Subcommands => new() { };
+
+    public override Dictionary<string, string> Flags => new() { };
+
+    protected override async Task<CommandResult> ExecuteCommand(
+        ArgParser argParser,
+        GameState? gameState,
+        ConsoleUI ui
+    )
     {
-        if (args.Length > 0)
+        if (argParser.PositionalArgs.Count > 0)
         {
             // Show help for specific command
-            var commandName = args[0].ToLower();
+            var commandName = argParser.PositionalArgs[0].ToLower();
             var command = GetCommandByName(commandName);
 
             if (command == null)
@@ -30,7 +43,7 @@ public class HelpCommand : ICommand
         // Show all commands
         ui.PrintSection("📖 Available Commands");
 
-        var commands = GetAllCommands();
+        var commands = this.GetAllCommands();
         var headers = new[] { "Command", "Description", "Usage" };
         var rows = commands.Select(cmd => new[] { cmd.Name, cmd.Description, cmd.Usage }).ToArray();
 
@@ -41,7 +54,7 @@ public class HelpCommand : ICommand
 
     private ICommand? GetCommandByName(string name)
     {
-        return GetAllCommands()
+        return this.GetAllCommands()
             .FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -50,11 +63,10 @@ public class HelpCommand : ICommand
         return new ICommand[]
         {
             new HelpCommand(),
-            new CharactersCommand(),
-            // new ModifyStatCommand(),
-            // new SetStatCommand(),
             new InfoCommand(),
             new ClearCommand(),
+            // new ModifyStatCommand(),
+            // new SetStatCommand(),
         };
     }
 }

@@ -58,6 +58,14 @@ public class ConsoleUI
         ResetColor();
     }
 
+    public void PrintIndentedWarning(string message, int indentLevel = 1)
+    {
+        string indent = CreateIndentWithLines(indentLevel);
+        SetColor(warningColor);
+        Console.WriteLine($"{indent}⚠️  {message}");
+        ResetColor();
+    }
+
     public void PrintSection(string title)
     {
         SetColor(sectionColor);
@@ -66,7 +74,7 @@ public class ConsoleUI
         ResetColor();
     }
 
-    public void PrintSubsection(string title, int indentLevel = 1)
+    public void PrintIndentedSection(string title, int indentLevel = 1)
     {
         string indent = CreateIndentWithLines(indentLevel);
         SetColor(sectionColor);
@@ -75,7 +83,7 @@ public class ConsoleUI
         ResetColor();
     }
 
-    public void PrintSubsection(string title, int indentLevel, bool isLast)
+    public void PrintIndentedSection(string title, int indentLevel, bool isLast)
     {
         string indent = CreateIndentWithLines(indentLevel, isLast);
         SetColor(sectionColor);
@@ -98,6 +106,16 @@ public class ConsoleUI
         SetColor(infoColor);
         Console.WriteLine($"{indent}ℹ️  {message}");
         ResetColor();
+    }
+
+    public void PrintIndentedNewLine(int indentLevel = 1)
+    {
+        var indent = new System.Text.StringBuilder();
+        for (int i = 0; i <= indentLevel - 1; i++)
+        {
+            indent.Append("│   ");
+        }
+        Console.WriteLine($"{indent}");
     }
 
     public void PrintTable(string[] headers, string[][] rows)
