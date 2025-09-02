@@ -11,8 +11,7 @@ public class InfoCommand : BaseCommand
     public override string Name => "info";
     public override string Description =>
         "Show detailed information about the game state and its components";
-    public override string Usage =>
-        "info                    # Show game state summary\ninfo [subcommand] [options] # Show specific information";
+    public override string Usage => "info [subcommand] [options]";
 
     public override string DetailedHelp =>
         "The info command provides detailed information about the current game state. "
