@@ -21,9 +21,11 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     [Fact]
     public void Skill_CanLoadFromFile()
     {
-        Skill facePalm = SkillFactory.CreateFromRecord(this._fixture.FacePalmRecord);
+        Skill facePalm = SkillFactory
+            .CreateSkillTemplateFromRecord(this._fixture.FacePalmRecord)
+            .Instantiate();
 
-        Assert.Equal("skill_facepalm", facePalm.Id);
+        Assert.Equal("skill_facepalm", facePalm.TemplateId.ToString());
         Assert.Equal("Face Palm", facePalm.Name);
         Assert.Equal(1, this._fixture.FacePalmRecord.Targeter?.Count);
         Assert.Equal(ETargetQuantity.Count, this._fixture.FacePalmRecord.Targeter?.TargetQuantity);
@@ -36,24 +38,31 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     [Fact]
     public void Skill_CanLoadFullFromFile()
     {
-        Skill ignite = SkillFactory.CreateFromRecord(this._fixture.IgniteRecord);
+        Skill ignite = SkillFactory
+            .CreateSkillTemplateFromRecord(this._fixture.IgniteRecord)
+            .Instantiate();
 
-        Assert.Equal("skill_ignite", ignite.Id);
+        Assert.Equal("skill_ignite", ignite.TemplateId.ToString());
         Assert.Equal("Ignite", ignite.Name);
 
-        UsableConfig usableConfig = (UsableConfig)ignite.Usables[0].GetConfig();
-        Assert.Equal(ETargetQuantity.Count, usableConfig.Targeter?.TargetQuantity);
-        Assert.Equal([EFactionRelationship.Enemy], usableConfig.Targeter?.AllowedTargets);
-        Assert.Equal(1, usableConfig.Targeter?.Count);
+        Usable? igniteUsable = ignite.Usables[0] as Usable;
+        Assert.NotNull(igniteUsable);
 
-        IEffect secondEffect = usableConfig.Effects[1];
-        BurnStatusEffect burnEffect = (BurnStatusEffect)secondEffect;
-        BurnStatusEffectConfig burnEffectConfig = (BurnStatusEffectConfig)burnEffect.GetConfig();
-        Assert.Equal("effect_burn_dot", burnEffectConfig.Id);
-        Assert.Equal("Status", burnEffectConfig.Type);
-        Assert.Equal("Burn", burnEffectConfig.Subtype);
-        Assert.Equal("DOT", burnEffectConfig.Variant);
-        Assert.Equal(3, burnEffectConfig.Duration);
-        Assert.Equal(5, burnEffectConfig.DamagePerTurn);
+        Targeter? igniteUsableTargeter = igniteUsable.Targeter as Targeter;
+        Assert.NotNull(igniteUsableTargeter);
+        Assert.Equal(ETargetQuantity.Count, igniteUsableTargeter.TargetQuantity);
+        Assert.Equal([EFactionRelationship.Enemy], igniteUsableTargeter.AllowedTargets);
+        Assert.Equal(1, igniteUsableTargeter.Count);
+
+        IEffect secondEffect = igniteUsable.Effects[1];
+
+        BurnStatusEffect? burnEffect = secondEffect as BurnStatusEffect;
+        Assert.NotNull(burnEffect);
+        Assert.Equal("effect_burn_dot", burnEffect.TemplateId.ToString());
+        Assert.Equal(EEffectType.Status, burnEffect.Type);
+        Assert.Equal("Burn", burnEffect.Subtype);
+        Assert.Equal("DOT", burnEffect.Variant);
+        Assert.Equal(3, burnEffect.Duration);
+        Assert.Equal(5, burnEffect.Value);
     }
 }

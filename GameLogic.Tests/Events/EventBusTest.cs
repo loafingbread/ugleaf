@@ -2,8 +2,8 @@ namespace GameLogic.EventsTests;
 
 using GameLogic.Config;
 using GameLogic.Entities.Characters;
-using GameLogic.Tests;
 using GameLogic.Events;
+using GameLogic.Tests;
 using Xunit;
 
 class EventBusTestData
@@ -21,10 +21,14 @@ class EventBusTestData
     public EventBusTestData(CharacterTestFixture characters)
     {
         this._characters = characters;
-        this.Alice = CharacterFactory.CreateFromRecord(this._characters.AliceRecord);
-        this.Brock = CharacterFactory.CreateFromRecord(this._characters.BrockRecord);
+        this.Alice = CharacterFactory
+            .CreateCharacterTemplateFromRecord(this._characters.AliceRecord)
+            .Instantiate();
+        this.Brock = CharacterFactory
+            .CreateCharacterTemplateFromRecord(this._characters.BrockRecord)
+            .Instantiate();
 
-        this.FireballSkillUseEvent = new("Fireball", this.Alice.GetConfig().Name);
+        this.FireballSkillUseEvent = new("Fireball", this.Alice.Name);
         this.StartCombatPhaseChangedEvent = new(
             this.Alice,
             this.Alice,

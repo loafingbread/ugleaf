@@ -1,8 +1,8 @@
 namespace GameLogic.Entities.Stats;
 
-using System.Diagnostics.CodeAnalysis;
+using GameLogic.Utils;
 
-public class StatBlock
+public class StatBlock : IDeepCopyable<StatBlock>
 {
     public List<Stat> Stats { get; private set; } = new();
     public StatModifiers Modifiers { get; private set; } = new();
@@ -13,6 +13,17 @@ public class StatBlock
         {
             this.Stats.Add(StatFactory.CreateStatFromRecord(statRecord));
         }
+    }
+
+    public StatBlock(StatBlock statBlock)
+    {
+        this.Stats = statBlock.Stats.DeepCopyList();
+        this.Modifiers = statBlock.Modifiers.DeepCopy();
+    }
+
+    public StatBlock DeepCopy()
+    {
+        return new StatBlock(this);
     }
 
     public void AddModifier(StatModifier modifier)

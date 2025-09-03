@@ -1,6 +1,6 @@
 {
-    "Id": "char_pc_ash",
-    "Name": "Ash",
+    "TemplateId": "char_pc_missy",
+    "Name": "Missy",
     "Stats": [
         {
             "Type": "Value",
@@ -106,8 +106,5 @@
                 }
             }
         }
-    ],
-    "Skills": [
-        "skill_ignite"
     ]
 }

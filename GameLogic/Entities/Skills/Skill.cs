@@ -1,66 +1,78 @@
 namespace GameLogic.Entities.Skills;
 
-using GameLogic.Config;
 using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
+using GameLogic.Utils;
 
-public class SkillTemplate : IConfigurable<SkillConfigRecord, SkillMetadataRecord>, ITemplate
+public class SkillTemplate : ITemplate
 {
-    public TemplateId Id { get; private set; }
-    public SkillMetadataRecord Metadata { get; private set; }
-    public SkillConfigRecord Config { get; private set; }
+    public TemplateId TemplateId { get; private set; }
 
-    public SkillTemplate(SkillTemplateRecord record)
+    public string Name { get; private set; } = "";
+    public string Description { get; private set; } = "";
+    public List<string> Tags { get; private set; } = new();
+
+    public ITargeter Targeter { get; private set; }
+    public List<Usable> Usables { get; private set; } = new();
+
+    public SkillTemplate(
+        TemplateId templateId,
+        string name,
+        string description,
+        List<string> tags,
+        ITargeter targeter,
+        List<Usable> usables
+    )
     {
-        this.Id = new TemplateId(record.Id);
-        this.Metadata = record.Metadata;
-        this.Config = record.Config;
+        this.TemplateId = templateId;
+        this.Name = name;
+        this.Description = description;
+        this.Tags = [.. tags];
+        this.Targeter = targeter.DeepCopy();
+        this.Usables = usables.DeepCopyList();
     }
 
-    public Skill CreateSkill()
+    public Skill Instantiate()
     {
         return SkillFactory.CreateSkillFromTemplate(this);
     }
 }
 
-public class Skill
+public class Skill : SkillTemplate, IInstance, IDeepCopyable<Skill>
 {
-    public InstanceId Id { get; private set; }
-    public TemplateId TemplateId { get; private set; }
-    public string Name { get; private set; } = "";
-    public string Description { get; private set; } = "";
-    public List<string> Tags { get; private set; } = new();
-
-    public ITargeter? Targeter { get; private set; } = null;
-    public List<IUsable> Usables { get; private set; } = new();
+    public InstanceId InstanceId { get; private set; }
 
     public Skill(
-        GameLogic.Registry.InstanceId id,
+        GameLogic.Registry.InstanceId instanceId,
         GameLogic.Registry.TemplateId templateId,
         string name,
         string description,
         List<string> tags,
-        TargeterConfig? targeter,
-        List<UsableConfig> usables
+        ITargeter targeter,
+        List<Usable> usables
     )
+        : base(templateId, name, description, tags, targeter, usables)
     {
-        this.Id = id;
-        this.TemplateId = templateId;
+        this.InstanceId = instanceId;
+    }
 
-        this.Name = name;
-        this.Description = description;
-        this.Tags = [.. tags];
+    public Skill(Skill skill)
+        : base(
+            skill.TemplateId,
+            skill.Name,
+            skill.Description,
+            skill.Tags,
+            skill.Targeter,
+            skill.Usables
+        )
+    {
+        this.InstanceId = Ids.Instance();
+    }
 
-        if (targeter is not null)
-        {
-            this.Targeter = new Targeter(targeter);
-        }
-
-        foreach (UsableConfig usableConfig in usables)
-        {
-            this.Usables.Add(new Usable(usableConfig));
-        }
+    public Skill DeepCopy()
+    {
+        return new Skill(this);
     }
 
     public bool CanTarget() => this.Targeter != null;

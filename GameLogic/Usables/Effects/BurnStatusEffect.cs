@@ -1,31 +1,31 @@
 namespace GameLogic.Usables.Effects;
 
-public record BurnStatusEffectParametersRecord
-{
-    public required int Duration { get; init; }
-    public required int DamagePerTurn { get; init; }
-}
-
-public class BurnStatusEffectConfig : StatusEffectConfig
-{
-    public int DamagePerTurn { get; init; }
-
-    public BurnStatusEffectConfig(
-        string id,
-        string type,
-        string subtype,
-        string variant,
-        int duration,
-        int damagePerTurn
-    )
-        : base(id, type, subtype, variant, duration)
-    {
-        this.DamagePerTurn = damagePerTurn;
-    }
-}
+using GameLogic.Registry;
 
 public class BurnStatusEffect : StatusEffect
 {
-    public BurnStatusEffect(EffectConfig config)
-        : base(config) { }
+    public BurnStatusEffect(
+        InstanceId id,
+        TemplateId templateId,
+        EEffectType type,
+        string subtype,
+        string variant,
+        string name,
+        string description,
+        List<string> tags,
+        int value,
+        int duration
+    )
+        : base(id, templateId, type, subtype, variant, name, description, tags, value, duration) { }
+
+    public BurnStatusEffect(EffectTemplate template)
+        : base(template) { }
+
+    public BurnStatusEffect(BurnStatusEffect burnStatusEffect)
+        : base(burnStatusEffect) { }
+
+    public override IEffect DeepCopy()
+    {
+        return new BurnStatusEffect(this);
+    }
 }

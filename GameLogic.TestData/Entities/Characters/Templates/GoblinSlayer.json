@@ -1,6 +1,6 @@
 {
-    "Id": "char_pc_alice",
-    "Name": "Alice",
+    "TemplateId": "char_pc_goblinslayer",
+    "Name": "Goblin Slayer",
     "Stats": [
         {
             "Type": "Value",
@@ -15,7 +15,7 @@
                 "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 20
+                    "Value": 25
                 }
             }
         },
@@ -32,7 +32,7 @@
                 "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 25
+                    "Value": 30
                 }
             }
         },
@@ -66,7 +66,7 @@
                 "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 30
+                    "Value": 20
                 }
             }
         },
@@ -84,7 +84,7 @@
                 "StartingCurrentValue": 80,
                 "BaseCapacityFormula": {
                     "Type": "Constant",
-                    "Value": 80
+                    "Value": 100
                 }
             }
         },
@@ -99,10 +99,10 @@
             "Config": {
                 "BaseCapacityCap": 200,
                 "CurrentCapacityCap": 300,
-                "StartingCurrentValue": 50,
+                "StartingCurrentValue": 40,
                 "BaseCapacityFormula": {
                     "Type": "Constant",
-                    "Value": 60
+                    "Value": 50
                 }
             }
         }

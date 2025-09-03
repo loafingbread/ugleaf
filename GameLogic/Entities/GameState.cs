@@ -25,7 +25,7 @@ public record PlayerState
     {
         foreach (CharacterRecord characterRecord in playerStateRecord.Characters)
         {
-            Character character = CharacterFactory.CreateFromRecord(characterRecord);
+            Character character = CharacterFactory.CreateCharacterFromRecord(characterRecord);
             this.Characters.Add(character);
         }
     }

@@ -15,13 +15,21 @@ public static class ConfigPaths
             BasePath,
             "GameLogic.TestData/Entities/Characters/"
         );
+    }
+
+    public static class CharacterTemplate
+    {
+        public static readonly string Folder = Path.Combine(
+            BasePath,
+            "GameLogic.TestData/Entities/Characters/Templates/"
+        );
         public static readonly string Alice = Path.Combine(Folder, "Alice.json");
         public static readonly string Ash = Path.Combine(Folder, "Ash.json");
         public static readonly string Brock = Path.Combine(Folder, "Brock.json");
-        public static readonly string Missy = Path.Combine(Folder, "Missy.json");
         public static readonly string Colonizer = Path.Combine(Folder, "Colonizer.json");
         public static readonly string Goblin = Path.Combine(Folder, "Goblin.json");
         public static readonly string GoblinSlayer = Path.Combine(Folder, "GoblinSlayer.json");
+        public static readonly string Missy = Path.Combine(Folder, "Missy.json");
     }
 
     public static class Skill
@@ -30,7 +38,14 @@ public static class ConfigPaths
             BasePath,
             "GameLogic.TestData/Entities/Skills/"
         );
+    }
 
+    public static class SkillTemplate
+    {
+        public static readonly string Folder = Path.Combine(
+            BasePath,
+            "GameLogic.TestData/Entities/Skills/Templates/"
+        );
         public static readonly string Ignite = Path.Combine(Folder, "Ignite.json");
         public static readonly string FacePalm = Path.Combine(Folder, "FacePalm.json");
         public static readonly string Steal = Path.Combine(Folder, "Steal.json");

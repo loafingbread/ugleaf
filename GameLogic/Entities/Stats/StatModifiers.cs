@@ -1,10 +1,22 @@
 namespace GameLogic.Entities.Stats;
 
-public class StatModifiers
+using GameLogic.Utils;
+
+public class StatModifiers : IDeepCopyable<StatModifiers>
 {
     public List<StatModifier> Modifiers { get; } = new List<StatModifier>();
 
     public StatModifiers() { }
+
+    public StatModifiers(StatModifiers statModifiers)
+    {
+        this.Modifiers = statModifiers.Modifiers.DeepCopyList();
+    }
+
+    public StatModifiers DeepCopy()
+    {
+        return new StatModifiers(this);
+    }
 
     /// <summary>
     /// Adds a modifier to the stat modifiers.
@@ -68,7 +80,7 @@ public class StatModifiers
     }
 }
 
-public class StatModifier
+public class StatModifier : IDeepCopyable<StatModifier>
 {
     public string StatId { get; }
     public StatModifierType Type { get; }
@@ -86,6 +98,19 @@ public class StatModifier
         this.SourceType = sourceType;
         this.StatId = statId;
         this.Value = value;
+    }
+
+    public StatModifier(StatModifier statModifier)
+    {
+        this.StatId = statModifier.StatId;
+        this.Type = statModifier.Type;
+        this.SourceType = statModifier.SourceType;
+        this.Value = statModifier.Value;
+    }
+
+    public StatModifier DeepCopy()
+    {
+        return new StatModifier(this);
     }
 }
 

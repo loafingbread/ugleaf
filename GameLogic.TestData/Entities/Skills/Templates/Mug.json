@@ -1,5 +1,5 @@
 {
-    "Id": "skill_mug",
+    "TemplateId": "skill_mug",
     "Name": "Mug",
     "Targeter": {
         "TargetQuantity": "Count",

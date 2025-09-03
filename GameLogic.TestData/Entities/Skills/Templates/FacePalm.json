@@ -1,5 +1,5 @@
 {
-    "Id": "skill_facepalm",
+    "TemplateId": "skill_facepalm",
     "Name": "Face Palm",
     "Targeter": {
         "TargetQuantity": "Count",
@@ -8,7 +8,7 @@
     },
     "Usables": [
         {
-            "Id": "usable_facepalm",
+            "TemplateId": "usable_facepalm",
             "Targeter": {
                 "TargetQuantity": "Count",
                 "AllowedTargets": [
@@ -18,12 +18,12 @@
             },
             "Effects": [
                 {
-                    "Id": "effect_physical_damage",
+                    "TemplateId": "effect_physical_damage",
                     "Type": "Attack",
                     "Subtype": "SingleHit",
                     "Variant": "PhysicalDamage",
-                    "Parameters": {
-                        "Damage": 777
+                    "Config": {
+                        "Value": 777
                     }
                 }
             ]

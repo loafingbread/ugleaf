@@ -14,6 +14,18 @@ public class ValueStat : Stat
         this.CurrentValue = this.BaseValue;
     }
 
+    public ValueStat(ValueStat valueStat)
+        : base(valueStat)
+    {
+        this.BaseValue = this.GetConfig().BaseValueFormula.CalculateValue();
+        this.CurrentValue = this.BaseValue;
+    }
+
+    public override Stat DeepCopy()
+    {
+        return new ValueStat(this);
+    }
+
     public ValueStatConfigRecord GetConfig()
     {
         return (ValueStatConfigRecord)this.Config;

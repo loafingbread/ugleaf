@@ -18,11 +18,22 @@ class TurnQueueTestData
         this._characters = characters;
         this.Players =
         [
-            CharacterFactory.CreateFromRecord(this._characters.AshRecord),
-            CharacterFactory.CreateFromRecord(this._characters.BrockRecord),
-            CharacterFactory.CreateFromRecord(this._characters.MissyRecord),
+            CharacterFactory
+                .CreateCharacterTemplateFromRecord(this._characters.AshRecord)
+                .Instantiate(),
+            CharacterFactory
+                .CreateCharacterTemplateFromRecord(this._characters.BrockRecord)
+                .Instantiate(),
+            CharacterFactory
+                .CreateCharacterTemplateFromRecord(this._characters.MissyRecord)
+                .Instantiate(),
         ];
-        this.Enemies = [CharacterFactory.CreateFromRecord(this._characters.MissyRecord)];
+        this.Enemies =
+        [
+            CharacterFactory
+                .CreateCharacterTemplateFromRecord(this._characters.MissyRecord)
+                .Instantiate(),
+        ];
     }
 }
 
@@ -43,7 +54,7 @@ public class TurnQueueTest : IClassFixture<CharacterTestFixture>
 
         Character currentTurn = sut.GetCurrentTurn();
 
-        Assert.Equal("Ash", currentTurn.GetConfig().Name);
+        Assert.Equal("Ash", currentTurn.Name);
     }
 
     [Fact]

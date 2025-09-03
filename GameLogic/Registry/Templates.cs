@@ -2,15 +2,15 @@ namespace GameLogic.Registry;
 
 public interface ITemplate
 {
-    public TemplateId Id { get; }
+    public TemplateId TemplateId { get; }
 }
 
 public abstract class TemplateBase : ITemplate
 {
-    public TemplateId Id { get; }
+    public TemplateId TemplateId { get; }
 
     protected TemplateBase(TemplateId id)
     {
-        this.Id = id;
+        this.TemplateId = id;
     }
 }

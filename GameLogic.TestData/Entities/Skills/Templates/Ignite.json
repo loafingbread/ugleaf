@@ -1,5 +1,5 @@
 {
-    "Id": "skill_ignite",
+    "TemplateId": "skill_ignite",
     "Name": "Ignite",
     "Targeter": {
         "TargetQuantity": "Count",
@@ -10,7 +10,7 @@
     },
     "Usables": [
         {
-            "Id": "usable_ignite",
+            "TemplateId": "usable_ignite",
             "Targeter": {
                 "TargetQuantity": "Count",
                 "AllowedTargets": [
@@ -20,28 +20,28 @@
             },
             "Effects": [
                 {
-                    "Id": "effect_fire_damage",
+                    "TemplateId": "effect_fire_damage",
                     "Type": "Attack",
                     "Subtype": "SingleHit",
                     "Variant": "FireDamage",
-                    "Parameters": {
-                        "Damage": 10
+                    "Config": {
+                        "Value": 10
                     }
                 },
                 {
-                    "Id": "effect_burn_dot",
+                    "TemplateId": "effect_burn_dot",
                     "Type": "Status",
                     "Subtype": "Burn",
                     "Variant": "DOT",
-                    "Parameters": {
+                    "Config": {
                         "Duration": 3,
-                        "DamagePerTurn": 5
+                        "Value": 5
                     }
                 }
             ]
         },
         {
-            "Id": "usable_overheat",
+            "TemplateId": "usable_overheat",
             "Targeter": {
                 "TargetQuantity": "Count",
                 "AllowedTargets": [
@@ -51,12 +51,12 @@
             },
             "Effects": [
                 {
-                    "Id": "effect_overheat",
+                    "TemplateId": "effect_overheat",
                     "Type": "Attack",
                     "Subtype": "SingleHit",
                     "Variant": "FireDamage",
-                    "Parameters": {
-                        "Damage": 5
+                    "Config": {
+                        "Value": 5
                     }
                 }
             ]

@@ -4,23 +4,34 @@ using GameLogic.Entities;
 
 public class Targeter : ITargeter
 {
+    public ETargetQuantity TargetQuantity { get; private set; }
+    public List<EFactionRelationship> AllowedTargets { get; private set; }
+    public int Count { get; private set; }
+
     private List<ITargetable> _targets = new();
-    public TargeterConfig _config { get; private set; }
 
-    public Targeter(TargeterConfig config)
+    public Targeter(
+        ETargetQuantity targetQuantity,
+        List<EFactionRelationship> allowedTargets,
+        int count
+    )
     {
-        this._config = config;
+        this.TargetQuantity = targetQuantity;
+        this.AllowedTargets = allowedTargets;
+        this.Count = count;
     }
 
-    /*********************************
-    * IConfigurable<TargeterConfig>
-    *********************************/
-    public void ApplyConfig(TargeterConfig config)
+    public Targeter(Targeter targeter)
     {
-        this._config = config;
+        this.TargetQuantity = targeter.TargetQuantity;
+        this.AllowedTargets = targeter.AllowedTargets;
+        this.Count = targeter.Count;
     }
 
-    public TargeterConfig GetConfig() => this._config;
+    public ITargeter DeepCopy()
+    {
+        return new Targeter(this);
+    }
 
     /*********************************
     * ITargeter
@@ -29,16 +40,16 @@ public class Targeter : ITargeter
 
     public bool CanTarget(ITargetable candidate)
     {
-        return this._config.AllowedTargets.Contains(candidate.GetRelationTo(this));
+        return this.AllowedTargets.Contains(candidate.GetRelationTo(this));
     }
 
     // Get max number of eligibile targets
     public int GetMaxTargets(object source, IEnumerable<ITargetable> candidates)
     {
-        switch (this._config.TargetQuantity)
+        switch (this.TargetQuantity)
         {
             case ETargetQuantity.Count:
-                return this.getMaxTargets(source, candidates, this._config.Count);
+                return this.getMaxTargets(source, candidates, this.Count);
             case ETargetQuantity.All:
                 return this.getMaxTargets(source, candidates, int.MaxValue);
             default:

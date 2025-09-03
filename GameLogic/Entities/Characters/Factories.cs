@@ -3,14 +3,15 @@ namespace GameLogic.Entities.Characters;
 using System.Linq;
 using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
+using GameLogic.Utils;
 
 public static class CharacterFactory
 {
     public static Character CreateCharacterFromRecord(CharacterRecord record)
     {
         return new Character(
-            new GameLogic.Registry.InstanceId(record.InstanceId),
-            new GameLogic.Registry.TemplateId(record.TemplateId),
+            GameLogic.Registry.Ids.Instance(record.InstanceId),
+            GameLogic.Registry.Ids.Template(record.TemplateId),
             record.Name,
             record.Description,
             record.Tags,
@@ -25,16 +26,12 @@ public static class CharacterFactory
     {
         return new Character(
             GameLogic.Registry.Ids.Instance(),
-            template.Id,
-            template.Metadata.Name,
-            template.Metadata.Description,
-            template.Metadata.Tags,
-            StatFactory.CreateStatBlockFromRecord(template.Config),
-            template
-                .Config.Skills.Select(
-                    (SkillRecord skill) => SkillFactory.CreateSkillFromRecord(skill)
-                )
-                .ToList()
+            template.TemplateId,
+            template.Name,
+            template.Description,
+            template.Tags,
+            template.Stats.DeepCopy(),
+            template.Skills.DeepCopyList()
         );
     }
 
@@ -42,6 +39,13 @@ public static class CharacterFactory
         CharacterTemplateRecord record
     )
     {
-        return new CharacterTemplate(record);
+        return new CharacterTemplate(
+            GameLogic.Registry.Ids.Template(record.TemplateId),
+            record.Name,
+            record.Description,
+            record.Tags,
+            StatFactory.CreateStatBlockFromRecord(record),
+            record.Skills.Select(SkillFactory.CreateSkillFromRecord).ToList()
+        );
     }
 }

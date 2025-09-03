@@ -146,7 +146,7 @@ public class InfoCommand : BaseCommand
 
         foreach (Character character in gameState.PlayerState.Characters)
         {
-            var characterInfo = $"{character.GetConfig().Name} ({character.GetConfig().Id})";
+            var characterInfo = $"{character.Name} ({character.InstanceId.ToString()})";
 
             if (verbose)
             {

@@ -93,7 +93,7 @@ public class CharactersCommand : BaseCommand
             Character character = gameState.PlayerState.Characters[i];
             bool isLast = i == gameState.PlayerState.Characters.Count - 1;
             ui.PrintIndentedInfo(
-                $"{character.GetConfig().Name} ({character.GetConfig().Id})",
+                $"{character.Name} ({character.InstanceId.ToString()})",
                 indentLevel + 1,
                 isLast
             );
@@ -143,7 +143,7 @@ public class CharactersCommand : BaseCommand
     )
     {
         Character? character = gameState.PlayerState.Characters.FirstOrDefault(c =>
-            c.GetConfig().Id == characterId
+            c.InstanceId.ToString() == characterId
         );
         if (character == null)
             return CommandResult.Error($"Character not found: {characterId}");
@@ -160,7 +160,7 @@ public class CharactersCommand : BaseCommand
     )
     {
         ui.PrintIndentedSection(
-            $"{character.GetConfig().Name} ({character.GetConfig().Id})",
+            $"{character.Name} ({character.InstanceId.ToString()})",
             indentLevel,
             isLast
         );
@@ -172,7 +172,7 @@ public class CharactersCommand : BaseCommand
     public static void DisplayStats(Character character, ConsoleUI ui, int indentLevel = 0)
     {
         ui.PrintIndentedSection(
-            $"{character.GetConfig().Name} Stats ({character.Stats.Stats.Count})",
+            $"{character.Name} Stats ({character.Stats.Stats.Count})",
             indentLevel
         );
 
@@ -217,15 +217,12 @@ public class CharactersCommand : BaseCommand
 
     public static void DisplaySkills(Character character, ConsoleUI ui, int indentLevel = 0)
     {
-        ui.PrintIndentedSection(
-            $"{character.GetConfig().Name} Skills ({character.GetConfig().Skills.Count})",
-            indentLevel
-        );
+        ui.PrintIndentedSection($"{character.Name} Skills ({character.Skills.Count})", indentLevel);
 
-        for (int i = 0; i < character.GetConfig().Skills.Count; i++)
+        for (int i = 0; i < character.Skills.Count; i++)
         {
-            bool isLast = i == character.GetConfig().Skills.Count - 1;
-            DisplaySkill(character.GetConfig().Skills[i], ui, indentLevel + 1, isLast);
+            bool isLast = i == character.Skills.Count - 1;
+            DisplaySkill(character.Skills[i], ui, indentLevel + 1, isLast);
         }
     }
 
@@ -236,32 +233,29 @@ public class CharactersCommand : BaseCommand
         bool isLast = false
     )
     {
-        ui.PrintIndentedSection(
-            $"{skill.GetConfig().Name} ({skill.GetConfig().Id})",
-            indentLevel,
-            isLast
-        );
+        ui.PrintIndentedSection($"{skill.Name} ({skill.InstanceId})", indentLevel, isLast);
 
-        DisplayTargeter(skill.Targeter?.GetConfig(), ui, indentLevel + 1);
+        DisplayTargeter(skill.Targeter, ui, indentLevel + 1);
         DisplayUsables(skill.Usables, ui, indentLevel + 1);
     }
 
-    public static void DisplayTargeter(TargeterConfig? targeter, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplayTargeter(ITargeter? targeter, ConsoleUI ui, int indentLevel = 0)
     {
-        if (targeter == null)
+        Targeter? _targeter = targeter as Targeter;
+        if (_targeter == null)
             return;
 
         ui.PrintIndentedSection("Targeter", indentLevel);
 
-        ui.PrintIndentedInfo($"Target Quantity Type: {targeter.TargetQuantity}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Target Quantity Type: {_targeter.TargetQuantity}", indentLevel + 1);
         ui.PrintIndentedInfo(
-            $"Allowed Target Types: {string.Join(", ", targeter.AllowedTargets)}",
+            $"Allowed Target Types: {string.Join(", ", _targeter.AllowedTargets)}",
             indentLevel + 1
         );
-        ui.PrintIndentedInfo($"Target Count: {targeter.Count}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Target Count: {_targeter.Count}", indentLevel + 1);
     }
 
-    public static void DisplayUsables(List<IUsable> usables, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplayUsables(List<Usable> usables, ConsoleUI ui, int indentLevel = 0)
     {
         ui.PrintIndentedSection($"Usables ({usables.Count})", indentLevel);
 
@@ -279,11 +273,15 @@ public class CharactersCommand : BaseCommand
         bool isLast = false
     )
     {
-        ui.PrintIndentedSection($"{usable.GetConfig().Id}", indentLevel, isLast);
+        Usable? _usable = usable as Usable;
+        if (_usable == null)
+            return;
 
-        TargeterConfig usableTargeter = usable.GetConfig().Targeter;
+        ui.PrintIndentedSection($"{_usable.InstanceId}", indentLevel, isLast);
+
+        Targeter? usableTargeter = _usable.Targeter as Targeter;
         DisplayTargeter(usableTargeter, ui, indentLevel + 1);
-        DisplayEffects(usable.GetConfig().Effects, ui, indentLevel + 1);
+        DisplayEffects(_usable.Effects, ui, indentLevel + 1);
     }
 
     public static void DisplayEffects(List<IEffect> effects, ConsoleUI ui, int indentLevel = 0)
@@ -304,16 +302,21 @@ public class CharactersCommand : BaseCommand
         bool isLast = false
     )
     {
-        ui.PrintIndentedSection($"{effect.GetConfig().Id}", indentLevel, isLast);
+        Effect? _effect = effect as Effect;
+        if (_effect == null)
+            return;
 
-        ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
-        ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
-        ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1, isLast);
+        ui.PrintIndentedSection($"{_effect.InstanceId}", indentLevel, isLast);
 
-        if (effect.GetConfig().Type == "Attack")
+        ui.PrintIndentedInfo($"Type: {_effect.Type}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Subtype: {_effect.Subtype}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Variant: {_effect.Variant}", indentLevel + 1, isLast);
+        ui.PrintIndentedInfo($"Value: {_effect.Value}", indentLevel + 1);
+
+        if (_effect is StatusEffect)
         {
             ui.PrintIndentedInfo(
-                $"Damage: {(effect.GetConfig() as AttackEffectConfig)?.Damage}",
+                $"Duration: {(_effect as StatusEffect)?.Duration}",
                 indentLevel + 1
             );
         }

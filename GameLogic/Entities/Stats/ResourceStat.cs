@@ -18,6 +18,19 @@ public class ResourceStat : Stat
         this.SetCurrentValue(this.GetConfig().StartingCurrentValue);
     }
 
+    public ResourceStat(ResourceStat resourceStat)
+        : base(resourceStat)
+    {
+        this.BaseCapacity = this.GetConfig().BaseCapacityFormula.CalculateValue();
+        this.CurrentCapacity = this.BaseCapacity;
+        this.SetCurrentValue(this.GetConfig().StartingCurrentValue);
+    }
+
+    public override Stat DeepCopy()
+    {
+        return new ResourceStat(this);
+    }
+
     public ResourceStatConfigRecord GetConfig()
     {
         return (ResourceStatConfigRecord)this.Config;

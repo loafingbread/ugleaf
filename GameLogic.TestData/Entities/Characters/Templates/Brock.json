@@ -1,6 +1,6 @@
 {
-    "Id": "char_pc_goblinslayer",
-    "Name": "Goblin Slayer",
+    "TemplateId": "char_pc_brock",
+    "Name": "Brock",
     "Stats": [
         {
             "Type": "Value",
@@ -15,7 +15,7 @@
                 "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 25
+                    "Value": 20
                 }
             }
         },
@@ -32,7 +32,7 @@
                 "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 30
+                    "Value": 25
                 }
             }
         },
@@ -66,7 +66,7 @@
                 "CurrentValueCap": 100,
                 "BaseValueFormula": {
                     "Type": "Constant",
-                    "Value": 20
+                    "Value": 30
                 }
             }
         },
@@ -84,7 +84,7 @@
                 "StartingCurrentValue": 80,
                 "BaseCapacityFormula": {
                     "Type": "Constant",
-                    "Value": 100
+                    "Value": 80
                 }
             }
         },
@@ -99,10 +99,10 @@
             "Config": {
                 "BaseCapacityCap": 200,
                 "CurrentCapacityCap": 300,
-                "StartingCurrentValue": 40,
+                "StartingCurrentValue": 50,
                 "BaseCapacityFormula": {
                     "Type": "Constant",
-                    "Value": 50
+                    "Value": 60
                 }
             }
         }

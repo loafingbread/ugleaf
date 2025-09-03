@@ -1,9 +1,11 @@
 namespace GameLogic.Entities.Stats;
 
+using GameLogic.Utils;
+
 /// <summary>
 /// A stat is a value that can be modified by modifiers.
 /// </summary>
-public abstract class Stat
+public abstract class Stat : IDeepCopyable<Stat>
 {
     public StatMetadataRecord Metadata { get; init; }
     public IStatConfigRecord Config { get; init; }
@@ -20,6 +22,16 @@ public abstract class Stat
         this.Type = record.Type;
         this.Modifiers = new StatModifiers();
     }
+
+    public Stat(Stat stat)
+    {
+        this.Metadata = stat.Metadata;
+        this.Config = stat.Config;
+        this.Type = stat.Type;
+        this.Modifiers = new StatModifiers();
+    }
+
+    public abstract Stat DeepCopy();
 
     /// <summary>
     /// Checks if the stat is derived from a formula or a constant.

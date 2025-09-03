@@ -1,10 +1,10 @@
 namespace GameLogic.Usables.Effects;
 
-using GameLogic.Config;
 using GameLogic.Entities;
 using GameLogic.Targeting;
+using GameLogic.Utils;
 
-public interface IEffect : IConfigurable<EffectConfig>
+public interface IEffect : IDeepCopyable<IEffect>
 {
     EffectResult Apply(IUser user, ITargetable target);
 }

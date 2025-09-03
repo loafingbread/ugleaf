@@ -1,6 +1,6 @@
 {
-    "Id": "char_pc_colonizer",
-    "Name": "Colonizer",
+    "TemplateId": "char_pc_ash",
+    "Name": "Ash",
     "Stats": [
         {
             "Type": "Value",

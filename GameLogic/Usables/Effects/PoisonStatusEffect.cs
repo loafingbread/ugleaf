@@ -1,25 +1,31 @@
 namespace GameLogic.Usables.Effects;
 
-public class PoisonStatusEffectConfig : StatusEffectConfig
-{
-    public int DamagePerTurn { get; init; }
-
-    public PoisonStatusEffectConfig(
-        string id,
-        string type,
-        string subtype,
-        string variant,
-        int duration,
-        int damagePerTurn
-    )
-        : base(id, type, subtype, variant, duration)
-    {
-        this.DamagePerTurn = damagePerTurn;
-    }
-}
+using GameLogic.Registry;
 
 public class PoisonStatusEffect : StatusEffect
 {
-    public PoisonStatusEffect(EffectConfig config)
-        : base(config) { }
+    public PoisonStatusEffect(
+        InstanceId id,
+        TemplateId templateId,
+        EEffectType type,
+        string subtype,
+        string variant,
+        string name,
+        string description,
+        List<string> tags,
+        int value,
+        int duration
+    )
+        : base(id, templateId, type, subtype, variant, name, description, tags, value, duration) { }
+
+    public PoisonStatusEffect(EffectTemplate template)
+        : base(template) { }
+
+    public PoisonStatusEffect(PoisonStatusEffect poisonStatusEffect)
+        : base(poisonStatusEffect) { }
+
+    public override IEffect DeepCopy()
+    {
+        return new PoisonStatusEffect(this);
+    }
 }

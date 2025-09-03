@@ -1,9 +1,12 @@
 using GameLogic.Entities;
+using GameLogic.Utils;
 
 namespace GameLogic.Usables;
 
 public class User : IUser
 {
+    public User() { }
+
     /*********************************
     * IUser
     *********************************/
@@ -19,4 +22,6 @@ public class User : IUser
     {
         return usable.Use(user, targets);
     }
+
+    IUser IDeepCopyable<IUser>.DeepCopy() => new User();
 }

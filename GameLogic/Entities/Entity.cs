@@ -6,10 +6,10 @@ using System.Data;
 using GameLogic.Entities.Stats;
 using GameLogic.Targeting;
 using GameLogic.Usables;
+using GameLogic.Utils;
 
-public class Entity : ITargeter, ITargetable, IAffectable, IUser
+public class Entity : ITargeter, ITargetable, IAffectable, IUser, IDeepCopyable<Entity>
 {
-    private TargeterConfig? _targeterConfig;
     private ITargeter? _targeter;
     private ITargetable? _targetable;
     private IUser? _user;
@@ -20,6 +20,21 @@ public class Entity : ITargeter, ITargetable, IAffectable, IUser
         this._targetable = targetable;
         this._user = user;
     }
+
+    public Entity(Entity entity)
+    {
+        this._targeter = entity._targeter?.DeepCopy() ?? null;
+        this._targetable = entity._targetable?.DeepCopy() ?? null;
+        this._user = entity._user?.DeepCopy() ?? null;
+    }
+
+    ITargeter IDeepCopyable<ITargeter>.DeepCopy() => new Entity(this);
+
+    ITargetable IDeepCopyable<ITargetable>.DeepCopy() => new Entity(this);
+
+    IUser IDeepCopyable<IUser>.DeepCopy() => new Entity(this);
+
+    Entity IDeepCopyable<Entity>.DeepCopy() => new Entity(this);
 
     public bool CanTarget() => this._targeter != null;
 
@@ -128,20 +143,6 @@ public class Entity : ITargeter, ITargetable, IAffectable, IUser
             throw new NoNullAllowedException("Cannot use without a user");
         }
         return this._user.Use(usable, user, targets);
-    }
-
-    public void ApplyConfig(TargeterConfig config)
-    {
-        this._targeterConfig = config;
-        this._targeter = new Targeter(config);
-    }
-
-    // TODO: Need to make this nullable. But cannot do that without breaking changes.
-    // Need to fix Configurable interface to allow for nullable configs. Fix this
-    // everywhere else
-    public TargeterConfig GetConfig()
-    {
-        return this._targeterConfig;
     }
 
     // TODO: Delete this if not needed. It's a good idea though

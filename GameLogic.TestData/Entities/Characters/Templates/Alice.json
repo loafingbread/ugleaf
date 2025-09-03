@@ -1,6 +1,6 @@
 {
-    "Id": "char_npc_goblin",
-    "Name": "Goblin",
+    "TemplateId": "char_pc_alice",
+    "Name": "Alice",
     "Stats": [
         {
             "Type": "Value",

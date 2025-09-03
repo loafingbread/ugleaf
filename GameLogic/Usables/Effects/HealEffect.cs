@@ -1,12 +1,30 @@
 namespace GameLogic.Usables.Effects;
 
-public class HealEffectConfig : EffectConfig
-{
-    public int Value { get; init; }
+using GameLogic.Registry;
 
-    public HealEffectConfig(string id, string type, string subtype, string variant, int value)
-        : base(id, type, subtype, variant)
+public class HealEffect : Effect
+{
+    public HealEffect(
+        InstanceId id,
+        TemplateId templateId,
+        EEffectType type,
+        string subtype,
+        string variant,
+        string name,
+        string description,
+        List<string> tags,
+        int value
+    )
+        : base(id, templateId, type, subtype, variant, name, description, tags, value, 0) { }
+
+    public HealEffect(EffectTemplate template)
+        : base(template) { }
+
+    public HealEffect(HealEffect healEffect)
+        : base(healEffect) { }
+
+    public override IEffect DeepCopy()
     {
-        this.Value = value;
+        return new HealEffect(this);
     }
 }

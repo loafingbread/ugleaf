@@ -1,5 +1,5 @@
 {
-    "Id": "skill_steal",
+    "TemplateId": "skill_steal",
     "Name": "Steal",
     "Targeter": {
         "TargetQuantity": "Count",
