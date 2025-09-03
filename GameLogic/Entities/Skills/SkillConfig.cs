@@ -1,6 +1,5 @@
 namespace GameLogic.Entities.Skills;
 
-using System.Diagnostics.CodeAnalysis;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
