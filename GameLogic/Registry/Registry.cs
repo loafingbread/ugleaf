@@ -14,3 +14,11 @@ public readonly record struct Ref<T>(TemplateId id)
             ? template
             : throw new KeyNotFoundException($"Missing template {id} of type {typeof(T).Name}");
 }
+
+public class TemplateRegistry : IRegistry
+{
+    private readonly Dictionary<TemplateId, object> _characters = new();
+    private readonly Dictionary<TemplateId, object> _skills = new();
+    private readonly Dictionary<TemplateId, object> _usables = new();
+    private readonly Dictionary<TemplateId, object> _effects = new();
+}
