@@ -28,3 +28,18 @@ public static class Ids
         return new(value);
     }
 }
+
+public readonly record struct TemplateIdentifier(string value)
+{
+    public required TemplateId TemplateId { get; init; }
+    public required TemplateType TemplateType { get; init; }
+}
+
+public enum TemplateType
+{
+    Character,
+    Item,
+    Skill,
+    Usable,
+    Effect,
+}

@@ -1,5 +1,7 @@
 namespace GameLogic.Usables.Effects;
 
+using GameLogic.Registry;
+
 public record EffectTemplateRecord
 {
     public required string TemplateId { get; init; }
@@ -10,6 +12,21 @@ public record EffectTemplateRecord
     public string Description { get; init; } = "";
     public List<string> Tags { get; init; } = new();
     public required EffectConfigRecord Config { get; init; }
+}
+
+public record EffectOverrideRecord : ITemplateOverride<EffectTemplateRecord>
+{
+    // TODO: Include template type with template id because both are needed to resolve the template
+
+    // public required TemplateId TemplateId { get; init; }
+    public string TemplateId { get; init; } = "";
+    public string Type { get; init; } = "";
+    public string Subtype { get; init; } = "";
+    public string Variant { get; init; } = "";
+    public string Name { get; init; } = "";
+    public string Description { get; init; } = "";
+    public List<string> Tags { get; init; } = new();
+    public EffectConfigRecord Config { get; init; } = new();
 }
 
 public record EffectRecord : EffectTemplateRecord
