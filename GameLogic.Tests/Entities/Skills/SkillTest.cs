@@ -25,7 +25,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
             .CreateSkillTemplateFromRecord(this._fixture.FacePalmRecord)
             .Instantiate();
 
-        Assert.Equal("skill_facepalm", facePalm.TemplateId.ToString());
+        Assert.Equal("skill_facepalm", facePalm.TemplateIdentifier.TemplateId.ToString());
         Assert.Equal("Face Palm", facePalm.Name);
         Assert.Equal(1, this._fixture.FacePalmRecord.Targeter?.Count);
         Assert.Equal(ETargetQuantity.Count, this._fixture.FacePalmRecord.Targeter?.TargetQuantity);
@@ -42,7 +42,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
             .CreateSkillTemplateFromRecord(this._fixture.IgniteRecord)
             .Instantiate();
 
-        Assert.Equal("skill_ignite", ignite.TemplateId.ToString());
+        Assert.Equal("skill_ignite", ignite.TemplateIdentifier.TemplateId.ToString());
         Assert.Equal("Ignite", ignite.Name);
 
         Usable? igniteUsable = ignite.Usables[0] as Usable;
@@ -58,7 +58,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
 
         BurnStatusEffect? burnEffect = secondEffect as BurnStatusEffect;
         Assert.NotNull(burnEffect);
-        Assert.Equal("effect_burn_dot", burnEffect.TemplateId.ToString());
+        Assert.Equal("effect_burn_dot", burnEffect.TemplateIdentifier.TemplateId.ToString());
         Assert.Equal(EEffectType.Status, burnEffect.Type);
         Assert.Equal("Burn", burnEffect.Subtype);
         Assert.Equal("DOT", burnEffect.Variant);

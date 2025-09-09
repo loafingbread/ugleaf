@@ -14,6 +14,20 @@ public static class Ids
 {
     public static TemplateId Template(string value) => new(value);
 
+    public static TemplateId NewTemplateId() => new(System.Guid.NewGuid().ToString());
+
+    public static ReferenceUnionMetadata NewReferenceUnionMetadata(
+        ETemplateType templateType,
+        EReferenceKind referenceKind,
+        string templateId
+    ) =>
+        new()
+        {
+            TemplateId = templateId == "" ? NewTemplateId() : new(templateId),
+            TemplateType = templateType,
+            Kind = referenceKind,
+        };
+
     public static InstanceId Instance(string? value = null)
     {
         if (value is null)
@@ -29,13 +43,7 @@ public static class Ids
     }
 }
 
-public readonly record struct TemplateIdentifier(string value)
-{
-    public required TemplateId TemplateId { get; init; }
-    public required TemplateType TemplateType { get; init; }
-}
-
-public enum TemplateType
+public enum ETemplateType
 {
     Character,
     Item,

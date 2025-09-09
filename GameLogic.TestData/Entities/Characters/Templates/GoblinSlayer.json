@@ -1,5 +1,8 @@
 {
-    "TemplateId": "char_pc_goblinslayer",
+    "TemplateIdentifier": {
+        "TemplateId": "char_pc_goblinslayer",
+        "TemplateType": "Character"
+    },
     "Name": "Goblin Slayer",
     "Stats": [
         {

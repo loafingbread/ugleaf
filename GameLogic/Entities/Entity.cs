@@ -10,6 +10,7 @@ using GameLogic.Utils;
 
 public class Entity : ITargeter, ITargetable, IAffectable, IUser, IDeepCopyable<Entity>
 {
+    public Position Position { get; } = new Position(0, 0, 0);
     private ITargeter? _targeter;
     private ITargetable? _targetable;
     private IUser? _user;
@@ -157,7 +158,31 @@ public class Entity : ITargeter, ITargetable, IAffectable, IUser, IDeepCopyable<
     }
 }
 
-public interface IEntity
+public interface IEntity : IPosition
 {
     public Entity GetEntity();
+}
+
+public interface IPosition
+{
+    public Position Position { get; }
+}
+
+public class Position : IDeepCopyable<Position>
+{
+    public int X { get; }
+    public int Y { get; }
+    public int Z { get; }
+
+    public Position(int x, int y, int z)
+    {
+        this.X = x;
+        this.Y = y;
+        this.Z = z;
+    }
+
+    public Position DeepCopy()
+    {
+        return new Position(this.X, this.Y, this.Z);
+    }
 }

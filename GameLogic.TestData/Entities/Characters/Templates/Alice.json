@@ -1,5 +1,8 @@
 {
-    "TemplateId": "char_pc_alice",
+    "TemplateIdentifier": {
+        "TemplateId": "char_pc_alice",
+        "TemplateType": "Character"
+    },
     "Name": "Alice",
     "Stats": [
         {

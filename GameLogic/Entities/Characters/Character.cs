@@ -8,7 +8,7 @@ using GameLogic.Utils;
 
 public class CharacterTemplate : ITemplate, IDeepCopyable<CharacterTemplate>
 {
-    public TemplateId TemplateId { get; private set; }
+    public TemplateIdentifier TemplateIdentifier { get; set; }
     public string Name { get; private set; } = "";
     public string Description { get; private set; } = "";
     public List<string> Tags { get; private set; } = new();
@@ -16,7 +16,7 @@ public class CharacterTemplate : ITemplate, IDeepCopyable<CharacterTemplate>
     public List<Skill> Skills { get; private set; } = new();
 
     public CharacterTemplate(
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         string name,
         string description,
         List<string> tags,
@@ -24,7 +24,7 @@ public class CharacterTemplate : ITemplate, IDeepCopyable<CharacterTemplate>
         List<Skill> skills
     )
     {
-        this.TemplateId = templateId;
+        this.TemplateIdentifier = templateIdentifier;
         this.Name = name;
         this.Description = description;
         this.Tags = [.. tags];
@@ -34,7 +34,7 @@ public class CharacterTemplate : ITemplate, IDeepCopyable<CharacterTemplate>
 
     public CharacterTemplate(CharacterTemplate template)
     {
-        this.TemplateId = template.TemplateId;
+        this.TemplateIdentifier = template.TemplateIdentifier;
         this.Name = template.Name;
         this.Description = template.Description;
         this.Tags = [.. template.Tags];
@@ -59,21 +59,21 @@ public class Character : CharacterTemplate, IInstance, IDeepCopyable<Character>
 
     public Character(
         InstanceId id,
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         string name,
         string description,
         List<string> tags,
         StatBlock stats,
         List<Skill> skills
     )
-        : base(templateId, name, description, tags, stats, skills)
+        : base(templateIdentifier, name, description, tags, stats, skills)
     {
         this.InstanceId = id;
     }
 
     public Character(Character character)
         : base(
-            character.TemplateId,
+            character.TemplateIdentifier,
             character.Name,
             character.Description,
             character.Tags,

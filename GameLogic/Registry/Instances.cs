@@ -8,16 +8,14 @@ public interface IInstanceRegistry
 public interface IInstance
 {
     public InstanceId InstanceId { get; }
-    public TemplateId TemplateId { get; }
 }
 
-public abstract class InstanceBase : IInstance
-{
-    public InstanceId InstanceId { get; } = Ids.Instance();
-    public TemplateId TemplateId { get; }
+// public abstract class InstanceBase : IInstance
+// {
+//     public InstanceId InstanceId { get; } = Ids.Instance();
 
-    protected InstanceBase(TemplateId templateId)
-    {
-        this.TemplateId = templateId;
-    }
-}
+//     protected InstanceBase(ReferenceUnionMetadata referenceMetadata)
+//     {
+//         this.ReferenceMetadata = referenceMetadata;
+//     }
+// }

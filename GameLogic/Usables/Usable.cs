@@ -8,7 +8,7 @@ using GameLogic.Utils;
 
 public class UsableTemplate : ITemplate
 {
-    public TemplateId TemplateId { get; private set; }
+    public TemplateIdentifier TemplateIdentifier { get; private set; }
     public string Name { get; private set; }
     public string Description { get; private set; }
     public List<string> Tags { get; private set; }
@@ -16,7 +16,7 @@ public class UsableTemplate : ITemplate
     public List<IEffect> Effects { get; private set; }
 
     public UsableTemplate(
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         string name,
         string description,
         List<string> tags,
@@ -24,7 +24,7 @@ public class UsableTemplate : ITemplate
         List<IEffect> effects
     )
     {
-        this.TemplateId = templateId;
+        this.TemplateIdentifier = templateIdentifier;
         this.Name = name;
         this.Description = description;
         this.Tags = [.. tags];
@@ -41,7 +41,7 @@ public class UsableTemplate : ITemplate
 public class Usable : IUsable, IInstance, IDeepCopyable<Usable>
 {
     public InstanceId InstanceId { get; private set; }
-    public TemplateId TemplateId { get; private set; }
+    public TemplateIdentifier TemplateIdentifier { get; private set; }
 
     public string Name { get; private set; }
     public string Description { get; private set; }
@@ -52,7 +52,7 @@ public class Usable : IUsable, IInstance, IDeepCopyable<Usable>
 
     public Usable(
         InstanceId? instanceId,
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         string name,
         string description,
         List<string> tags,
@@ -69,7 +69,7 @@ public class Usable : IUsable, IInstance, IDeepCopyable<Usable>
             this.InstanceId = instanceId.Value;
         }
 
-        this.TemplateId = templateId;
+        this.TemplateIdentifier = templateIdentifier;
         this.Name = name;
         this.Description = description;
         this.Tags = [.. tags];
@@ -80,7 +80,7 @@ public class Usable : IUsable, IInstance, IDeepCopyable<Usable>
     public Usable (Usable usable)
     {
         this.InstanceId = Ids.Instance();
-        this.TemplateId = usable.TemplateId;
+        this.TemplateIdentifier = usable.TemplateIdentifier;
         this.Name = usable.Name;
         this.Description = usable.Description;
         this.Tags = [.. usable.Tags];

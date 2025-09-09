@@ -1,5 +1,8 @@
 {
-    "TemplateId": "skill_ignite",
+    "TemplateIdentifier": {
+        "TemplateId": "skill_ignite",
+        "TemplateType": "Skill"
+    },
     "Name": "Ignite",
     "Targeter": {
         "TargetQuantity": "Count",

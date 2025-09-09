@@ -1,5 +1,8 @@
 {
-    "TemplateId": "char_npc_goblin",
+    "TemplateIdentifier": {
+        "TemplateId": "char_npc_goblin",
+        "TemplateType": "Character"
+    },
     "Name": "Goblin",
     "Stats": [
         {

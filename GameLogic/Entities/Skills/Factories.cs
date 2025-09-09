@@ -1,14 +1,15 @@
 using GameLogic.Entities.Skills;
+using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
 public static class SkillFactory
 {
-    public static Skill CreateSkillFromRecord(SkillRecord record)
+    public static Skill CreateSkillFromRecord(ReferenceUnionSpec record)
     {
         return new Skill(
             GameLogic.Registry.Ids.Instance(record.InstanceId),
-            GameLogic.Registry.Ids.Template(record.TemplateId),
+            record.TemplateIdentifier,
             record.Name,
             record.Description,
             record.Tags,
@@ -17,11 +18,13 @@ public static class SkillFactory
         );
     }
 
+    public static Skill
+
     public static Skill CreateSkillFromTemplate(SkillTemplate template)
     {
         return new Skill(
             GameLogic.Registry.Ids.Instance(),
-            template.TemplateId,
+            template.TemplateIdentifier,
             template.Name,
             template.Description,
             template.Tags,
@@ -33,7 +36,7 @@ public static class SkillFactory
     public static SkillTemplate CreateSkillTemplateFromRecord(SkillTemplateRecord record)
     {
         return new SkillTemplate(
-            new GameLogic.Registry.TemplateId(record.TemplateId),
+            record.TemplateIdentifier,
             record.Name,
             record.Description,
             record.Tags,

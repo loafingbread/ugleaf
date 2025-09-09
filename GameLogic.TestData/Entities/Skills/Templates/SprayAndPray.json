@@ -1,5 +1,8 @@
 {
-    "TemplateId": "skill_sprayandpray",
+    "TemplateIdentifier": {
+        "TemplateId": "skill_sprayandpray",
+        "TemplateType": "Skill"
+    },
     "Name": "Spray And Pray",
     "Targeter": {
         "TargetQuantity": "All",

@@ -7,7 +7,7 @@ public static class EffectFactory
     public static EffectTemplate CreateEffectTemplateFromRecord(EffectTemplateRecord record)
     {
         return new EffectTemplate(
-            GameLogic.Registry.Ids.Template(record.TemplateId),
+            record.TemplateIdentifier,
             Enum.Parse<EEffectType>(record.Type),
             record.Subtype,
             record.Variant,
@@ -26,7 +26,7 @@ public static class EffectFactory
             "Status" => CreateStatusEffectFromRecord(record),
             "Attack" => new AttackEffect(
                 GameLogic.Registry.Ids.Instance(record.InstanceId),
-                GameLogic.Registry.Ids.Template(record.TemplateId),
+                record.TemplateIdentifier,
                 Enum.Parse<EEffectType>(record.Type),
                 record.Subtype,
                 record.Variant,
@@ -37,7 +37,7 @@ public static class EffectFactory
             ),
             "Heal" => new HealEffect(
                 GameLogic.Registry.Ids.Instance(record.InstanceId),
-                GameLogic.Registry.Ids.Template(record.TemplateId),
+                record.TemplateIdentifier,
                 Enum.Parse<EEffectType>(record.Type),
                 record.Subtype,
                 record.Variant,
@@ -67,7 +67,7 @@ public static class EffectFactory
         {
             "Burn" => new BurnStatusEffect(
                 new InstanceId(record.InstanceId),
-                new TemplateId(record.TemplateId),
+                record.TemplateIdentifier,
                 Enum.Parse<EEffectType>(record.Type),
                 record.Subtype,
                 record.Variant,
@@ -79,7 +79,7 @@ public static class EffectFactory
             ),
             "Poison" => new PoisonStatusEffect(
                 new InstanceId(record.InstanceId),
-                new TemplateId(record.TemplateId),
+                record.TemplateIdentifier,
                 Enum.Parse<EEffectType>(record.Type),
                 record.Subtype,
                 record.Variant,

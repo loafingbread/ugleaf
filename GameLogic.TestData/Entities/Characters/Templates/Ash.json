@@ -1,5 +1,8 @@
 {
-    "TemplateId": "char_pc_ash",
+    "TemplateIdentifier": {
+        "TemplateId": "char_pc_ash",
+        "TemplateType": "Character"
+    },
     "Name": "Ash",
     "Stats": [
         {

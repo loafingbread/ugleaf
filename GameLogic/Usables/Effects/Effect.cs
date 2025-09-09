@@ -7,7 +7,7 @@ using GameLogic.Utils;
 
 public class EffectTemplate : ITemplate, IDeepCopyable<EffectTemplate>
 {
-    public TemplateId TemplateId { get; private set; }
+    public TemplateIdentifier TemplateIdentifier { get; private set; }
 
     public EEffectType Type { get; private set; }
     public string Subtype { get; private set; }
@@ -21,7 +21,7 @@ public class EffectTemplate : ITemplate, IDeepCopyable<EffectTemplate>
     public int Duration { get; private set; }
 
     public EffectTemplate(
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         EEffectType type,
         string subtype,
         string variant,
@@ -32,7 +32,7 @@ public class EffectTemplate : ITemplate, IDeepCopyable<EffectTemplate>
         int duration
     )
     {
-        this.TemplateId = templateId;
+        this.TemplateIdentifier = templateIdentifier;
         this.Type = type;
         this.Subtype = subtype;
         this.Variant = variant;
@@ -45,7 +45,7 @@ public class EffectTemplate : ITemplate, IDeepCopyable<EffectTemplate>
 
     public EffectTemplate(EffectTemplate template)
     {
-        this.TemplateId = template.TemplateId;
+        this.TemplateIdentifier = template.TemplateIdentifier;
         this.Type = template.Type;
         this.Subtype = template.Subtype;
         this.Variant = template.Variant;
@@ -73,7 +73,7 @@ public abstract class Effect : EffectTemplate, IEffect, IInstance
 
     public Effect(
         InstanceId instanceId,
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         EEffectType type,
         string subtype,
         string variant,
@@ -83,7 +83,7 @@ public abstract class Effect : EffectTemplate, IEffect, IInstance
         int value,
         int duration
     )
-        : base(templateId, type, subtype, variant, name, description, tags, value, duration)
+        : base(templateIdentifier, type, subtype, variant, name, description, tags, value, duration)
     {
         this.InstanceId = instanceId;
     }
@@ -96,7 +96,7 @@ public abstract class Effect : EffectTemplate, IEffect, IInstance
 
     public Effect(Effect effect)
         : base(
-            effect.TemplateId,
+            effect.TemplateIdentifier,
             effect.Type,
             effect.Subtype,
             effect.Variant,

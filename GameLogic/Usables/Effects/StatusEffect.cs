@@ -6,7 +6,7 @@ public abstract class StatusEffect : Effect
 {
     public StatusEffect(
         InstanceId id,
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         EEffectType type,
         string subtype,
         string variant,
@@ -16,7 +16,7 @@ public abstract class StatusEffect : Effect
         int value,
         int duration
     )
-        : base(id, templateId, type, subtype, variant, name, description, tags, value, duration) { }
+        : base(id, templateIdentifier, type, subtype, variant, name, description, tags, value, duration) { }
 
     public StatusEffect(EffectTemplate template)
         : base(template) { }

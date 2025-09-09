@@ -6,7 +6,7 @@ public class HealEffect : Effect
 {
     public HealEffect(
         InstanceId id,
-        TemplateId templateId,
+        TemplateIdentifier templateIdentifier,
         EEffectType type,
         string subtype,
         string variant,
@@ -15,7 +15,7 @@ public class HealEffect : Effect
         List<string> tags,
         int value
     )
-        : base(id, templateId, type, subtype, variant, name, description, tags, value, 0) { }
+        : base(id, templateIdentifier, type, subtype, variant, name, description, tags, value, 0) { }
 
     public HealEffect(EffectTemplate template)
         : base(template) { }

@@ -1,5 +1,8 @@
 {
-    "TemplateId": "char_pc_colonizer",
+    "TemplateIdentifier": {
+        "TemplateId": "char_pc_colonizer",
+        "TemplateType": "Character"
+    },
     "Name": "Colonizer",
     "Stats": [
         {

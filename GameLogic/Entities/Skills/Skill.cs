@@ -1,14 +1,14 @@
 namespace GameLogic.Entities.Skills;
 
+using System.Diagnostics.CodeAnalysis;
 using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 using GameLogic.Utils;
 
-public class SkillTemplate : ITemplate
+public class SkillTemplate : IReferenceUnion
 {
-    public TemplateId TemplateId { get; private set; }
-
+    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
     public string Name { get; private set; } = "";
     public string Description { get; private set; } = "";
     public List<string> Tags { get; private set; } = new();
@@ -16,8 +16,15 @@ public class SkillTemplate : ITemplate
     public ITargeter Targeter { get; private set; }
     public List<Usable> Usables { get; private set; } = new();
 
+    [SetsRequiredMembers]
+    public SkillTemplate(ReferenceUnionMetadata referenceMetadata)
+    {
+        this.ReferenceMetadata = referenceMetadata;
+        this.Targeter = new NoTargeter(new Position(0, 0, 0));
+    }
+
     public SkillTemplate(
-        TemplateId templateId,
+        ReferenceUnionMetadata referenceMetadata,
         string name,
         string description,
         List<string> tags,
@@ -25,7 +32,7 @@ public class SkillTemplate : ITemplate
         List<Usable> usables
     )
     {
-        this.TemplateId = templateId;
+        this.ReferenceMetadata = referenceMetadata;
         this.Name = name;
         this.Description = description;
         this.Tags = [.. tags];
@@ -45,21 +52,21 @@ public class Skill : SkillTemplate, IInstance, IDeepCopyable<Skill>
 
     public Skill(
         GameLogic.Registry.InstanceId instanceId,
-        GameLogic.Registry.TemplateId templateId,
+        GameLogic.Registry.ReferenceUnionMetadata referenceMetadata,
         string name,
         string description,
         List<string> tags,
         ITargeter targeter,
         List<Usable> usables
     )
-        : base(templateId, name, description, tags, targeter, usables)
+        : base(referenceMetadata, name, description, tags, targeter, usables)
     {
         this.InstanceId = instanceId;
     }
 
     public Skill(Skill skill)
         : base(
-            skill.TemplateId,
+            skill.ReferenceMetadata,
             skill.Name,
             skill.Description,
             skill.Tags,

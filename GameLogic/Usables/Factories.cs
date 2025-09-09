@@ -9,7 +9,7 @@ public static class UsableFactory
     {
         return new Usable(
             GameLogic.Registry.Ids.Instance(record.InstanceId),
-            GameLogic.Registry.Ids.Template(record.TemplateId),
+            record.TemplateIdentifier,
             record.Name,
             record.Description,
             record.Tags,
@@ -22,7 +22,7 @@ public static class UsableFactory
     {
         return new Usable(
             GameLogic.Registry.Ids.Instance(),
-            template.TemplateId,
+            template.TemplateIdentifier,
             template.Name,
             template.Description,
             template.Tags,
@@ -34,7 +34,7 @@ public static class UsableFactory
     public static UsableTemplate CreateUsableTemplateFromRecord(UsableTemplateRecord record)
     {
         return new UsableTemplate(
-            GameLogic.Registry.Ids.Template(record.TemplateId),
+            record.TemplateIdentifier,
             record.Name,
             record.Description,
             record.Tags,

@@ -1,5 +1,8 @@
 {
-    "TemplateId": "char_pc_brock",
+    "TemplateIdentifier": {
+        "TemplateId": "char_pc_brock",
+        "TemplateType": "Character"
+    },
     "Name": "Brock",
     "Stats": [
         {

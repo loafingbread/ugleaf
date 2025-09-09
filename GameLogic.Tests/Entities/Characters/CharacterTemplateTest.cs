@@ -24,7 +24,7 @@ public class CharacterTemplateTest : IClassFixture<CharacterTestFixture>
             this._fixture.GoblinRecord
         );
 
-        Assert.Equal("char_npc_goblin", goblin.TemplateId.ToString());
+        Assert.Equal("char_npc_goblin", goblin.TemplateIdentifier.TemplateId.ToString());
         Assert.Equal("Goblin", goblin.Name);
 
         ResourceStat? healthStat =
@@ -50,7 +50,7 @@ public class CharacterTemplateTest : IClassFixture<CharacterTestFixture>
             this._fixture.AshRecord
         );
 
-        Assert.Equal("char_pc_ash", ash.TemplateId.ToString());
+        Assert.Equal("char_pc_ash", ash.TemplateIdentifier.TemplateId.ToString());
         Assert.Equal("Ash", ash.Name);
 
         // Skill firstSkill = ash.Skills[0];

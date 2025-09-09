@@ -1,16 +1,20 @@
 namespace GameLogic.Registry;
 
+public interface IReferenceUnion
+{
+    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
+}
+
 public interface ITemplate
 {
-    public TemplateId TemplateId { get; }
 }
 
 public abstract class TemplateBase : ITemplate
 {
-    public TemplateId TemplateId { get; }
+    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
 
-    protected TemplateBase(TemplateId id)
+    protected TemplateBase(ReferenceUnionMetadata referenceMetadata)
     {
-        this.TemplateId = id;
+        this.ReferenceMetadata = referenceMetadata;
     }
 }

@@ -11,7 +11,7 @@ public static class CharacterFactory
     {
         return new Character(
             GameLogic.Registry.Ids.Instance(record.InstanceId),
-            GameLogic.Registry.Ids.Template(record.TemplateId),
+            record.TemplateIdentifier,
             record.Name,
             record.Description,
             record.Tags,
@@ -26,7 +26,7 @@ public static class CharacterFactory
     {
         return new Character(
             GameLogic.Registry.Ids.Instance(),
-            template.TemplateId,
+            template.TemplateIdentifier,
             template.Name,
             template.Description,
             template.Tags,
@@ -40,7 +40,7 @@ public static class CharacterFactory
     )
     {
         return new CharacterTemplate(
-            GameLogic.Registry.Ids.Template(record.TemplateId),
+            record.TemplateIdentifier,
             record.Name,
             record.Description,
             record.Tags,
