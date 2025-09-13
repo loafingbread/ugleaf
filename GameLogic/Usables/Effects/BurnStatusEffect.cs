@@ -5,18 +5,11 @@ using GameLogic.Registry;
 public class BurnStatusEffect : StatusEffect
 {
     public BurnStatusEffect(
+        ReferenceUnionMetadata referenceMetadata,
         InstanceId id,
-        TemplateIdentifier templateIdentifier,
-        EEffectType type,
-        string subtype,
-        string variant,
-        string name,
-        string description,
-        List<string> tags,
-        int value,
-        int duration
+        EffectRecord? instanceState
     )
-        : base(id, templateIdentifier, type, subtype, variant, name, description, tags, value, duration) { }
+        : base(referenceMetadata, id, instanceState) { }
 
     public BurnStatusEffect(EffectTemplate template)
         : base(template) { }

@@ -9,9 +9,9 @@ public interface ITargeterRecord
 
 public record TargeterRecord : ITargeterRecord
 {
-    public required ETargetQuantity TargetQuantity { get; init; }
-    public required List<EFactionRelationship> AllowedTargets { get; init; }
-    public int Count { get; init; }
+    public required ETargetQuantity TargetQuantity { get; init; } = ETargetQuantity.None;
+    public required List<EFactionRelationship> AllowedTargets { get; init; } = new();
+    public int Count { get; init; } = 0;
 }
 
 public enum ETargetQuantity
@@ -23,6 +23,7 @@ public enum ETargetQuantity
 
 public enum EFactionRelationship
 {
+    Any,
     Self,
     Ally,
     Enemy,

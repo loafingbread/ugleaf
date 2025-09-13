@@ -4,49 +4,114 @@ using GameLogic.Registry;
 
 public static class EffectFactory
 {
-    public static EffectTemplate CreateEffectTemplateFromRecord(EffectTemplateRecord record)
+    public static Reference<EffectTemplate, IEffect> CreateEffectReferenceFromRecord(
+        ReferenceUnionSpec record
+    )
     {
-        return new EffectTemplate(
-            record.TemplateIdentifier,
-            Enum.Parse<EEffectType>(record.Type),
-            record.Subtype,
-            record.Variant,
-            record.Name,
-            record.Description,
-            record.Tags,
-            record.Config.Value,
-            record.Config.Duration
+        switch (record.Metadata.Kind)
+        {
+            case EReferenceKind.Ref:
+                return CreateEffectTemplateFromReference(record);
+            case EReferenceKind.Inline:
+                return CreateEffectTemplateFromInline(record);
+            case EReferenceKind.Override:
+                return CreateEffectTemplateFromOverride(record);
+            case EReferenceKind.Instance:
+                return CreateInstanceFromReference(record);
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
+    public static Reference<EffectTemplate, IEffect> CreateEffectTemplateFromReference(
+        ReferenceUnionSpec record
+    )
+    {
+        var refSpec = record as RefSpec;
+        if (refSpec is null)
+        {
+            throw new InvalidOperationException("Ref spec is not a effect template");
+        }
+
+        return new Reference<EffectTemplate, IEffect>(refSpec.Metadata, null, null);
+    }
+
+    public static Reference<EffectTemplate, IEffect> CreateEffectTemplateFromInline(
+        ReferenceUnionSpec record
+    )
+    {
+        var inlineSpec = record as InlineSpec<EffectTemplateRecord>;
+        if (inlineSpec is null)
+        {
+            throw new InvalidOperationException("Inline spec is not a effect template");
+        }
+
+        return new Reference<EffectTemplate, IEffect>(
+            inlineSpec.Metadata,
+            new EffectTemplate(inlineSpec.Metadata, inlineSpec.Template, null),
+            null
         );
     }
 
-    public static IEffect CreateEffectFromRecord(EffectRecord record)
+    public static Reference<EffectTemplate, IEffect> CreateEffectTemplateFromOverride(
+        ReferenceUnionSpec record
+    )
     {
-        return record.Type switch
+        var overrideSpec = record as OverrideSpec<EffectTemplateRecord, EffectOverrideRecord>;
+        if (overrideSpec is null)
         {
-            "Status" => CreateStatusEffectFromRecord(record),
+            throw new InvalidOperationException("Override spec is not a effect template");
+        }
+
+        return new Reference<EffectTemplate, IEffect>(
+            overrideSpec.Metadata,
+            new EffectTemplate(overrideSpec.Metadata, null, overrideSpec.Override),
+            null
+        );
+    }
+
+    public static Reference<EffectTemplate, IEffect> CreateInstanceFromReference(
+        ReferenceUnionSpec record
+    )
+    {
+        var instanceSpec = record as InstanceSpec<EffectTemplateRecord, EffectRecord>;
+        if (instanceSpec is null)
+        {
+            throw new InvalidOperationException("Instance spec is not a effect template");
+        }
+
+        return new Reference<EffectTemplate, IEffect>(
+            instanceSpec.Metadata,
+            null,
+            CreateEffectFromInstanceSpec(instanceSpec)
+        );
+    }
+
+    public static IEffect CreateEffectFromInstanceSpec(
+        InstanceSpec<EffectTemplateRecord, EffectRecord> instanceSpec
+    )
+    {
+        if (instanceSpec.Instance is null)
+        {
+            throw new InvalidOperationException("Instance is null");
+        }
+
+        return instanceSpec.Instance.Type switch
+        {
+            "Status" => CreateStatusEffectFromRecord(instanceSpec),
             "Attack" => new AttackEffect(
-                GameLogic.Registry.Ids.Instance(record.InstanceId),
-                record.TemplateIdentifier,
-                Enum.Parse<EEffectType>(record.Type),
-                record.Subtype,
-                record.Variant,
-                record.Name,
-                record.Description,
-                record.Tags,
-                record.Config.Value
+                instanceSpec.Metadata,
+                instanceSpec.InstanceId,
+                instanceSpec.Instance
             ),
             "Heal" => new HealEffect(
-                GameLogic.Registry.Ids.Instance(record.InstanceId),
-                record.TemplateIdentifier,
-                Enum.Parse<EEffectType>(record.Type),
-                record.Subtype,
-                record.Variant,
-                record.Name,
-                record.Description,
-                record.Tags,
-                record.Config.Value
+                instanceSpec.Metadata,
+                instanceSpec.InstanceId,
+                instanceSpec.Instance
             ),
-            _ => throw new NotSupportedException($"Effect type {record.Type} is not supported."),
+            _ => throw new NotSupportedException(
+                $"Effect type {instanceSpec.Instance.Type} is not supported."
+            ),
         };
     }
 
@@ -61,36 +126,29 @@ public static class EffectFactory
         };
     }
 
-    private static IEffect CreateStatusEffectFromRecord(EffectRecord record)
+    private static IEffect CreateStatusEffectFromRecord(
+        InstanceSpec<EffectTemplateRecord, EffectRecord> instanceSpec
+    )
     {
-        return record.Subtype switch
+        if (instanceSpec.Instance is null)
+        {
+            throw new InvalidOperationException("Instance is null");
+        }
+
+        return instanceSpec.Instance.Subtype switch
         {
             "Burn" => new BurnStatusEffect(
-                new InstanceId(record.InstanceId),
-                record.TemplateIdentifier,
-                Enum.Parse<EEffectType>(record.Type),
-                record.Subtype,
-                record.Variant,
-                record.Name,
-                record.Description,
-                record.Tags,
-                record.Config.Value,
-                record.Config.Duration
+                instanceSpec.Metadata,
+                instanceSpec.InstanceId,
+                instanceSpec.Instance
             ),
             "Poison" => new PoisonStatusEffect(
-                new InstanceId(record.InstanceId),
-                record.TemplateIdentifier,
-                Enum.Parse<EEffectType>(record.Type),
-                record.Subtype,
-                record.Variant,
-                record.Name,
-                record.Description,
-                record.Tags,
-                record.Config.Value,
-                record.Config.Duration
+                instanceSpec.Metadata,
+                instanceSpec.InstanceId,
+                instanceSpec.Instance
             ),
             _ => throw new NotSupportedException(
-                $"Effect subtype {record.Subtype} is not supported."
+                $"Effect subtype {instanceSpec.Instance.Subtype} is not supported."
             ),
         };
     }

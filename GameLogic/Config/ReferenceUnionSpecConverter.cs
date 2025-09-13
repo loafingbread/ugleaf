@@ -20,29 +20,27 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         using JsonDocument jsonDocument = JsonDocument.ParseValue(ref reader);
         JsonElement rootElement = jsonDocument.RootElement;
 
-        EReferenceKind kind = ParseKind(rootElement);
+        ReferenceUnionMetadata referenceMetadata = ParseReferenceMetadata(rootElement, options);
 
-        TemplateIdentifier templateIdentifier = ParseTemplateIdentifier(rootElement, options);
-
-        return kind switch
+        return referenceMetadata.Kind switch
         {
-            EReferenceKind.Ref => this.DeserializeRefSpec(rootElement, options),
+            EReferenceKind.Ref => this.DeserializeRefSpec(rootElement, options, referenceMetadata),
             EReferenceKind.Override => this.DeserializeOverrideSpec(
                 rootElement,
-                templateIdentifier.TemplateType,
-                options
+                options,
+                referenceMetadata
             ),
             EReferenceKind.Inline => this.DeserializeInlineSpec(
                 rootElement,
-                templateIdentifier.TemplateType,
-                options
+                options,
+                referenceMetadata
             ),
             EReferenceKind.Instance => this.DeserializeInstanceSpec(
                 rootElement,
-                templateIdentifier.TemplateType,
-                options
+                options,
+                referenceMetadata
             ),
-            _ => throw new JsonException($"Invalid kind: {kind}"),
+            _ => throw new JsonException($"Invalid kind: {referenceMetadata.Kind}"),
         };
     }
 
@@ -59,34 +57,31 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         return kind;
     }
 
-    private TemplateIdentifier ParseTemplateIdentifier(
+    private ReferenceUnionMetadata ParseReferenceMetadata(
         JsonElement rootElement,
         JsonSerializerOptions options
     )
     {
-        if (
-            !rootElement.TryGetProperty(
-                "TemplateIdentifier",
-                out JsonElement templateIdentifierElement
-            )
-        )
-            throw new JsonException("Expected 'TemplateIdentifier' property");
+        if (!rootElement.TryGetProperty("Metadata", out JsonElement referenceMetadataElement))
+            throw new JsonException("Expected 'Metadata' property");
 
-        TemplateIdentifier? templateIdentifier = JsonSerializer.Deserialize<TemplateIdentifier>(
-            templateIdentifierElement.GetRawText(),
-            options
-        );
-        if (templateIdentifier is null)
+        ReferenceUnionMetadata? referenceMetadata =
+            JsonSerializer.Deserialize<ReferenceUnionMetadata>(
+                referenceMetadataElement.GetRawText(),
+                options
+            );
+        if (referenceMetadata is null)
             throw new JsonException(
-                "Expected 'TemplateIdentifier' property to be a valid template identifier"
+                "Expected 'Metadata' property to be a valid reference metadata"
             );
 
-        return templateIdentifier;
+        return referenceMetadata;
     }
 
     private ReferenceUnionSpec DeserializeRefSpec(
         JsonElement rootElement,
-        JsonSerializerOptions options
+        JsonSerializerOptions options,
+        ReferenceUnionMetadata referenceMetadata
     )
     {
         return JsonSerializer.Deserialize<RefSpec>(rootElement.GetRawText(), options)!;
@@ -94,12 +89,12 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
 
     private ReferenceUnionSpec DeserializeOverrideSpec(
         JsonElement rootElement,
-        ETemplateType eTemplateType,
-        JsonSerializerOptions options
+        JsonSerializerOptions options,
+        ReferenceUnionMetadata referenceMetadata
     )
     {
         (Type templateType, Type overrideType) = TemplateTypeMaps.ETemplateTypeToOverrideType[
-            eTemplateType
+            referenceMetadata.TemplateType
         ];
         Type genericType = typeof(OverrideSpec<,>).MakeGenericType(templateType, overrideType);
 
@@ -109,11 +104,13 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
 
     private ReferenceUnionSpec DeserializeInlineSpec(
         JsonElement rootElement,
-        ETemplateType eTemplateType,
-        JsonSerializerOptions options
+        JsonSerializerOptions options,
+        ReferenceUnionMetadata referenceMetadata
     )
     {
-        Type templateType = TemplateTypeMaps.ETemplateTypeToTemplateType[eTemplateType];
+        Type templateType = TemplateTypeMaps.ETemplateTypeToTemplateType[
+            referenceMetadata.TemplateType
+        ];
         Type genericType = typeof(InlineSpec<>).MakeGenericType(templateType);
 
         return (ReferenceUnionSpec)
@@ -122,12 +119,12 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
 
     private ReferenceUnionSpec DeserializeInstanceSpec(
         JsonElement rootElement,
-        ETemplateType eTemplateType,
-        JsonSerializerOptions options
+        JsonSerializerOptions options,
+        ReferenceUnionMetadata referenceMetadata
     )
     {
         (Type templateType, Type overrideType) = TemplateTypeMaps.ETemplateTypeToOverrideType[
-            eTemplateType
+            referenceMetadata.TemplateType
         ];
         Type genericType = typeof(InstanceSpec<,>).MakeGenericType(templateType, overrideType);
 

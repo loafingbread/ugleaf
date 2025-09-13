@@ -1,45 +1,150 @@
 namespace GameLogic.Entities.Characters;
 
-using GameLogic.Config;
 using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
 using GameLogic.Registry;
+using GameLogic.Targeting;
 using GameLogic.Utils;
 
-public class CharacterTemplate : ITemplate, IDeepCopyable<CharacterTemplate>
+public class CharacterTemplate
+    : ITemplate<CharacterOverrideRecord>,
+        IDeepCopyable<CharacterTemplate>
 {
-    public TemplateIdentifier TemplateIdentifier { get; set; }
-    public string Name { get; private set; } = "";
-    public string Description { get; private set; } = "";
-    public List<string> Tags { get; private set; } = new();
-    public StatBlock Stats { get; private set; }
-    public List<Skill> Skills { get; private set; } = new();
+    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
+    public CharacterOverrideRecord? TemplateOverride { get; set; }
+    public string Name { get; set; } = "";
+    public string Description { get; set; } = "";
+    public List<string> Tags { get; set; } = new();
+    public StatBlock Stats { get; set; }
+    public List<Skill> Skills { get; set; } = new();
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public CharacterTemplate(
-        TemplateIdentifier templateIdentifier,
-        string name,
-        string description,
-        List<string> tags,
-        StatBlock stats,
-        List<Skill> skills
+        ReferenceUnionMetadata referenceMetadata,
+        CharacterTemplateRecord? templateRecord,
+        CharacterOverrideRecord? templateOverride
     )
     {
-        this.TemplateIdentifier = templateIdentifier;
-        this.Name = name;
-        this.Description = description;
-        this.Tags = [.. tags];
-        this.Stats = stats.DeepCopy();
-        this.Skills = skills.DeepCopyList();
+        if (referenceMetadata.Kind == EReferenceKind.Instance)
+        {
+            throw new InvalidOperationException("Templates cannot be loaded from instances");
+        }
+        else if (referenceMetadata.Kind == EReferenceKind.Inline && templateRecord is null)
+        {
+            throw new InvalidOperationException("Inline templates must have a template record");
+        }
+        else if (referenceMetadata.Kind == EReferenceKind.Override && templateOverride is null)
+        {
+            throw new InvalidOperationException("Override templates must have a template override");
+        }
+        else if (referenceMetadata.Kind != EReferenceKind.Ref)
+        {
+            throw new InvalidOperationException("Invalid reference kind");
+        }
+
+        this.ReferenceMetadata = referenceMetadata;
+        this.TemplateOverride = templateOverride;
+        this.ApplyTemplateRecord(templateRecord);
+    }
+#pragma warning restore CS8618
+
+    private void ApplyTemplateRecord(CharacterTemplateRecord? templateRecord)
+    {
+        if (templateRecord is null)
+        {
+            return;
+        }
+
+        this.Name = templateRecord.Name;
+        this.Description = templateRecord.Description;
+        this.Tags = [.. templateRecord.Tags];
+        this.Stats = templateRecord.Stats.DeepCopy();
+        this.Skills = this.CreateSkillsFromReferences(templateRecord.Skills);
     }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public CharacterTemplate(CharacterTemplate template)
     {
-        this.TemplateIdentifier = template.TemplateIdentifier;
+        this.ApplyTemplate(template);
+    }
+#pragma warning restore CS8618
+
+    protected List<Skill> CreateSkillsFromReferences(List<ReferenceUnionSpec> skills)
+    {
+        return skills
+            .Select(
+                (ReferenceUnionSpec record) =>
+                {
+                    Reference<SkillTemplate, Skill> skillReference =
+                        SkillFactory.CreateSkillReferenceFromRecord(record);
+                    return skillReference.Template?.Instantiate();
+                }
+            )
+            .Select(
+                (Skill? skill) =>
+                {
+                    return skill is not null
+                        ? skill
+                        : throw new InvalidOperationException(
+                            "Skill template should not be null while loading skill files"
+                        );
+                }
+            )
+            .ToList();
+    }
+
+    protected void ApplyTemplate(CharacterTemplate template)
+    {
         this.Name = template.Name;
         this.Description = template.Description;
         this.Tags = [.. template.Tags];
         this.Stats = template.Stats.DeepCopy();
         this.Skills = template.Skills.DeepCopyList();
+    }
+
+    public void LoadReferences(IRegistry registry)
+    {
+        if (this.ReferenceMetadata.Kind == EReferenceKind.Inline)
+        {
+            return;
+        }
+
+        registry.TryGetValue<Reference<CharacterTemplate, Character>>(
+            this.ReferenceMetadata,
+            out Reference<CharacterTemplate, Character> referenceValue
+        );
+
+        if (referenceValue.Template is null)
+        {
+            throw new InvalidOperationException("Template reference should not be null");
+        }
+
+        if (this.ReferenceMetadata.Kind == EReferenceKind.Ref)
+        {
+            this.ApplyTemplate(referenceValue.Template);
+        }
+        else if (this.ReferenceMetadata.Kind == EReferenceKind.Override)
+        {
+            this.ApplyTemplate(referenceValue.Template);
+            this.ApplyOverrides(this.TemplateOverride);
+        }
+    }
+
+    protected void ApplyOverrides(CharacterOverrideRecord? overrideRecord)
+    {
+        if (overrideRecord is null)
+        {
+            return;
+        }
+
+        this.TemplateOverride = overrideRecord;
+        this.Name = overrideRecord.Name ?? this.Name;
+        this.Description = overrideRecord.Description ?? this.Description;
+        this.Tags = overrideRecord.Tags ?? this.Tags;
+        this.Stats = overrideRecord.Stats.DeepCopy() ?? this.Stats;
+        this.Skills = overrideRecord.Skills is not null
+            ? this.CreateSkillsFromReferences(overrideRecord.Skills)
+            : this.Skills;
     }
 
     public CharacterTemplate DeepCopy()
@@ -53,35 +158,66 @@ public class CharacterTemplate : ITemplate, IDeepCopyable<CharacterTemplate>
     }
 }
 
-public class Character : CharacterTemplate, IInstance, IDeepCopyable<Character>
+public class Character : CharacterTemplate, IInstance<CharacterRecord>, IDeepCopyable<Character>
 {
-    public InstanceId InstanceId { get; private set; }
+    public InstanceId InstanceId { get; set; }
+    public CharacterRecord? InstanceState { get; set; }
 
     public Character(
-        InstanceId id,
-        TemplateIdentifier templateIdentifier,
-        string name,
-        string description,
-        List<string> tags,
-        StatBlock stats,
-        List<Skill> skills
+        ReferenceUnionMetadata referenceMetadata,
+        InstanceId instanceId,
+        CharacterRecord? instanceState
     )
-        : base(templateIdentifier, name, description, tags, stats, skills)
+        : base(referenceMetadata, null, null)
     {
-        this.InstanceId = id;
+        if (referenceMetadata.Kind == EReferenceKind.Instance)
+        {
+            throw new InvalidOperationException("Character reference is not an instance");
+        }
+
+        this.InstanceId = instanceId;
+        this.InstanceState = instanceState;
     }
 
     public Character(Character character)
-        : base(
-            character.TemplateIdentifier,
-            character.Name,
-            character.Description,
-            character.Tags,
-            character.Stats,
-            character.Skills
-        )
+        : base((character as CharacterTemplate).DeepCopy())
     {
         this.InstanceId = Ids.Instance();
+    }
+
+    public new void LoadReferences(IRegistry registry)
+    {
+        if (this.InstanceState is not null)
+        {
+            this.ApplyInstanceState();
+            return;
+        }
+
+        registry.TryGetValue<Reference<CharacterTemplate, Character>>(
+            this.ReferenceMetadata,
+            out Reference<CharacterTemplate, Character> referenceValue
+        );
+
+        if (referenceValue.Template is null)
+        {
+            throw new InvalidOperationException("Template reference should not be null");
+        }
+
+        this.ApplyTemplate(referenceValue.Template);
+    }
+
+    private void ApplyInstanceState()
+    {
+        if (this.InstanceState is null)
+        {
+            return;
+        }
+
+        this.Name = this.InstanceState.Name;
+        this.Description = this.InstanceState.Description;
+        this.Tags = [.. this.InstanceState.Tags];
+        this.Stats = this.InstanceState.Stats.DeepCopy();
+        this.Skills = this.CreateSkillsFromReferences(this.InstanceState.Skills);
     }
 
     public new Character DeepCopy()

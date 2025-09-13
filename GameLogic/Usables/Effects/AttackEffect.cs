@@ -6,17 +6,11 @@ using GameLogic.Targeting;
 public class AttackEffect : Effect
 {
     public AttackEffect(
+        ReferenceUnionMetadata referenceMetadata,
         InstanceId id,
-        TemplateIdentifier templateIdentifier,
-        EEffectType type,
-        string subtype,
-        string variant,
-        string name,
-        string description,
-        List<string> tags,
-        int value
+        EffectRecord? instanceState
     )
-        : base(id, templateIdentifier, type, subtype, variant, name, description, tags, value, 0) { }
+        : base(referenceMetadata, id, instanceState) { }
 
     public AttackEffect(EffectTemplate template)
         : base(template) { }

@@ -11,14 +11,19 @@ public record SkillTemplateRecord
     public required List<string> Tags { get; init; }
 
     public required TargeterRecord Targeter { get; init; }
-    public required List<UsableRecord> Usables { get; init; } = new();
+
+    // TODO: Do I need to include typing enforcement for usable type here?
+
+    public required List<ReferenceUnionSpec> Usables { get; init; } = new();
 }
 
 public record SkillOverrideRecord : ITemplateOverride<SkillTemplateRecord>
 {
-    public string Name { get; init; } = "";
-    public string Description { get; init; } = "";
-    public List<string> Tags { get; init; } = new();
+    public string? Name { get; init; }
+    public string? Description { get; init; }
+    public List<string>? Tags { get; init; }
     public TargeterRecord? Targeter { get; init; }
-    public List<UsableRecord> Usables { get; init; } = new();
+    public List<ReferenceUnionSpec>? Usables { get; init; }
 }
+
+public record SkillRecord : SkillTemplateRecord { }

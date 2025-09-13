@@ -15,19 +15,16 @@ public record EffectTemplateRecord
 
 public record EffectOverrideRecord : ITemplateOverride<EffectTemplateRecord>
 {
-    public string Type { get; init; } = "";
-    public string Subtype { get; init; } = "";
-    public string Variant { get; init; } = "";
-    public string Name { get; init; } = "";
-    public string Description { get; init; } = "";
-    public List<string> Tags { get; init; } = new();
-    public EffectConfigRecord Config { get; init; } = new();
+    public string? Type { get; init; }
+    public string? Subtype { get; init; }
+    public string? Variant { get; init; }
+    public string? Name { get; init; }
+    public string? Description { get; init; }
+    public List<string>? Tags { get; init; }
+    public EffectConfigRecord? Config { get; init; }
 }
 
-public record EffectRecord : EffectTemplateRecord
-{
-    public string InstanceId { get; init; } = "";
-}
+public record EffectRecord : EffectTemplateRecord { }
 
 public record EffectConfigRecord
 {

@@ -69,13 +69,11 @@ public sealed record InlineSpec<TTemplate> : ReferenceUnionSpec
 /// A reference to an instance with a template id. As it is an instance,
 /// overrides are not only allowed, but expected.
 /// </summary>
-public sealed record InstanceSpec<TTemplate, TOverride> : ReferenceUnionSpec
-    where TOverride : ITemplateOverride<TTemplate>
+public sealed record InstanceSpec<TTemplate, TInstance> : ReferenceUnionSpec
 {
-    public InstanceId InstanceId { get; init; } = Ids.Instance(); // optional; generate if null
-
     // TODO: Include custom TInstance fields to use instead of TTemplate again
-    public TTemplate? Instance { get; init; } // optional
+    public InstanceId InstanceId { get; init; } = Ids.Instance();
+    public TInstance? Instance { get; init; } // optional
 };
 
 public static class TemplateTypeMaps
