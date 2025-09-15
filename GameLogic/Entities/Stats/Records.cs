@@ -1,7 +1,6 @@
 namespace GameLogic.Entities.Stats;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using GameLogic.Registry;
 
 public interface IStatBlockRecord
 {
@@ -13,12 +12,21 @@ public record StatBlockRecord : IStatBlockRecord
     public required List<StatRecord> Stats { get; init; } = new();
 }
 
-public record StatRecord
+public record StatTemplateRecord
 {
     public required StatMetadataRecord Metadata { get; init; }
     public required IStatConfigRecord Config { get; init; }
     public required StatType Type { get; init; }
 }
+
+public record StatOverrideRecord : ITemplateOverride<StatTemplateRecord>
+{
+    public required StatMetadataRecord Metadata { get; init; }
+    public required IStatConfigRecord Config { get; init; }
+    public required StatType Type { get; init; }
+}
+
+public record StatRecord : StatTemplateRecord { }
 
 public record StatMetadataRecord
 {

@@ -1,35 +1,88 @@
 namespace GameLogic.Entities.Stats;
 
+using GameLogic.Registry;
 using GameLogic.Utils;
 
 /// <summary>
 /// A stat is a value that can be modified by modifiers.
 /// </summary>
-public abstract class Stat : IDeepCopyable<Stat>
+public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
 {
-    public StatMetadataRecord Metadata { get; init; }
-    public IStatConfigRecord Config { get; init; }
-    public StatType Type { get; init; }
+    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
+    public StatOverrideRecord? TemplateOverride { get; set; }
+    public StatRecord? InstanceState { get; set; }
+    public StatMetadataRecord Metadata { get; private set; }
+    public IStatConfigRecord Config { get; private set; }
+    public StatType Type { get; private set; }
 
     public StatModifiers Modifiers { get; private set; } = new();
     public int BaseValue { get; protected set; }
     public int CurrentValue { get; protected set; }
 
-    public Stat(StatRecord record)
+    public Stat(
+        ReferenceUnionMetadata referenceMetadata,
+        StatRecord? instanceState,
+        StatTemplateRecord? templateRecord,
+        StatOverrideRecord? templateOverride
+    )
     {
-        this.Metadata = record.Metadata;
-        this.Config = record.Config;
-        this.Type = record.Type;
+        if (referenceMetadata.Kind == EReferenceKind.Inline && templateRecord is null)
+        {
+            throw new InvalidOperationException("Inline stats must have a template record");
+        }
+        else if (referenceMetadata.Kind == EReferenceKind.Override && templateOverride is null)
+        {
+            throw new InvalidOperationException("Override stats must have a template override");
+        }
+        else if (
+            referenceMetadata.Kind != EReferenceKind.Instance
+            && referenceMetadata.Kind != EReferenceKind.Ref
+        )
+        {
+            throw new InvalidOperationException("Invalid reference kind");
+        }
+
+        this.ReferenceMetadata = referenceMetadata;
+
+        this.ApplyTemplateRecord(templateRecord);
+        this.TemplateOverride = templateOverride;
+
+
+        this.InstanceState = instanceState;
+        this.ApplyTemplateRecord(instanceState);
+
         this.Modifiers = new StatModifiers();
+    }
+
+    // TODO Remove ApplyInstanceState since this can replace it
+    private void ApplyTemplateRecord(StatTemplateRecord? templateRecord)
+    {
+        if (templateRecord is null)
+        {
+            return;
+        }
+
+        this.Metadata = templateRecord.Metadata;
+        this.Config = StatFactory.CopyStatConfig(templateRecord.Config);
+        this.Type = templateRecord.Type;
     }
 
     public Stat(Stat stat)
     {
-        this.Metadata = stat.Metadata;
-        this.Config = stat.Config;
+        this.ReferenceMetadata = stat.ReferenceMetadata;
+        this.Metadata = new StatMetadataRecord
+        {
+            Name = stat.Metadata.Name,
+            DisplayName = stat.Metadata.DisplayName,
+            Description = stat.Metadata.Description,
+            Tags = stat.Metadata.Tags,
+        };
+        this.Config = StatFactory.CopyStatConfig(stat.Config);
         this.Type = stat.Type;
         this.Modifiers = new StatModifiers();
     }
+
+    public void LoadReferences(IRegistry registry) { }
 
     public abstract Stat DeepCopy();
 
