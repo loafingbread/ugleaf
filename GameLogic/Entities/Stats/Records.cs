@@ -7,19 +7,25 @@ public interface IStatBlockRecord
     public List<StatRecord> Stats { get; init; }
 }
 
+
 public record StatBlockRecord : IStatBlockRecord
 {
     public required List<StatRecord> Stats { get; init; } = new();
 }
 
-public record StatTemplateRecord
+public interface IStatRecord 
+{
+    public StatType Type { get; init; }
+}
+
+public record StatTemplateRecord : IStatRecord
 {
     public required StatMetadataRecord Metadata { get; init; }
     public required IStatConfigRecord Config { get; init; }
     public required StatType Type { get; init; }
 }
 
-public record StatOverrideRecord : ITemplateOverride<StatTemplateRecord>
+public record StatOverrideRecord : ITemplateOverride<StatTemplateRecord>, IStatRecord
 {
     public required StatMetadataRecord Metadata { get; init; }
     public required IStatConfigRecord Config { get; init; }

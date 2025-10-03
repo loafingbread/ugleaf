@@ -58,7 +58,7 @@ public class CharacterTemplate
         this.Name = templateRecord.Name;
         this.Description = templateRecord.Description;
         this.Tags = [.. templateRecord.Tags];
-        this.Stats = templateRecord.Stats.DeepCopy();
+        this.Stats = StatFactory.CreateStatBlockFromRecord(templateRecord);
         this.Skills = this.CreateSkillsFromReferences(templateRecord.Skills);
     }
 

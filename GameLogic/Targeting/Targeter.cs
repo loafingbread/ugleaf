@@ -7,6 +7,7 @@ public class Targeter : ITargeter
     public ETargetQuantity TargetQuantity { get; private set; }
     public List<EFactionRelationship> AllowedTargets { get; private set; }
     public int Count { get; private set; }
+    public Position Position { get; } = new(0, 0, 0);
 
     private List<ITargetable> _targets = new();
 

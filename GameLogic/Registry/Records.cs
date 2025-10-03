@@ -18,6 +18,7 @@ public abstract record ReferenceUnionSpec
     public required ReferenceUnionMetadata Metadata { get; init; }
 };
 
+// TODO: Ask chat how to support sub types of stats or other classes in factory
 public record ReferenceUnionMetadata
 {
     public required EReferenceKind Kind { get; init; }

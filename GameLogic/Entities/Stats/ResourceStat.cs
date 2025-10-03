@@ -1,5 +1,7 @@
 namespace GameLogic.Entities.Stats;
 
+using GameLogic.Registry;
+
 /// <summary>
 /// A resource stat is a stat that has a base capacity and a current capacity.
 /// The base capacity is the maximum value of the resource with no modifiers.
@@ -10,8 +12,18 @@ public class ResourceStat : Stat
     public int BaseCapacity { get; private set; }
     public int CurrentCapacity { get; private set; }
 
-    public ResourceStat(StatRecord record)
-        : base(record)
+    public ResourceStat(
+        ReferenceUnionMetadata referenceMetadata,
+        StatRecord? instanceState,
+        StatTemplateRecord? templateRecord,
+        StatOverrideRecord? templateOverride
+    )
+        : base(
+            referenceMetadata,
+            instanceState,
+            templateRecord,
+            tempalteOverride
+        )            
     {
         this.BaseCapacity = this.GetConfig().BaseCapacityFormula.CalculateValue();
         this.CurrentCapacity = this.BaseCapacity;

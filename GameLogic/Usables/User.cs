@@ -5,6 +5,8 @@ namespace GameLogic.Usables;
 
 public class User : IUser
 {
+    public Position Position { get; } = new(0, 0, 0);
+
     public User() { }
 
     /*********************************

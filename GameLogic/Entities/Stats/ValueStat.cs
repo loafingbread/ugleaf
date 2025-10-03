@@ -1,5 +1,7 @@
 namespace GameLogic.Entities.Stats;
 
+using GameLogic.Registry;
+
 /// <summary>
 /// A value stat is a stat that has a base value and a current value.
 /// The base value is the value of the stat with no modifiers.
@@ -7,8 +9,18 @@ namespace GameLogic.Entities.Stats;
 /// </summary>
 public class ValueStat : Stat
 {
-    public ValueStat(StatRecord record)
-        : base(record)
+    public ValueStat(
+        ReferenceUnionMetadata referenceMetadata,
+        StatRecord? instanceState,
+        StatTemplateRecord? templateRecord,
+        StatOverrideRecord? templateOverride
+    )
+        : base(
+            referenceMetadata,
+            instanceState,
+            templateRecord,
+            templateOverride
+        )
     {
         this.BaseValue = this.GetConfig().BaseValueFormula.CalculateValue();
         this.CurrentValue = this.BaseValue;
