@@ -23,11 +23,11 @@ public record PlayerState
 
     public PlayerState(PlayerStateRecord playerStateRecord)
     {
-        foreach (CharacterRecord characterRecord in playerStateRecord.Characters)
-        {
-            Character character = CharacterFactory.CreateCharacterFromRecord(characterRecord);
-            this.Characters.Add(character);
-        }
+        // foreach (CharacterRecord characterRecord in playerStateRecord.Characters)
+        // {
+        //     Character character = CharacterFactory.CreateCharacterReferenceFromRecord(characterRecord);
+        //     this.Characters.Add(character);
+        // }
     }
 }
 

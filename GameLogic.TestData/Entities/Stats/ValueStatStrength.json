@@ -1,17 +1,27 @@
 {
-    "Type": "Value",
     "Metadata": {
-        "Name": "value_stat_strength",
-        "DisplayName": "Strength",
-        "Description": "Strength is a measure of your physical power.",
-        "Tags": ["physical", "strength"]
+        "Kind": "Inline",
+        "TemplateType": "Stat",
+        "TemplateSubType": "StatValue",
+        "TemplateId": {
+            "Value": "value_stat_strength"
+        }
     },
-    "Config": {
-        "BaseValueCap": 50,
-        "CurrentValueCap": 70,
-        "BaseValueFormula": {
-            "Type": "Constant",
-            "Value": 20
+    "Template": {
+        "Type": "Value",
+        "Metadata": {
+            "Name": "value_stat_strength",
+            "DisplayName": "Strength",
+            "Description": "Strength is a measure of your physical power.",
+            "Tags": ["physical", "strength"]
+        },
+        "Config": {
+            "BaseValueCap": 50,
+            "CurrentValueCap": 70,
+            "BaseValueFormula": {
+                "Type": "Constant",
+                "Value": 20
+            }
         }
     }
 }

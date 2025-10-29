@@ -7,12 +7,9 @@ public class StatBlock : IDeepCopyable<StatBlock>
     public List<Stat> Stats { get; private set; } = new();
     public StatModifiers Modifiers { get; private set; } = new();
 
-    public StatBlock(IStatBlockRecord record)
+    public StatBlock(List<Stat> stats)
     {
-        foreach (StatRecord statRecord in record.Stats)
-        {
-            this.Stats.Add(StatFactory.CreateStatFromRecord(statRecord));
-        }
+        this.Stats = [.. stats];
     }
 
     public StatBlock(StatBlock statBlock)

@@ -1,12 +1,17 @@
 {
-    "TemplateIdentifier": {
-        "TemplateId": "skill_mug",
-        "TemplateType": "Skill"
+    "Metadata": {
+        "Kind": "Inline",
+        "TemplateType": "Skill",
+        "TemplateId": {
+            "Value": "skill_mug"
+        }
     },
-    "Name": "Mug",
-    "Targeter": {
-        "TargetQuantity": "Count",
-        "AllowedTargets": ["Enemy"],
-        "Count": 1
+    "Template": {
+        "Name": "Mug",
+        "Targeter": {
+            "TargetQuantity": "Count",
+            "AllowedTargets": ["Enemy"],
+            "Count": 1
+        }
     }
 }

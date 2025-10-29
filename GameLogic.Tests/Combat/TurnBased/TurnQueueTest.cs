@@ -19,20 +19,20 @@ class TurnQueueTestData
         this.Players =
         [
             CharacterFactory
-                .CreateCharacterTemplateFromRecord(this._characters.AshRecord)
-                .Instantiate(),
+                .CreateCharacterReferenceFromRecord(this._characters.AshRecord)
+                .Instance,
             CharacterFactory
-                .CreateCharacterTemplateFromRecord(this._characters.BrockRecord)
-                .Instantiate(),
+                .CreateCharacterReferenceFromRecord(this._characters.BrockRecord)
+                .Instance,
             CharacterFactory
-                .CreateCharacterTemplateFromRecord(this._characters.MissyRecord)
-                .Instantiate(),
+                .CreateCharacterReferenceFromRecord(this._characters.MissyRecord)
+                .Instance,
         ];
         this.Enemies =
         [
             CharacterFactory
-                .CreateCharacterTemplateFromRecord(this._characters.MissyRecord)
-                .Instantiate(),
+                .CreateCharacterReferenceFromRecord(this._characters.MissyRecord)
+                .Instance,
         ];
     }
 }

@@ -1,12 +1,17 @@
 {
-    "TemplateIdentifier": {
-        "TemplateId": "skill_steal",
-        "TemplateType": "Skill"
+    "Metadata": {
+        "Kind": "Inline",
+        "TemplateType": "Skill",
+        "TemplateId": {
+            "Value": "skill_steal"
+        }
     },
-    "Name": "Steal",
-    "Targeter": {
-        "TargetQuantity": "Count",
-        "AllowedTargets": ["Ally", "Enemy", "Neutral"],
-        "Count": 1
+    "Template": {
+        "Name": "Steal",
+        "Targeter": {
+            "TargetQuantity": "Count",
+            "AllowedTargets": ["Ally", "Enemy", "Neutral"],
+            "Count": 1
+        }
     }
 }

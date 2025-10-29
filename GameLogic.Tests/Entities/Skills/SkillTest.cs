@@ -1,6 +1,7 @@
 namespace GameLogic.Tests;
 
 using GameLogic.Entities.Skills;
+using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
@@ -21,28 +22,37 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     [Fact]
     public void Skill_CanLoadFromFile()
     {
-        Skill facePalm = SkillFactory
-            .CreateSkillTemplateFromRecord(this._fixture.FacePalmRecord)
-            .Instantiate();
+        Reference<SkillTemplate, Skill> facePalmReference =
+            SkillFactory.CreateSkillReferenceFromRecord(this._fixture.FacePalmRecord);
 
-        Assert.Equal("skill_facepalm", facePalm.TemplateIdentifier.TemplateId.ToString());
+        if (facePalmReference.Template is null)
+        {
+            throw new InvalidOperationException("Face Palm template is null");
+        }
+
+        SkillTemplate facePalm = facePalmReference.Template;
+
+        Assert.Equal("skill_facepalm", facePalm.ReferenceMetadata.TemplateId.ToString());
         Assert.Equal("Face Palm", facePalm.Name);
-        Assert.Equal(1, this._fixture.FacePalmRecord.Targeter?.Count);
-        Assert.Equal(ETargetQuantity.Count, this._fixture.FacePalmRecord.Targeter?.TargetQuantity);
-        Assert.Equal(
-            [EFactionRelationship.Self],
-            this._fixture.FacePalmRecord.Targeter?.AllowedTargets
-        );
+        Assert.Equal(1, facePalm.Targeter?.Count);
+        Assert.Equal(ETargetQuantity.Count, facePalm.Targeter?.QuantityType);
+        Assert.Equal([EFactionRelationship.Self], facePalm.Targeter?.AllowedTargets);
     }
 
     [Fact]
     public void Skill_CanLoadFullFromFile()
     {
-        Skill ignite = SkillFactory
-            .CreateSkillTemplateFromRecord(this._fixture.IgniteRecord)
-            .Instantiate();
+        Reference<SkillTemplate, Skill> igniteReference =
+            SkillFactory.CreateSkillReferenceFromRecord(this._fixture.IgniteRecord);
 
-        Assert.Equal("skill_ignite", ignite.TemplateIdentifier.TemplateId.ToString());
+        if (igniteReference.Template is null)
+        {
+            throw new InvalidOperationException("Ignite template is null");
+        }
+
+        SkillTemplate ignite = igniteReference.Template;
+
+        Assert.Equal("skill_ignite", ignite.ReferenceMetadata.TemplateId.ToString());
         Assert.Equal("Ignite", ignite.Name);
 
         Usable? igniteUsable = ignite.Usables[0] as Usable;
@@ -50,7 +60,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
 
         Targeter? igniteUsableTargeter = igniteUsable.Targeter as Targeter;
         Assert.NotNull(igniteUsableTargeter);
-        Assert.Equal(ETargetQuantity.Count, igniteUsableTargeter.TargetQuantity);
+        Assert.Equal(ETargetQuantity.Count, igniteUsableTargeter.QuantityType);
         Assert.Equal([EFactionRelationship.Enemy], igniteUsableTargeter.AllowedTargets);
         Assert.Equal(1, igniteUsableTargeter.Count);
 
@@ -58,7 +68,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
 
         BurnStatusEffect? burnEffect = secondEffect as BurnStatusEffect;
         Assert.NotNull(burnEffect);
-        Assert.Equal("effect_burn_dot", burnEffect.TemplateIdentifier.TemplateId.ToString());
+        Assert.Equal("effect_burn_dot", burnEffect.ReferenceMetadata.TemplateId.ToString());
         Assert.Equal(EEffectType.Status, burnEffect.Type);
         Assert.Equal("Burn", burnEffect.Subtype);
         Assert.Equal("DOT", burnEffect.Variant);

@@ -1,11 +1,16 @@
 {
-    "TemplateIdentifier": {
-        "TemplateId": "skill_sprayandpray",
-        "TemplateType": "Skill"
+    "Metadata": {
+        "Kind": "Inline",
+        "TemplateType": "Skill",
+        "TemplateId": {
+            "Value": "skill_sprayandpray"
+        }
     },
-    "Name": "Spray And Pray",
-    "Targeter": {
-        "TargetQuantity": "All",
-        "AllowedTargets": ["Ally", "Enemy", "Neutral"]
+    "Template": {
+        "Name": "Spray And Pray",
+        "Targeter": {
+            "TargetQuantity": "All",
+            "AllowedTargets": ["Ally", "Enemy", "Neutral"]
+        }
     }
 }

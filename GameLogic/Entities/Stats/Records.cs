@@ -4,16 +4,16 @@ using GameLogic.Registry;
 
 public interface IStatBlockRecord
 {
-    public List<StatRecord> Stats { get; init; }
+    public List<ReferenceUnionSpec> Stats { get; init; }
 }
 
 
 public record StatBlockRecord : IStatBlockRecord
 {
-    public required List<StatRecord> Stats { get; init; } = new();
+    public required List<ReferenceUnionSpec> Stats { get; init; } = new();
 }
 
-public interface IStatRecord 
+public interface IStatRecord
 {
     public StatType Type { get; init; }
 }

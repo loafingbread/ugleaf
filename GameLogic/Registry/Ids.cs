@@ -50,4 +50,12 @@ public enum ETemplateType
     Skill,
     Usable,
     Effect,
+    Stat,
+}
+
+public enum ETemplateSubType
+{
+    None,
+    StatValue,
+    StatResource,
 }

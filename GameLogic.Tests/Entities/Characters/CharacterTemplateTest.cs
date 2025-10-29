@@ -3,6 +3,7 @@ namespace GameLogic.Tests;
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
+using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
@@ -20,11 +21,17 @@ public class CharacterTemplateTest : IClassFixture<CharacterTestFixture>
     [Fact]
     public void CharacterTemplate_CanLoadFromFile()
     {
-        CharacterTemplate goblin = CharacterFactory.CreateCharacterTemplateFromRecord(
-            this._fixture.GoblinRecord
-        );
+        Reference<CharacterTemplate, Character> goblinReference =
+            CharacterFactory.CreateCharacterReferenceFromRecord(this._fixture.GoblinRecord);
 
-        Assert.Equal("char_npc_goblin", goblin.TemplateIdentifier.TemplateId.ToString());
+        if (goblinReference.Template is null)
+        {
+            throw new InvalidOperationException("Goblin template is null");
+        }
+
+        CharacterTemplate goblin = goblinReference.Template;
+
+        Assert.Equal("char_npc_goblin", goblin.ReferenceMetadata.TemplateId.ToString());
         Assert.Equal("Goblin", goblin.Name);
 
         ResourceStat? healthStat =
@@ -46,11 +53,16 @@ public class CharacterTemplateTest : IClassFixture<CharacterTestFixture>
     [Fact]
     public void Character_CanLoadWithSkillFromFile()
     {
-        CharacterTemplate ash = CharacterFactory.CreateCharacterTemplateFromRecord(
-            this._fixture.AshRecord
-        );
+        Reference<CharacterTemplate, Character> ashReference =
+            CharacterFactory.CreateCharacterReferenceFromRecord(this._fixture.AshRecord);
+        if (ashReference.Template is null)
+        {
+            throw new InvalidOperationException("Ash template is null");
+        }
 
-        Assert.Equal("char_pc_ash", ash.TemplateIdentifier.TemplateId.ToString());
+        CharacterTemplate ash = ashReference.Template;
+
+        Assert.Equal("char_pc_ash", ash.ReferenceMetadata.TemplateId.ToString());
         Assert.Equal("Ash", ash.Name);
 
         // Skill firstSkill = ash.Skills[0];

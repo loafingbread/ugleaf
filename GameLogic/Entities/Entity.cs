@@ -12,6 +12,19 @@ public class Entity : ITargeter, ITargetable, IAffectable, IUser, IDeepCopyable<
 {
     public Position Position { get; } = new Position(0, 0, 0);
     private ITargeter? _targeter;
+    public ETargetQuantity QuantityType
+    {
+        get => this._targeter?.QuantityType ?? ETargetQuantity.None;
+    }
+
+    public int Count
+    {
+        get => this._targeter?.Count ?? 0;
+    }
+    public List<EFactionRelationship> AllowedTargets
+    {
+        get => this._targeter?.AllowedTargets ?? new();
+    }
     private ITargetable? _targetable;
     private IUser? _user;
 

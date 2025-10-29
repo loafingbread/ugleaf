@@ -8,7 +8,7 @@ using GameLogic.Utils;
 
 public static class CharacterFactory
 {
-    public static Reference<CharacterTemplate, Character> CreateCharacterFromReference(
+    public static Reference<CharacterTemplate, Character> CreateCharacterReferenceFromRecord(
         ReferenceUnionSpec record
     )
     {

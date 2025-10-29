@@ -2,30 +2,31 @@ namespace GameLogic.Tests;
 
 using GameLogic.Config;
 using GameLogic.Entities.Skills;
+using GameLogic.Registry;
 
 public class SkillTestFixture
 {
-    public SkillTemplateRecord FacePalmRecord { get; }
-    public SkillTemplateRecord IgniteRecord { get; }
-    public SkillTemplateRecord MugRecord { get; }
-    public SkillTemplateRecord SprayAndPrayRecord { get; }
-    public SkillTemplateRecord StealRecord { get; }
+    public ReferenceUnionSpec FacePalmRecord { get; }
+    public ReferenceUnionSpec IgniteRecord { get; }
+    public ReferenceUnionSpec MugRecord { get; }
+    public ReferenceUnionSpec SprayAndPrayRecord { get; }
+    public ReferenceUnionSpec StealRecord { get; }
 
     public SkillTestFixture()
     {
-        IgniteRecord = JsonConfigLoader.LoadFromFile<SkillTemplateRecord>(
+        IgniteRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.SkillTemplate.Ignite
         );
-        FacePalmRecord = JsonConfigLoader.LoadFromFile<SkillTemplateRecord>(
+        FacePalmRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.SkillTemplate.FacePalm
         );
-        MugRecord = JsonConfigLoader.LoadFromFile<SkillTemplateRecord>(
+        MugRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.SkillTemplate.Mug
         );
-        SprayAndPrayRecord = JsonConfigLoader.LoadFromFile<SkillTemplateRecord>(
+        SprayAndPrayRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.SkillTemplate.SprayAndPray
         );
-        StealRecord = JsonConfigLoader.LoadFromFile<SkillTemplateRecord>(
+        StealRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.SkillTemplate.Steal
         );
     }

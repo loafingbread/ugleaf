@@ -4,27 +4,27 @@ using GameLogic.Entities;
 
 public class Targeter : ITargeter
 {
-    public ETargetQuantity TargetQuantity { get; private set; }
-    public List<EFactionRelationship> AllowedTargets { get; private set; }
+    public ETargetQuantity QuantityType  { get; private set; }
     public int Count { get; private set; }
+    public List<EFactionRelationship> AllowedTargets { get; private set; }
     public Position Position { get; } = new(0, 0, 0);
 
     private List<ITargetable> _targets = new();
 
     public Targeter(
-        ETargetQuantity targetQuantity,
+        ETargetQuantity quantityType,
         List<EFactionRelationship> allowedTargets,
         int count
     )
     {
-        this.TargetQuantity = targetQuantity;
+        this.QuantityType = quantityType;
         this.AllowedTargets = allowedTargets;
         this.Count = count;
     }
 
     public Targeter(Targeter targeter)
     {
-        this.TargetQuantity = targeter.TargetQuantity;
+        this.QuantityType = targeter.QuantityType;
         this.AllowedTargets = targeter.AllowedTargets;
         this.Count = targeter.Count;
     }
@@ -47,7 +47,7 @@ public class Targeter : ITargeter
     // Get max number of eligibile targets
     public int GetMaxTargets(object source, IEnumerable<ITargetable> candidates)
     {
-        switch (this.TargetQuantity)
+        switch (this.QuantityType)
         {
             case ETargetQuantity.Count:
                 return this.getMaxTargets(source, candidates, this.Count);

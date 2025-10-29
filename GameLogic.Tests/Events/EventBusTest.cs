@@ -21,12 +21,23 @@ class EventBusTestData
     public EventBusTestData(CharacterTestFixture characters)
     {
         this._characters = characters;
-        this.Alice = CharacterFactory
-            .CreateCharacterTemplateFromRecord(this._characters.AliceRecord)
-            .Instantiate();
-        this.Brock = CharacterFactory
-            .CreateCharacterTemplateFromRecord(this._characters.BrockRecord)
-            .Instantiate();
+        Character? AliceInstance = CharacterFactory
+            .CreateCharacterReferenceFromRecord(this._characters.AliceRecord)
+            .Instance;
+        if (AliceInstance is null)
+        {
+            throw new InvalidOperationException("Alice instance is null");
+        }
+        this.Alice = AliceInstance;
+
+        Character? BrockInstance = CharacterFactory
+            .CreateCharacterReferenceFromRecord(this._characters.BrockRecord)
+            .Instance;
+        if (BrockInstance is null)
+        {
+            throw new InvalidOperationException("Brock instance is null");
+        }
+        this.Brock = BrockInstance;
 
         this.FireballSkillUseEvent = new("Fireball", this.Alice.Name);
         this.StartCombatPhaseChangedEvent = new(

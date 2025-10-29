@@ -141,7 +141,9 @@ public class CharacterTemplate
         this.Name = overrideRecord.Name ?? this.Name;
         this.Description = overrideRecord.Description ?? this.Description;
         this.Tags = overrideRecord.Tags ?? this.Tags;
-        this.Stats = overrideRecord.Stats.DeepCopy() ?? this.Stats;
+        this.Stats = overrideRecord.Stats is not null
+            ? StatFactory.CreateStatBlockFromReferences(overrideRecord.Stats)
+            : this.Stats;
         this.Skills = overrideRecord.Skills is not null
             ? this.CreateSkillsFromReferences(overrideRecord.Skills)
             : this.Skills;
@@ -216,7 +218,7 @@ public class Character : CharacterTemplate, IInstance<CharacterRecord>, IDeepCop
         this.Name = this.InstanceState.Name;
         this.Description = this.InstanceState.Description;
         this.Tags = [.. this.InstanceState.Tags];
-        this.Stats = this.InstanceState.Stats.DeepCopy();
+        this.Stats = StatFactory.CreateStatBlockFromRecord(this.InstanceState);
         this.Skills = this.CreateSkillsFromReferences(this.InstanceState.Skills);
     }
 

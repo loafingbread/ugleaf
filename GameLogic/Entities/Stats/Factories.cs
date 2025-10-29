@@ -4,28 +4,24 @@ using GameLogic.Registry;
 
 public static class StatFactory
 {
-    public static Reference<Stat, Stat> CreateStatReferenceFromRecord<TStat>(
-        ReferenceUnionSpec record
-    )
+    public static Reference<Stat, Stat> CreateStatReferenceFromRecord(ReferenceUnionSpec record)
     {
-        switch(record.Metadata.Kind)
+        switch (record.Metadata.Kind)
         {
             case EReferenceKind.Ref:
-                return CreateStatFromReference<TStat>(record);
+                return CreateStatFromReference(record);
             case EReferenceKind.Inline:
-                return CreateStatFromInline<TStat>(record);
+                return CreateStatFromInline(record);
             case EReferenceKind.Override:
-                return CreateStatFromOverride<TStat>(record);
+                return CreateStatFromOverride(record);
             case EReferenceKind.Instance:
-                return CreateStatFromInstance<TStat>(record);
+                return CreateStatFromInstance(record);
             default:
                 throw new NotImplementedException();
         }
     }
 
-    public static Reference<Stat, Stat> CreateStatFromReference<TStat>(
-        ReferenceUnionSpec record
-    )
+    public static Reference<Stat, Stat> CreateStatFromReference(ReferenceUnionSpec record)
     {
         var refSpec = record as RefSpec;
         if (refSpec is null)
@@ -35,36 +31,34 @@ public static class StatFactory
 
         return new Reference<Stat, Stat>(
             refSpec.Metadata,
-            CreateStat<inlineSpec.Template.Type>(
-                refSpec.Metadata,
-                null, 
-                null,
-                null
-            ),
+            CreateStat(refSpec.Metadata, null, null, null),
             null
         );
     }
+
     // TODO: Create all references afterwards, do not instantiate
     // until they are resolved
 
-    public static TStat CreateStat<TStat>(
+    public static Stat CreateStat(
         ReferenceUnionMetadata metadata,
         StatRecord? instanceState,
         StatTemplateRecord? templateRecord,
-        StatOverrideRecord overrideRecord
+        StatOverrideRecord? overrideRecord
     )
     {
-        return new TStat(
-            metadata,
-            instanceState,
-            templateRecord,
-            overrideRecord
-        )
+        if (metadata.TemplateSubType == ETemplateSubType.StatValue)
+        {
+            return new ValueStat(metadata, instanceState, templateRecord, overrideRecord);
+        }
+        else if (metadata.TemplateSubType == ETemplateSubType.StatResource)
+        {
+            return new ResourceStat(metadata, instanceState, templateRecord, overrideRecord);
+        }
+
+        throw new InvalidOperationException("Invalid stat sub type");
     }
 
-    public static Reference<Stat, Stat> CreateStatFromInline<TStat>(
-        ReferenceUnionSpec record
-    )
+    public static Reference<Stat, Stat> CreateStatFromInline(ReferenceUnionSpec record)
     {
         var inlineSpec = record as InlineSpec<StatTemplateRecord>;
         if (inlineSpec is null)
@@ -74,46 +68,27 @@ public static class StatFactory
 
         return new Reference<Stat, Stat>(
             inlineSpec.Metadata,
-            CreateStat<inlineSpec.Template.Type>(
-                inlineSpec.Metadata,
-                null, 
-                inlineSpec.Template,
-                null
-            ),
+            CreateStat(inlineSpec.Metadata, null, inlineSpec.Template, null),
             null
         );
     }
 
-    public static Reference<Stat, Stat> CreateStatFromOverride<TStat>(
-        ReferenceUnionSpec record
-    )
+    public static Reference<Stat, Stat> CreateStatFromOverride(ReferenceUnionSpec record)
     {
         var overrideSpec = record as OverrideSpec<StatTemplateRecord, StatOverrideRecord>;
         if (overrideSpec is null)
         {
-            throw InvalidOperationException("Override spec is not a stat");
+            throw new InvalidOperationException("Override spec is not a stat");
         }
 
         return new Reference<Stat, Stat>(
             overrideSpec.Metadata,
-            new TStat(overrideSpec, null, null, overrideSpec.Override),
-            null
-        );
-        return new Reference<Stat, Stat>(
-            overrideSpec.Metadata,
-            CreateStat<inlineSpec.Template.Type>(
-                inlineSpec.Metadata,
-                null, 
-                inlineSpec.Template,
-                null
-            ),
+            CreateStat(overrideSpec.Metadata, null, null, overrideSpec.Override),
             null
         );
     }
 
-    public static Reference<Stat, Stat> CreateStatFromInstance<TStat>(
-        ReferenceUnionSpec record
-    )
+    public static Reference<Stat, Stat> CreateStatFromInstance(ReferenceUnionSpec record)
     {
         var instanceSpec = record as InstanceSpec<StatTemplateRecord, StatRecord>;
         if (instanceSpec is null)
@@ -123,73 +98,39 @@ public static class StatFactory
 
         return new Reference<Stat, Stat>(
             instanceSpec.Metadata,
-            null,
-        new TStat(instanceSpec.Metadata, instanceSpec.Instance, null, null)
-        );
-    }
-
-    public static Stat CreateStatFromRecord(ReferenceUnionSpec record, StatType type)
-    {
-        switch (type)
-        {
-            case StatType.Value:
-                return new 
-        }
-    }
-
-    public static Stat CreateStatFromRecord(StatRecord record)
-    {
-        switch (record.Type)
-        {
-            case StatType.Value:
-                return new ValueStat(record);
-            case StatType.Resource:
-                return new ResourceStat(record);
-            default:
-                throw new ArgumentException($"Invalid stat type: {record.Type}");
-        }
-    }
-
-    public static Stat CreateStat(
-        ReferenceUnionSpec record
-    )
-    {
-
-    }
-
-    public static ValueStat CreateValueStat(
-        ReferenceUnionMetadata metadata,
-        StatRecord? instanceState,
-        StatTemplateRecord? templateRecord,
-        StatOverrideRecord? templateOverride
-    )
-    {
-        return new ValueStat(
-            metadata,
-            instanceState,
-            templateRecord,
-            templateOverride
-        );
-    }
-
-    public static ResourceStat CreateResourceStat(
-        ReferenceUnionMetadata metadata,
-        StatRecord? instanceState,
-        StatTemplateRecord? templateRecord,
-        StatOverrideRecord? templateOverride
-    )
-    {
-        return new ValueStat(
-            metadata,
-            instanceState,
-            templateRecord,
-            templateOverride
+            CreateStat(instanceSpec.Metadata, instanceSpec.Instance, null, null),
+            null
         );
     }
 
     public static StatBlock CreateStatBlockFromRecord(IStatBlockRecord record)
     {
-        return new StatBlock(record);
+        List<Stat> stats = new();
+        foreach (ReferenceUnionSpec statRecord in record.Stats)
+        {
+            Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(statRecord);
+            if (stat.Instance is not null)
+            {
+                stats.Add(stat.Instance);
+            }
+        }
+
+        return new StatBlock(stats);
+    }
+
+    public static StatBlock CreateStatBlockFromReferences(List<ReferenceUnionSpec> records)
+    {
+        List<Stat> stats = new();
+        foreach (ReferenceUnionSpec statRecord in records)
+        {
+            Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(statRecord);
+            if (stat.Instance is not null)
+            {
+                stats.Add(stat.Instance);
+            }
+        }
+
+        return new StatBlock(stats);
     }
 
     public static IStatConfigRecord CopyStatConfig(IStatConfigRecord record)

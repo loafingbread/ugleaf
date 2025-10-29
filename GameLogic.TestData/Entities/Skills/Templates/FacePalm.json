@@ -1,41 +1,46 @@
 {
-    "TemplateIdentifier": {
-        "TemplateId": "skill_facepalm",
-        "TemplateType": "Skill"
-    },
-    "Name": "Face Palm",
-    "Targeter": {
-        "TargetQuantity": "Count",
-        "AllowedTargets": ["Self"],
-        "Count": 1
-    },
-    "Usables": [
-        {
-            "TemplateIdentifier": {
-                "TemplateId": "usable_facepalm",
-                "TemplateType": "Usable"
-            },
-            "Targeter": {
-                "TargetQuantity": "Count",
-                "AllowedTargets": [
-                    "Self"
-                ],
-                "Count": 1
-            },
-            "Effects": [
-                {
-                    "TemplateIdentifier": {
-                        "TemplateId": "effect_physical_damage",
-                        "TemplateType": "Effect"
-                    },
-                    "Type": "Attack",
-                    "Subtype": "SingleHit",
-                    "Variant": "PhysicalDamage",
-                    "Config": {
-                        "Value": 777
-                    }
-                }
-            ]
+    "Metadata": {
+        "Kind": "Inline",
+        "TemplateType": "Skill",
+        "TemplateId": {
+            "Value": "skill_facepalm"
         }
-    ]
+    },
+    "Template": {
+        "Name": "Face Palm",
+        "Targeter": {
+            "TargetQuantity": "Count",
+            "AllowedTargets": ["Self"],
+            "Count": 1
+        },
+        "Usables": [
+            {
+                "TemplateIdentifier": {
+                    "TemplateId": "usable_facepalm",
+                    "TemplateType": "Usable"
+                },
+                "Targeter": {
+                    "TargetQuantity": "Count",
+                    "AllowedTargets": [
+                        "Self"
+                    ],
+                    "Count": 1
+                },
+                "Effects": [
+                    {
+                        "TemplateIdentifier": {
+                            "TemplateId": "effect_physical_damage",
+                            "TemplateType": "Effect"
+                        },
+                        "Type": "Attack",
+                        "Subtype": "SingleHit",
+                        "Variant": "PhysicalDamage",
+                        "Config": {
+                            "Value": 777
+                        }
+                    }
+                ]
+            }
+        ]
+    }
 }

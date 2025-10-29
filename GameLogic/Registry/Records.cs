@@ -13,7 +13,7 @@ using GameLogic.Usables.Effects;
 /// - Inline reference: An inline definition of a template
 /// - Reference with an instance id: An instance with a template id
 /// </summary>
-public abstract record ReferenceUnionSpec
+public record ReferenceUnionSpec
 {
     public required ReferenceUnionMetadata Metadata { get; init; }
 };
@@ -23,6 +23,8 @@ public record ReferenceUnionMetadata
 {
     public required EReferenceKind Kind { get; init; }
     public required ETemplateType TemplateType { get; init; }
+    public ETemplateSubType TemplateSubType { get; init; } = ETemplateSubType.None;
+
     public TemplateId TemplateId { get; init; } = Ids.NewTemplateId();
 };
 

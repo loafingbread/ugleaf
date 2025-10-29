@@ -247,7 +247,7 @@ public class CharactersCommand : BaseCommand
 
         ui.PrintIndentedSection("Targeter", indentLevel);
 
-        ui.PrintIndentedInfo($"Target Quantity Type: {_targeter.TargetQuantity}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Target Quantity Type: {_targeter.QuantityType}", indentLevel + 1);
         ui.PrintIndentedInfo(
             $"Allowed Target Types: {string.Join(", ", _targeter.AllowedTargets)}",
             indentLevel + 1

@@ -9,7 +9,7 @@ public record CharacterTemplateRecord : IStatBlockRecord
     public required string Name { get; init; } = "";
     public required string Description { get; init; } = "";
     public required List<string> Tags { get; init; } = new();
-    public required List<StatRecord> Stats { get; init; } = new();
+    public required List<ReferenceUnionSpec> Stats { get; init; } = new();
     public required List<ReferenceUnionSpec> Skills { get; init; } = new();
 }
 
@@ -18,7 +18,7 @@ public record CharacterOverrideRecord : ITemplateOverride<CharacterTemplateRecor
     public string? Name { get; init; } = "";
     public string? Description { get; init; } = "";
     public List<string>? Tags { get; init; } = new();
-    public List<StatRecord>? Stats { get; init; } = new();
+    public List<ReferenceUnionSpec>? Stats { get; init; } = new();
     public List<ReferenceUnionSpec>? Skills { get; init; } = new();
 }
 

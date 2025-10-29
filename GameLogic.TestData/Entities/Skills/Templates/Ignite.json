@@ -1,68 +1,73 @@
 {
-    "TemplateIdentifier": {
-        "TemplateId": "skill_ignite",
-        "TemplateType": "Skill"
-    },
-    "Name": "Ignite",
-    "Targeter": {
-        "TargetQuantity": "Count",
-        "AllowedTargets": [
-            "Enemy"
-        ],
-        "Count": 1
-    },
-    "Usables": [
-        {
-            "TemplateId": "usable_ignite",
-            "Targeter": {
-                "TargetQuantity": "Count",
-                "AllowedTargets": [
-                    "Enemy"
-                ],
-                "Count": 1
-            },
-            "Effects": [
-                {
-                    "TemplateId": "effect_fire_damage",
-                    "Type": "Attack",
-                    "Subtype": "SingleHit",
-                    "Variant": "FireDamage",
-                    "Config": {
-                        "Value": 10
-                    }
-                },
-                {
-                    "TemplateId": "effect_burn_dot",
-                    "Type": "Status",
-                    "Subtype": "Burn",
-                    "Variant": "DOT",
-                    "Config": {
-                        "Duration": 3,
-                        "Value": 5
-                    }
-                }
-            ]
-        },
-        {
-            "TemplateId": "usable_overheat",
-            "Targeter": {
-                "TargetQuantity": "Count",
-                "AllowedTargets": [
-                    "Self"
-                ],
-                "Count": 1
-            },
-            "Effects": [
-                {
-                    "TemplateId": "effect_overheat",
-                    "Type": "Attack",
-                    "Subtype": "SingleHit",
-                    "Variant": "FireDamage",
-                    "Config": {
-                        "Value": 5
-                    }
-                }
-            ]
+    "Metadata": {
+        "Kind": "Inline",
+        "TemplateType": "Skill",
+        "TemplateId": {
+            "Value": "skill_ignite"
         }
-    ]
+    },
+    "Template": {
+        "Name": "Ignite",
+        "Targeter": {
+            "TargetQuantity": "Count",
+            "AllowedTargets": [
+                "Enemy"
+            ],
+            "Count": 1
+        },
+        "Usables": [
+            {
+                "TemplateId": "usable_ignite",
+                "Targeter": {
+                    "TargetQuantity": "Count",
+                    "AllowedTargets": [
+                        "Enemy"
+                    ],
+                    "Count": 1
+                },
+                "Effects": [
+                    {
+                        "TemplateId": "effect_fire_damage",
+                        "Type": "Attack",
+                        "Subtype": "SingleHit",
+                        "Variant": "FireDamage",
+                        "Config": {
+                            "Value": 10
+                        }
+                    },
+                    {
+                        "TemplateId": "effect_burn_dot",
+                        "Type": "Status",
+                        "Subtype": "Burn",
+                        "Variant": "DOT",
+                        "Config": {
+                            "Duration": 3,
+                            "Value": 5
+                        }
+                    }
+                ]
+            },
+            {
+                "TemplateId": "usable_overheat",
+                "Targeter": {
+                    "TargetQuantity": "Count",
+                    "AllowedTargets": [
+                        "Self"
+                    ],
+                    "Count": 1
+                },
+                "Effects": [
+                    {
+                        "TemplateId": "effect_overheat",
+                        "Type": "Attack",
+                        "Subtype": "SingleHit",
+                        "Variant": "FireDamage",
+                        "Config": {
+                            "Value": 5
+                        }
+                    }
+                ]
+            }
+        ]
+    }
 }

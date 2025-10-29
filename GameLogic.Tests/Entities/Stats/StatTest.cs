@@ -1,6 +1,7 @@
 namespace GameLogic.Tests;
 
 using GameLogic.Entities.Stats;
+using GameLogic.Registry;
 using Xunit;
 
 public class StatTest : IClassFixture<StatTestFixture>
@@ -15,17 +16,27 @@ public class StatTest : IClassFixture<StatTestFixture>
     [Fact]
     public void ValueStat_CanLoadFromFile()
     {
-        Stat stat = StatFactory.CreateStatFromRecord(this._fixture.ValueStatStrengthRecord);
+        Reference<Stat, Stat> valueStatStrengthReference =
+            StatFactory.CreateStatReferenceFromRecord(this._fixture.ValueStatStrengthRecord);
+        if (valueStatStrengthReference.Template is null)
+        {
+            throw new InvalidOperationException("Value Stat Strength template is null");
+        }
 
-        Assert.IsType<ValueStat>(stat);
-        Assert.Equal(StatType.Value, stat.Type);
+        Stat valueStatStrength = valueStatStrengthReference.Template;
 
-        Assert.Equal("value_stat_strength", stat.Metadata.Name);
-        Assert.Equal("Strength", stat.Metadata.DisplayName);
-        Assert.Equal("Strength is a measure of your physical power.", stat.Metadata.Description);
-        Assert.Equal(["physical", "strength"], stat.Metadata.Tags);
+        Assert.IsType<ValueStat>(valueStatStrength);
+        Assert.Equal(StatType.Value, valueStatStrength.Type);
 
-        ValueStatConfigRecord valueStatConfig = ((ValueStat)stat).GetConfig()!;
+        Assert.Equal("value_stat_strength", valueStatStrength.Metadata.Name);
+        Assert.Equal("Strength", valueStatStrength.Metadata.DisplayName);
+        Assert.Equal(
+            "Strength is a measure of your physical power.",
+            valueStatStrength.Metadata.Description
+        );
+        Assert.Equal(["physical", "strength"], valueStatStrength.Metadata.Tags);
+
+        ValueStatConfigRecord valueStatConfig = ((ValueStat)valueStatStrength).GetConfig()!;
         Assert.Equal(50, valueStatConfig.BaseValueCap);
         Assert.Equal(70, valueStatConfig.CurrentValueCap);
         Assert.Equal(StatFormulaType.Constant, valueStatConfig.BaseValueFormula.Type);
@@ -35,26 +46,35 @@ public class StatTest : IClassFixture<StatTestFixture>
     [Fact]
     public void ResourceStat_CanLoadFromFile()
     {
-        Stat stat = StatFactory.CreateStatFromRecord(this._fixture.ResourceStatHealthRecord);
+        Reference<Stat, Stat> resourceStatHealthReference =
+            StatFactory.CreateStatReferenceFromRecord(this._fixture.ResourceStatHealthRecord);
+        if (resourceStatHealthReference.Template is null)
+        {
+            throw new InvalidOperationException("Resource Stat Health template is null");
+        }
 
-        Assert.IsType<ResourceStat>(stat);
-        Assert.Equal(StatType.Resource, stat.Type);
+        Stat resourceStatHealth = resourceStatHealthReference.Template;
 
-        Assert.Equal("resource_stat_health", stat.Metadata.Name);
-        Assert.Equal("Health", stat.Metadata.DisplayName);
+        Assert.IsType<ResourceStat>(resourceStatHealth);
+        Assert.Equal(StatType.Resource, resourceStatHealth.Type);
+
+        Assert.Equal("resource_stat_health", resourceStatHealth.Metadata.Name);
+        Assert.Equal("Health", resourceStatHealth.Metadata.DisplayName);
         Assert.Equal(
             "Health is a measure of your healthiness. You die when it reaches 0.",
-            stat.Metadata.Description
+            resourceStatHealth.Metadata.Description
         );
-        Assert.Equal(["physical", "health"], stat.Metadata.Tags);
+        Assert.Equal(["physical", "health"], resourceStatHealth.Metadata.Tags);
 
-        ResourceStatConfigRecord resourceStatConfig = ((ResourceStat)stat).GetConfig()!;
+        ResourceStatConfigRecord resourceStatConfig = (
+            (ResourceStat)resourceStatHealth
+        ).GetConfig()!;
         Assert.Equal(200, resourceStatConfig.BaseCapacityCap);
         Assert.Equal(300, resourceStatConfig.CurrentCapacityCap);
         Assert.Equal(80, resourceStatConfig.StartingCurrentValue);
         Assert.Equal(StatFormulaType.Constant, resourceStatConfig.BaseCapacityFormula.Type);
         Assert.Equal(100, resourceStatConfig.BaseCapacityFormula.CalculateValue());
 
-        Assert.Equal(resourceStatConfig.StartingCurrentValue, stat.CurrentValue);
+        Assert.Equal(resourceStatConfig.StartingCurrentValue, resourceStatHealth.CurrentValue);
     }
 }

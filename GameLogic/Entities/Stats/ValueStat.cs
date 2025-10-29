@@ -15,12 +15,7 @@ public class ValueStat : Stat
         StatTemplateRecord? templateRecord,
         StatOverrideRecord? templateOverride
     )
-        : base(
-            referenceMetadata,
-            instanceState,
-            templateRecord,
-            templateOverride
-        )
+        : base(referenceMetadata, instanceState, templateRecord, templateOverride)
     {
         this.BaseValue = this.GetConfig().BaseValueFormula.CalculateValue();
         this.CurrentValue = this.BaseValue;

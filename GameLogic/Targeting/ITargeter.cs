@@ -5,6 +5,10 @@ using GameLogic.Utils;
 
 public interface ITargeter : IPosition, IDeepCopyable<ITargeter>
 {
+    public ETargetQuantity QuantityType { get; }
+    public int Count { get; }
+    public List<EFactionRelationship> AllowedTargets { get; }
+
     public bool CanTarget(ITargetable candidate);
     public int GetMaxTargets(object source, IEnumerable<ITargetable> candidates);
     public IEnumerable<ITargetable> GetEligibleTargets(
@@ -18,6 +22,10 @@ public interface ITargeter : IPosition, IDeepCopyable<ITargeter>
 
 public class NoTargeter : ITargeter
 {
+    public ETargetQuantity QuantityType { get; } = ETargetQuantity.None;
+    public int Count { get; } = 0;
+    public List<EFactionRelationship> AllowedTargets { get; } = new();
+
     public Position Position { get; } = new Position(0, 0, 0);
 
     public NoTargeter(Position position)
@@ -40,7 +48,6 @@ public class NoTargeter : ITargeter
         false;
 
     public bool Untarget(ITargetable target) => false;
-
 
     public ITargeter DeepCopy() => new NoTargeter(this.Position.DeepCopy());
 }

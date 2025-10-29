@@ -18,12 +18,7 @@ public class ResourceStat : Stat
         StatTemplateRecord? templateRecord,
         StatOverrideRecord? templateOverride
     )
-        : base(
-            referenceMetadata,
-            instanceState,
-            templateRecord,
-            tempalteOverride
-        )            
+        : base(referenceMetadata, instanceState, templateRecord, templateOverride)
     {
         this.BaseCapacity = this.GetConfig().BaseCapacityFormula.CalculateValue();
         this.CurrentCapacity = this.BaseCapacity;

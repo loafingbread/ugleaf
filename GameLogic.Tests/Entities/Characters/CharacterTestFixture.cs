@@ -2,30 +2,31 @@ namespace GameLogic.Tests;
 
 using GameLogic.Config;
 using GameLogic.Entities.Characters;
+using GameLogic.Registry;
 
 public class CharacterTestFixture
 {
-    public CharacterTemplateRecord AliceRecord { get; }
-    public CharacterTemplateRecord AshRecord { get; }
-    public CharacterTemplateRecord BrockRecord { get; }
-    public CharacterTemplateRecord GoblinRecord { get; }
-    public CharacterTemplateRecord MissyRecord { get; }
+    public ReferenceUnionSpec AliceRecord { get; }
+    public ReferenceUnionSpec AshRecord { get; }
+    public ReferenceUnionSpec BrockRecord { get; }
+    public ReferenceUnionSpec GoblinRecord { get; }
+    public ReferenceUnionSpec MissyRecord { get; }
 
     public CharacterTestFixture()
     {
-        AliceRecord = JsonConfigLoader.LoadFromFile<CharacterTemplateRecord>(
+        AliceRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.CharacterTemplate.Alice
         );
-        AshRecord = JsonConfigLoader.LoadFromFile<CharacterTemplateRecord>(
+        AshRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.CharacterTemplate.Ash
         );
-        BrockRecord = JsonConfigLoader.LoadFromFile<CharacterTemplateRecord>(
+        BrockRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.CharacterTemplate.Brock
         );
-        GoblinRecord = JsonConfigLoader.LoadFromFile<CharacterTemplateRecord>(
+        GoblinRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.CharacterTemplate.Goblin
         );
-        MissyRecord = JsonConfigLoader.LoadFromFile<CharacterTemplateRecord>(
+        MissyRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
             ConfigPaths.CharacterTemplate.Missy
         );
     }
