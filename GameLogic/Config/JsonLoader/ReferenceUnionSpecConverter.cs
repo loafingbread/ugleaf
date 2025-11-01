@@ -1,4 +1,4 @@
-namespace GameLogic.Config;
+namespace GameLogic.Config.JsonLoader;
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -12,6 +12,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         JsonSerializerOptions options
     )
     {
+        Console.WriteLine("Read called");
         if (reader.TokenType != JsonTokenType.StartObject)
         {
             throw new JsonException("Expected start of object");
@@ -62,6 +63,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         JsonSerializerOptions options
     )
     {
+        Console.WriteLine($"Root: {rootElement.GetRawText()}");
         if (!rootElement.TryGetProperty("Metadata", out JsonElement referenceMetadataElement))
             throw new JsonException("Expected 'Metadata' property");
 
@@ -111,10 +113,57 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         Type templateType = TemplateTypeMaps.ETemplateTypeToTemplateType[
             referenceMetadata.TemplateType
         ];
-        Type genericType = typeof(InlineSpec<>).MakeGenericType(templateType);
+        Type inlineSpecType = typeof(InlineSpec<>).MakeGenericType(templateType);
+        object inlineSpec =
+            Activator.CreateInstance(inlineSpecType)
+            ?? throw new JsonException("Failed to create instance of InlineSpec");
 
-        return (ReferenceUnionSpec)
-            JsonSerializer.Deserialize(rootElement.GetRawText(), genericType, options)!;
+        // Extract the Template property from JSON
+        if (!rootElement.TryGetProperty("Template", out JsonElement templateElement))
+        {
+            throw new JsonException("Expected 'Template' property for InlineSpec");
+        }
+
+        Console.WriteLine($"Template: {templateElement.GetRawText()}");
+        Console.WriteLine($"Template type: {templateType.FullName}");
+        Console.WriteLine($"Generic type: {inlineSpecType.FullName}");
+        // Console.WriteLine($"Options: {JsonSerializer.Serialize(options)}");
+
+        // // Deserialize the template
+        // object? template = JsonSerializer.Deserialize(
+        //     templateElement.GetRawText(),
+        //     templateType,
+        //     options
+        // );
+
+        // if (template is null)
+        // {
+        //     throw new JsonException("Failed to deserialize Template");
+        // }
+
+        // Construct the InlineSpec using the record's constructor
+        // Records have a constructor that takes all properties as parameters
+        // var constructor = genericType.GetConstructor(
+        //     new[] { typeof(ReferenceUnionMetadata), templateType }
+        // );
+        // if (constructor is null)
+        // {
+        //     throw new JsonException(
+        //         $"Failed to find constructor for {genericType.Name} with Metadata and Template parameters"
+        //     );
+        // }
+
+        // var instance = constructor.Invoke(new object[] { referenceMetadata, template });
+        // return (ReferenceUnionSpec)instance;
+
+        inlineSpecType
+            .GetProperty("Metadata")
+            ?.SetValue(inlineSpec, referenceMetadata);
+        inlineSpecType
+            .GetProperty("Template")
+            ?.SetValue(inlineSpec, rootElement.GetProperty("Template"));
+
+        return (ReferenceUnionSpec)inlineSpec;
     }
 
     private ReferenceUnionSpec DeserializeInstanceSpec(

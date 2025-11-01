@@ -30,6 +30,9 @@ dotnet test
 
 # Run specific test
 dotnet test --filter "{TestName}"
+
+# Example
+dotnet test --filter "Skill_CanLoadFromFile"
 ```
 
 ### Create new projects

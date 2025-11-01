@@ -1,5 +1,7 @@
 namespace GameLogic.Tests;
 
+using System.Text.Json;
+using GameLogic.Config;
 using GameLogic.Entities.Skills;
 using GameLogic.Registry;
 using GameLogic.Targeting;
@@ -22,6 +24,16 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     [Fact]
     public void Skill_CanLoadFromFile()
     {
+        // Print FacePalmRecord as JSON
+        JsonSerializerOptions jsonOptions = new(JsonConfigLoader.options)
+        {
+            WriteIndented = true,
+            PropertyNameCaseInsensitive = true,
+        };
+        string facePalmJson = JsonSerializer.Serialize(this._fixture.FacePalmRecord, jsonOptions);
+        this._output.WriteLine("FacePalmRecord JSON:");
+        this._output.WriteLine(facePalmJson);
+
         Reference<SkillTemplate, Skill> facePalmReference =
             SkillFactory.CreateSkillReferenceFromRecord(this._fixture.FacePalmRecord);
 

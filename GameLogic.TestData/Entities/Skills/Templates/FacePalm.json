@@ -15,9 +15,12 @@
         },
         "Usables": [
             {
-                "TemplateIdentifier": {
-                    "TemplateId": "usable_facepalm",
-                    "TemplateType": "Usable"
+                "Metadata": {
+                    "Kind": "Inline",
+                    "TemplateType": "Usable",
+                    "TemplateId": {
+                        "Value": "usable_facepalm"
+                    }
                 },
                 "Targeter": {
                     "TargetQuantity": "Count",

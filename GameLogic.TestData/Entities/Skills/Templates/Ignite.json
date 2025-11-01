@@ -17,56 +17,110 @@
         },
         "Usables": [
             {
-                "TemplateId": "usable_ignite",
-                "Targeter": {
-                    "TargetQuantity": "Count",
-                    "AllowedTargets": [
-                        "Enemy"
-                    ],
-                    "Count": 1
-                },
-                "Effects": [
-                    {
-                        "TemplateId": "effect_fire_damage",
-                        "Type": "Attack",
-                        "Subtype": "SingleHit",
-                        "Variant": "FireDamage",
-                        "Config": {
-                            "Value": 10
-                        }
-                    },
-                    {
-                        "TemplateId": "effect_burn_dot",
-                        "Type": "Status",
-                        "Subtype": "Burn",
-                        "Variant": "DOT",
-                        "Config": {
-                            "Duration": 3,
-                            "Value": 5
-                        }
+                "Metadata": {
+                    "Kind": "Inline",
+                    "TemplateType": "Usable",
+                    "TemplateId": {
+                        "Value": "usable_ignite"
                     }
-                ]
+                },
+                "Template": {
+                    "Targeter": {
+                        "TargetQuantity": "Count",
+                        "AllowedTargets": [
+                            "Enemy"
+                        ],
+                        "Count": 1
+                    },
+                    "Effects": [
+                        {
+                            "Metadata": {
+                                "Kind": "Inline",
+                                "TemplateType": "Effect",
+                                "TemplateId": {
+                                    "Value": "effect_fire_damage"
+                                }
+                            },
+                            "Template": {
+                                "Name": "Fire Damage",
+                                "Description": "Deals fire damage to the target.",
+                                "Tags": [
+                                    "Attack",
+                                    "Fire",
+                                    "Damage"
+                                ],
+                                "Type": "Attack",
+                                "Subtype": "SingleHit",
+                                "Variant": "FireDamage",
+                                "Config": {
+                                        "Value": 10
+                                    }
+                                }
+                        },
+                        {
+                            "Metadata": {
+                                "Kind": "Inline",
+                                "TemplateType": "Effect",
+                                "TemplateId": {
+                                    "Value": "effect_burn_dot"
+                                }
+                            },
+                            "Template": {
+                                "Name": "Burn DOT",
+                                "Description": "Applies a burn DOT to the target.",
+                                "Tags": [
+                                    "Status",
+                                    "Burn",
+                                    "DOT"
+                                ],
+                                "Type": "Status",
+                                "Subtype": "Burn",
+                                "Variant": "DOT",
+                                "Config": {
+                                    "Duration": 3,
+                                    "Value": 5
+                                }
+                            }
+                        }
+                    ]
+                }
             },
             {
-                "TemplateId": "usable_overheat",
-                "Targeter": {
-                    "TargetQuantity": "Count",
-                    "AllowedTargets": [
-                        "Self"
-                    ],
-                    "Count": 1
-                },
-                "Effects": [
-                    {
-                        "TemplateId": "effect_overheat",
-                        "Type": "Attack",
-                        "Subtype": "SingleHit",
-                        "Variant": "FireDamage",
-                        "Config": {
-                            "Value": 5
-                        }
+                "Metadata": {
+                    "Kind": "Inline",
+                    "TemplateType": "Usable",
+                    "TemplateId": {
+                        "Value": "usable_overheat"
                     }
-                ]
+                },
+                "Template": {
+                    "Targeter": {
+                        "TargetQuantity": "Count",
+                        "AllowedTargets": [
+                            "Self"
+                        ],
+                        "Count": 1
+                    },
+                    "Effects": [
+                        {
+                            "Metadata": {
+                                "Kind": "Inline",
+                                "TemplateType": "Effect",
+                                "TemplateId": {
+                                    "Value": "effect_overheat"
+                                }
+                            },
+                            "Template": {
+                                "Type": "Attack",
+                                "Subtype": "SingleHit",
+                                "Variant": "FireDamage",
+                                "Config": {
+                                    "Value": 5
+                                }
+                            }
+                        }
+                    ]
+                }
             }
         ]
     }
