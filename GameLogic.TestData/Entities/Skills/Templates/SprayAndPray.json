@@ -8,9 +8,16 @@
     },
     "Template": {
         "Name": "Spray And Pray",
+        "Description": "Sprays the target, dealing physical damage.",
+        "Tags": [
+            "Attack",
+            "Physical",
+            "Damage"
+        ],
         "Targeter": {
             "TargetQuantity": "All",
             "AllowedTargets": ["Ally", "Enemy", "Neutral"]
-        }
+        },
+        "Usables": []
     }
 }

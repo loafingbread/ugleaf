@@ -8,6 +8,12 @@
     },
     "Template": {
         "Name": "Face Palm",
+        "Description": "Faces the target, dealing physical damage.",
+        "Tags": [
+            "Attack",
+            "Physical",
+            "Damage"
+        ],
         "Targeter": {
             "TargetQuantity": "Count",
             "AllowedTargets": ["Self"],
@@ -22,27 +28,48 @@
                         "Value": "usable_facepalm"
                     }
                 },
-                "Targeter": {
-                    "TargetQuantity": "Count",
-                    "AllowedTargets": [
-                        "Self"
+                "Template": {
+                    "Name": "Face Palm",
+                    "Description": "Faces the target, dealing physical damage.",
+                    "Tags": [
+                        "Attack",
+                        "Physical",
+                        "Damage"
                     ],
-                    "Count": 1
-                },
-                "Effects": [
-                    {
-                        "TemplateIdentifier": {
-                            "TemplateId": "effect_physical_damage",
-                            "TemplateType": "Effect"
-                        },
-                        "Type": "Attack",
-                        "Subtype": "SingleHit",
-                        "Variant": "PhysicalDamage",
-                        "Config": {
-                            "Value": 777
+                    "Targeter": {
+                        "TargetQuantity": "Count",
+                        "AllowedTargets": [
+                            "Self"
+                        ],
+                        "Count": 1
+                    },
+                    "Effects": [
+                        {
+                            "Metadata": {
+                                "Kind": "Inline",
+                                "TemplateType": "Effect",
+                                "TemplateId": {
+                                    "Value": "effect_physical_damage"
+                                }
+                            },
+                            "Template": {
+                                "Name": "Physical Damage",
+                                "Description": "Deals physical damage to the target.",
+                                "Tags": [
+                                    "Attack",
+                                    "Physical",
+                                    "Damage"
+                                ],
+                                "Type": "Attack",
+                                "Subtype": "SingleHit",
+                                "Variant": "PhysicalDamage",
+                                "Config": {
+                                    "Value": 777
+                                }
+                            }
                         }
-                    }
-                ]
+                    ]
+                }
             }
         ]
     }

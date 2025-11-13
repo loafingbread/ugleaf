@@ -8,10 +8,17 @@
     },
     "Template": {
         "Name": "Mug",
+        "Description": "Mugs the target, dealing physical damage.",
+        "Tags": [
+            "Attack",
+            "Physical",
+            "Damage"
+        ],
         "Targeter": {
             "TargetQuantity": "Count",
             "AllowedTargets": ["Enemy"],
             "Count": 1
-        }
+        },
+        "Usables": []
     }
 }

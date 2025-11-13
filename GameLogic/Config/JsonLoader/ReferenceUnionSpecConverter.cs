@@ -4,6 +4,145 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using GameLogic.Entities.Skills;
 using GameLogic.Registry;
+using GameLogic.Usables;
+using GameLogic.Usables.Effects;
+
+public static class JsonConverter
+{
+    // When you know the property type at compile time, use this method.
+    public static T GetProperty<T>(
+        JsonElement element,
+        string propertyName,
+        JsonSerializerOptions options
+    )
+    {
+        if (!element.TryGetProperty(propertyName, out JsonElement propertyElement))
+        {
+            throw new JsonException(
+                $"Expected property '{propertyName}' in JSON element '{element.GetRawText()}'"
+            );
+        }
+
+        try
+        {
+            T propertyValue = JsonSerializer.Deserialize<T>(propertyElement.GetRawText(), options)!;
+            return propertyValue;
+        }
+        catch (JsonException ex)
+        {
+            throw new JsonException(
+                $"JSON element is not a valid {typeof(T).Name}: \n'{propertyElement.GetRawText()}'",
+                ex
+            );
+        }
+    }
+
+    // When you specify the property type at runtime, use this method.
+    public static object GetProperty(
+        JsonElement element,
+        string propertyName,
+        Type propertyType,
+        JsonSerializerOptions options
+    )
+    {
+        if (!element.TryGetProperty(propertyName, out JsonElement propertyElement))
+        {
+            throw new JsonException(
+                $"Expected property '{propertyName}' in JSON element '{element.GetRawText()}'"
+            );
+        }
+
+        try
+        {
+            object? propertyValue = JsonSerializer.Deserialize(
+                propertyElement.GetRawText(),
+                propertyType,
+                options
+            );
+
+            if (propertyValue is null)
+            {
+                throw new JsonException(
+                    $"JSON element is not a valid {propertyType.Name}: \n'{propertyElement.GetRawText()}'"
+                );
+            }
+
+            return propertyValue;
+        }
+        catch (JsonException ex)
+        {
+            throw new JsonException(
+                $"JSON element is not a valid {propertyType.Name}: \n'{propertyElement.GetRawText()}'",
+                ex
+            );
+        }
+    }
+}
+
+// public class SkillTemplateRecordConverter : JsonConverter<SkillTemplateRecord>
+// {
+//     public override SkillTemplateRecord Read(
+//         ref Utf8JsonReader reader,
+//         Type typeToConvert,
+//         JsonSerializerOptions options
+//     )
+//     {
+//         using JsonDocument jsonDocument = JsonDocument.ParseValue(ref reader);
+//         JsonElement skillElement = jsonDocument.RootElement;
+
+//         return JsonConverter.GetProperty<SkillTemplateRecord>(skillElement, "Template", options);
+//     }
+// }
+
+// public class UsableTemplateRecordConverter : JsonConverter<UsableTemplateRecord>
+// {
+//     public override UsableTemplateRecord Read(
+//         ref Utf8JsonReader reader,
+//         Type typeToConvert,
+//         JsonSerializerOptions options
+//     )
+//     {
+
+//     }
+// }
+
+// public class UsableTemplateRecordConverter : JsonConverter<UsableTemplateRecord>
+// {
+//     public override SkillTemplateRecord Read(
+//         ref Utf8JsonReader reader,
+//         Type typeToConvert,
+//         JsonSerializerOptions options
+//     )
+//     {
+//         using JsonDocument jsonDocument = JsonDocument.ParseValue(ref reader);
+//         JsonElement skillElement = jsonDocument.RootElement;
+
+//         Type templateType = TemplateTypeMaps.ETemplateTypeToTemplateType[
+//             referenceMetadata.TemplateType
+//         ];
+//         Type inlineSpecType = typeof(InlineSpec<>).MakeGenericType(templateType);
+//         object inlineSpec =
+//             Activator.CreateInstance(inlineSpecType)
+//             ?? throw new JsonException("Failed to create instance of InlineSpec");
+
+//         // Extract the Template property from JSON
+//         if (!rootElement.TryGetProperty("Template", out JsonElement templateElement))
+//         {
+//             throw new JsonException("Expected 'Template' property for InlineSpec");
+//         }
+
+//         inlineSpecType.GetProperty("Metadata")?.SetValue(inlineSpec, referenceMetadata);
+
+//         SkillTemplateRecord template = GetPropertyFromJsonElement<SkillTemplateRecord>(
+//             rootElement,
+//             "Template",
+//             options
+//         );
+//         inlineSpecType.GetProperty("Template")?.SetValue(inlineSpec, template);
+
+//         return (ReferenceUnionSpec)inlineSpec;
+//     }
+// }
 
 public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSpec>
 {
@@ -13,6 +152,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         JsonSerializerOptions options
     )
     {
+        Console.WriteLine("ReferenceUnionSpecConverter.Read called");
         if (reader.TokenType != JsonTokenType.StartObject)
         {
             throw new JsonException("Expected start of object");
@@ -22,7 +162,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         JsonElement rootElement = jsonDocument.RootElement;
 
         ReferenceUnionMetadata referenceMetadata =
-            GetPropertyFromJsonElement<ReferenceUnionMetadata>(rootElement, "Metadata", options);
+            JsonConverter.GetProperty<ReferenceUnionMetadata>(rootElement, "Metadata", options);
 
         return referenceMetadata.Kind switch
         {
@@ -80,33 +220,6 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         return referenceMetadata;
     }
 
-    private T GetPropertyFromJsonElement<T>(
-        JsonElement element,
-        string propertyName,
-        JsonSerializerOptions options
-    )
-    {
-        if (!element.TryGetProperty(propertyName, out JsonElement propertyElement))
-        {
-            throw new JsonException(
-                $"Expected property '{propertyName}' in JSON element '{element.GetRawText()}'"
-            );
-        }
-
-        try
-        {
-            T propertyValue = JsonSerializer.Deserialize<T>(propertyElement.GetRawText(), options)!;
-            return propertyValue;
-        }
-        catch (JsonException ex)
-        {
-            throw new JsonException(
-                $"JSON element is not a valid {typeof(T).Name}: \n'{propertyElement.GetRawText()}'",
-                ex
-            );
-        }
-    }
-
     private ReferenceUnionSpec DeserializeRefSpec(
         JsonElement rootElement,
         JsonSerializerOptions options,
@@ -132,61 +245,65 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
     }
 
     private ReferenceUnionSpec DeserializeInlineSpec(
-        JsonElement rootElement,
+        JsonElement element,
         JsonSerializerOptions options,
         ReferenceUnionMetadata referenceMetadata
     )
     {
-        Type templateType = TemplateTypeMaps.ETemplateTypeToTemplateType[
-            referenceMetadata.TemplateType
-        ];
+        Console.WriteLine(
+            $"DeserializeInlineSpec called: {referenceMetadata.TemplateType.ToString()}"
+        );
+        switch (referenceMetadata.TemplateType)
+        {
+            case ETemplateType.Skill:
+            {
+                return this.CreateInlineSpec(
+                    element,
+                    referenceMetadata,
+                    typeof(SkillTemplateRecord),
+                    options
+                );
+            }
+            case ETemplateType.Usable:
+            {
+                return this.CreateInlineSpec(
+                    element,
+                    referenceMetadata,
+                    typeof(UsableTemplateRecord),
+                    options
+                );
+            }
+            case ETemplateType.Effect:
+            {
+                return this.CreateInlineSpec(
+                    element,
+                    referenceMetadata,
+                    typeof(EffectTemplateRecord),
+                    options
+                );
+            }
+            default:
+                throw new NotSupportedException(
+                    $"Template type {referenceMetadata.TemplateType} is not supported"
+                );
+        }
+    }
+
+    private ReferenceUnionSpec CreateInlineSpec(
+        JsonElement element,
+        ReferenceUnionMetadata referenceMetadata,
+        Type templateType,
+        JsonSerializerOptions options
+    )
+    {
         Type inlineSpecType = typeof(InlineSpec<>).MakeGenericType(templateType);
         object inlineSpec =
             Activator.CreateInstance(inlineSpecType)
             ?? throw new JsonException("Failed to create instance of InlineSpec");
 
-        // Extract the Template property from JSON
-        if (!rootElement.TryGetProperty("Template", out JsonElement templateElement))
-        {
-            throw new JsonException("Expected 'Template' property for InlineSpec");
-        }
+        inlineSpecType.GetProperty("Metadata")?.SetValue(inlineSpec, referenceMetadata);
 
-        // // Deserialize the template
-        // object? template = JsonSerializer.Deserialize(
-        //     templateElement.GetRawText(),
-        //     templateType,
-        //     options
-        // );
-
-        // if (template is null)
-        // {
-        //     throw new JsonException("Failed to deserialize Template");
-        // }
-
-        // Construct the InlineSpec using the record's constructor
-        // Records have a constructor that takes all properties as parameters
-        // var constructor = genericType.GetConstructor(
-        //     new[] { typeof(ReferenceUnionMetadata), templateType }
-        // );
-        // if (constructor is null)
-        // {
-        //     throw new JsonException(
-        //         $"Failed to find constructor for {genericType.Name} with Metadata and Template parameters"
-        //     );
-        // }
-
-        // var instance = constructor.Invoke(new object[] { referenceMetadata, template });
-        // return (ReferenceUnionSpec)instance;
-
-        inlineSpecType
-            .GetProperty("Metadata")
-            ?.SetValue(inlineSpec, referenceMetadata);
-
-        SkillTemplateRecord template = GetPropertyFromJsonElement<SkillTemplateRecord>(
-            rootElement,
-            "Template",
-            options
-        );
+        object template = JsonConverter.GetProperty(element, "Template", templateType, options);
         inlineSpecType.GetProperty("Template")?.SetValue(inlineSpec, template);
 
         return (ReferenceUnionSpec)inlineSpec;
@@ -213,6 +330,6 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         JsonSerializerOptions options
     )
     {
-        JsonSerializer.Serialize(writer, value, options);
+        JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

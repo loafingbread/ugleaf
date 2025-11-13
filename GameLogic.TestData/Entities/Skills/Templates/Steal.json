@@ -8,10 +8,17 @@
     },
     "Template": {
         "Name": "Steal",
+        "Description": "Steals the target, dealing physical damage.",
+        "Tags": [
+            "Attack",
+            "Physical",
+            "Damage"
+        ],
         "Targeter": {
             "TargetQuantity": "Count",
             "AllowedTargets": ["Ally", "Enemy", "Neutral"],
             "Count": 1
-        }
+        },
+        "Usables": []
     }
 }

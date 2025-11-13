@@ -8,6 +8,12 @@
     },
     "Template": {
         "Name": "Ignite",
+        "Description": "Ignites the target, dealing fire damage and applying a burn DOT.",
+        "Tags": [
+            "Attack",
+            "Fire",
+            "DOT"
+        ],
         "Targeter": {
             "TargetQuantity": "Count",
             "AllowedTargets": [
@@ -25,6 +31,13 @@
                     }
                 },
                 "Template": {
+                    "Name": "Ignite",
+                    "Description": "Ignites the target, dealing fire damage and applying a burn DOT.",
+                    "Tags": [
+                        "Attack",
+                        "Fire",
+                        "DOT"
+                    ],
                     "Targeter": {
                         "TargetQuantity": "Count",
                         "AllowedTargets": [
@@ -94,6 +107,13 @@
                     }
                 },
                 "Template": {
+                    "Name": "Overheat",
+                    "Description": "Overheats the character, dealing fire damage and applying a burn DOT.",
+                    "Tags": [
+                        "Attack",
+                        "Fire",
+                        "DOT"
+                    ],
                     "Targeter": {
                         "TargetQuantity": "Count",
                         "AllowedTargets": [
@@ -111,6 +131,13 @@
                                 }
                             },
                             "Template": {
+                                "Name": "Overheat",
+                                "Description": "Overheats the character, dealing fire damage and applying a burn DOT.",
+                                "Tags": [
+                                    "Attack",
+                                    "Fire",
+                                    "DOT"
+                                ],
                                 "Type": "Attack",
                                 "Subtype": "SingleHit",
                                 "Variant": "FireDamage",

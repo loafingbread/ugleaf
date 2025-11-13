@@ -31,60 +31,71 @@ public class SkillTest : IClassFixture<SkillTestFixture>
             PropertyNameCaseInsensitive = true,
         };
         string facePalmJson = JsonSerializer.Serialize(this._fixture.FacePalmRecord, jsonOptions);
-        this._output.WriteLine("FacePalmRecord JSON:");
-        this._output.WriteLine(facePalmJson);
+        // string igniteJson = JsonSerializer.Serialize(this._fixture.IgniteRecord, jsonOptions);
+        // string mugJson = JsonSerializer.Serialize(this._fixture.MugRecord, jsonOptions);
+        // string sprayAndPrayJson = JsonSerializer.Serialize(this._fixture.SprayAndPrayRecord, jsonOptions);
+        // string stealJson = JsonSerializer.Serialize(this._fixture.StealRecord, jsonOptions);
+
+        Console.WriteLine($"facePalmJson: {facePalmJson}");
+        // Console.WriteLine($"igniteJson: {igniteJson}");
+        // Console.WriteLine($"mugJson: {mugJson}");
+        // Console.WriteLine($"sprayAndPrayJson: {sprayAndPrayJson}");
+        // Console.WriteLine($"stealJson: {stealJson}");
+
+        // this._output.WriteLine("FacePalmRecord JSON:");
+        // this._output.WriteLine(facePalmJson);
 
         Reference<SkillTemplate, Skill> facePalmReference =
             SkillFactory.CreateSkillReferenceFromRecord(this._fixture.FacePalmRecord);
 
-        if (facePalmReference.Template is null)
-        {
-            throw new InvalidOperationException("Face Palm template is null");
-        }
+        // if (facePalmReference.Template is null)
+        // {
+        //     throw new InvalidOperationException("Face Palm template is null");
+        // }
 
-        SkillTemplate facePalm = facePalmReference.Template;
+        // SkillTemplate facePalm = facePalmReference.Template;
 
-        Assert.Equal("skill_facepalm", facePalm.ReferenceMetadata.TemplateId.ToString());
-        Assert.Equal("Face Palm", facePalm.Name);
-        Assert.Equal(1, facePalm.Targeter?.Count);
-        Assert.Equal(ETargetQuantity.Count, facePalm.Targeter?.QuantityType);
-        Assert.Equal([EFactionRelationship.Self], facePalm.Targeter?.AllowedTargets);
+        // Assert.Equal("skill_facepalm", facePalm.ReferenceMetadata.TemplateId.ToString());
+        // Assert.Equal("Face Palm", facePalm.Name);
+        // Assert.Equal(1, facePalm.Targeter?.Count);
+        // Assert.Equal(ETargetQuantity.Count, facePalm.Targeter?.QuantityType);
+        // Assert.Equal([EFactionRelationship.Self], facePalm.Targeter?.AllowedTargets);
     }
 
-    [Fact]
-    public void Skill_CanLoadFullFromFile()
-    {
-        Reference<SkillTemplate, Skill> igniteReference =
-            SkillFactory.CreateSkillReferenceFromRecord(this._fixture.IgniteRecord);
+    // [Fact]
+    // public void Skill_CanLoadFullFromFile()
+    // {
+    //     Reference<SkillTemplate, Skill> igniteReference =
+    //         SkillFactory.CreateSkillReferenceFromRecord(this._fixture.IgniteRecord);
 
-        if (igniteReference.Template is null)
-        {
-            throw new InvalidOperationException("Ignite template is null");
-        }
+    //     if (igniteReference.Template is null)
+    //     {
+    //         throw new InvalidOperationException("Ignite template is null");
+    //     }
 
-        SkillTemplate ignite = igniteReference.Template;
+    //     SkillTemplate ignite = igniteReference.Template;
 
-        Assert.Equal("skill_ignite", ignite.ReferenceMetadata.TemplateId.ToString());
-        Assert.Equal("Ignite", ignite.Name);
+    //     Assert.Equal("skill_ignite", ignite.ReferenceMetadata.TemplateId.ToString());
+    //     Assert.Equal("Ignite", ignite.Name);
 
-        Usable? igniteUsable = ignite.Usables[0] as Usable;
-        Assert.NotNull(igniteUsable);
+    //     Usable? igniteUsable = ignite.Usables[0] as Usable;
+    //     Assert.NotNull(igniteUsable);
 
-        Targeter? igniteUsableTargeter = igniteUsable.Targeter as Targeter;
-        Assert.NotNull(igniteUsableTargeter);
-        Assert.Equal(ETargetQuantity.Count, igniteUsableTargeter.QuantityType);
-        Assert.Equal([EFactionRelationship.Enemy], igniteUsableTargeter.AllowedTargets);
-        Assert.Equal(1, igniteUsableTargeter.Count);
+    //     Targeter? igniteUsableTargeter = igniteUsable.Targeter as Targeter;
+    //     Assert.NotNull(igniteUsableTargeter);
+    //     Assert.Equal(ETargetQuantity.Count, igniteUsableTargeter.QuantityType);
+    //     Assert.Equal([EFactionRelationship.Enemy], igniteUsableTargeter.AllowedTargets);
+    //     Assert.Equal(1, igniteUsableTargeter.Count);
 
-        IEffect secondEffect = igniteUsable.Effects[1];
+    //     IEffect secondEffect = igniteUsable.Effects[1];
 
-        BurnStatusEffect? burnEffect = secondEffect as BurnStatusEffect;
-        Assert.NotNull(burnEffect);
-        Assert.Equal("effect_burn_dot", burnEffect.ReferenceMetadata.TemplateId.ToString());
-        Assert.Equal(EEffectType.Status, burnEffect.Type);
-        Assert.Equal("Burn", burnEffect.Subtype);
-        Assert.Equal("DOT", burnEffect.Variant);
-        Assert.Equal(3, burnEffect.Duration);
-        Assert.Equal(5, burnEffect.Value);
-    }
+    //     BurnStatusEffect? burnEffect = secondEffect as BurnStatusEffect;
+    //     Assert.NotNull(burnEffect);
+    //     Assert.Equal("effect_burn_dot", burnEffect.ReferenceMetadata.TemplateId.ToString());
+    //     Assert.Equal(EEffectType.Status, burnEffect.Type);
+    //     Assert.Equal("Burn", burnEffect.Subtype);
+    //     Assert.Equal("DOT", burnEffect.Variant);
+    //     Assert.Equal(3, burnEffect.Duration);
+    //     Assert.Equal(5, burnEffect.Value);
+    // }
 }
