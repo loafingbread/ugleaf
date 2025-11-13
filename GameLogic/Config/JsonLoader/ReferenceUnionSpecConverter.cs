@@ -2,6 +2,7 @@ namespace GameLogic.Config.JsonLoader;
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using GameLogic.Entities.Skills;
 using GameLogic.Registry;
 
 public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSpec>
@@ -12,7 +13,6 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         JsonSerializerOptions options
     )
     {
-        Console.WriteLine("Read called");
         if (reader.TokenType != JsonTokenType.StartObject)
         {
             throw new JsonException("Expected start of object");
@@ -21,7 +21,8 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         using JsonDocument jsonDocument = JsonDocument.ParseValue(ref reader);
         JsonElement rootElement = jsonDocument.RootElement;
 
-        ReferenceUnionMetadata referenceMetadata = ParseReferenceMetadata(rootElement, options);
+        ReferenceUnionMetadata referenceMetadata =
+            GetPropertyFromJsonElement<ReferenceUnionMetadata>(rootElement, "Metadata", options);
 
         return referenceMetadata.Kind switch
         {
@@ -63,7 +64,6 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         JsonSerializerOptions options
     )
     {
-        Console.WriteLine($"Root: {rootElement.GetRawText()}");
         if (!rootElement.TryGetProperty("Metadata", out JsonElement referenceMetadataElement))
             throw new JsonException("Expected 'Metadata' property");
 
@@ -78,6 +78,33 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
             );
 
         return referenceMetadata;
+    }
+
+    private T GetPropertyFromJsonElement<T>(
+        JsonElement element,
+        string propertyName,
+        JsonSerializerOptions options
+    )
+    {
+        if (!element.TryGetProperty(propertyName, out JsonElement propertyElement))
+        {
+            throw new JsonException(
+                $"Expected property '{propertyName}' in JSON element '{element.GetRawText()}'"
+            );
+        }
+
+        try
+        {
+            T propertyValue = JsonSerializer.Deserialize<T>(propertyElement.GetRawText(), options)!;
+            return propertyValue;
+        }
+        catch (JsonException ex)
+        {
+            throw new JsonException(
+                $"JSON element is not a valid {typeof(T).Name}: \n'{propertyElement.GetRawText()}'",
+                ex
+            );
+        }
     }
 
     private ReferenceUnionSpec DeserializeRefSpec(
@@ -124,11 +151,6 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
             throw new JsonException("Expected 'Template' property for InlineSpec");
         }
 
-        Console.WriteLine($"Template: {templateElement.GetRawText()}");
-        Console.WriteLine($"Template type: {templateType.FullName}");
-        Console.WriteLine($"Generic type: {inlineSpecType.FullName}");
-        // Console.WriteLine($"Options: {JsonSerializer.Serialize(options)}");
-
         // // Deserialize the template
         // object? template = JsonSerializer.Deserialize(
         //     templateElement.GetRawText(),
@@ -159,9 +181,13 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         inlineSpecType
             .GetProperty("Metadata")
             ?.SetValue(inlineSpec, referenceMetadata);
-        inlineSpecType
-            .GetProperty("Template")
-            ?.SetValue(inlineSpec, rootElement.GetProperty("Template"));
+
+        SkillTemplateRecord template = GetPropertyFromJsonElement<SkillTemplateRecord>(
+            rootElement,
+            "Template",
+            options
+        );
+        inlineSpecType.GetProperty("Template")?.SetValue(inlineSpec, template);
 
         return (ReferenceUnionSpec)inlineSpec;
     }
