@@ -37,10 +37,6 @@ public class SkillTemplate
         {
             throw new InvalidOperationException("Override templates must have a template override");
         }
-        else if (referenceMetadata.Kind != EReferenceKind.Ref)
-        {
-            throw new InvalidOperationException("Invalid reference kind");
-        }
 
         this.ReferenceMetadata = referenceMetadata;
         this.TemplateOverride = templateOverride;
@@ -151,7 +147,7 @@ public class SkillTemplate
 
     public Skill Instantiate()
     {
-        return SkillFactory.CreateSkillFromTemplate(this);
+        return new Skill(this);
     }
 
     public SkillTemplate DeepCopy()
@@ -179,6 +175,13 @@ public class Skill : SkillTemplate, IInstance<SkillRecord>, IDeepCopyable<Skill>
 
         this.InstanceId = instanceId;
         this.InstanceState = instanceState;
+    }
+
+    // Create a new skill from a template
+    public Skill(SkillTemplate template)
+        : base(template)
+    {
+        this.InstanceId = Ids.Instance();
     }
 
     public Skill(Skill skill)

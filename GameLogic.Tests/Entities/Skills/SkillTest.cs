@@ -48,18 +48,42 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         Reference<SkillTemplate, Skill> facePalmReference =
             SkillFactory.CreateSkillReferenceFromRecord(this._fixture.FacePalmRecord);
 
-        // if (facePalmReference.Template is null)
-        // {
-        //     throw new InvalidOperationException("Face Palm template is null");
-        // }
+        if (facePalmReference.Template is null)
+        {
+            throw new InvalidOperationException("Face Palm template is null");
+        }
 
-        // SkillTemplate facePalm = facePalmReference.Template;
+        SkillTemplate facePalm = facePalmReference.Template;
 
-        // Assert.Equal("skill_facepalm", facePalm.ReferenceMetadata.TemplateId.ToString());
-        // Assert.Equal("Face Palm", facePalm.Name);
-        // Assert.Equal(1, facePalm.Targeter?.Count);
-        // Assert.Equal(ETargetQuantity.Count, facePalm.Targeter?.QuantityType);
-        // Assert.Equal([EFactionRelationship.Self], facePalm.Targeter?.AllowedTargets);
+        Console.WriteLine($"facePalm: ");
+        Console.WriteLine(facePalm.ReferenceMetadata.TemplateId.ToString());
+        Console.WriteLine(facePalm.Name);
+        Console.WriteLine(facePalm.Targeter?.Count);
+        Console.WriteLine(facePalm.Targeter?.QuantityType);
+        Console.WriteLine(facePalm.Targeter?.AllowedTargets.ToString());
+        Console.WriteLine(facePalm.Usables.Count);
+        Console.WriteLine(facePalm.Usables[0].Targeter?.Count);
+        Console.WriteLine(facePalm.Usables[0].Targeter?.QuantityType);
+        Console.WriteLine(facePalm.Usables[0].Targeter?.AllowedTargets.ToString());
+        Console.WriteLine(facePalm.Usables[0].Effects.Count);
+
+
+        Effect? effect = facePalm.Usables[0].Effects[0] as Effect;
+        Console.WriteLine(effect?.Type);
+        Console.WriteLine(effect?.Subtype);
+        Console.WriteLine(effect?.Variant);
+        Console.WriteLine(effect?.Name);
+        Console.WriteLine(effect?.Description);
+        Console.WriteLine(effect?.Tags.ToString());
+        Console.WriteLine(effect?.Value);
+        Console.WriteLine(effect?.Duration);
+
+
+        Assert.Equal("skill_facepalm", facePalm.ReferenceMetadata.TemplateId.ToString());
+        Assert.Equal("Face Palm", facePalm.Name);
+        Assert.Equal(1, facePalm.Targeter?.Count);
+        Assert.Equal(ETargetQuantity.Count, facePalm.Targeter?.QuantityType);
+        Assert.Equal([EFactionRelationship.Self], facePalm.Targeter?.AllowedTargets);
     }
 
     // [Fact]

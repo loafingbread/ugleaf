@@ -42,10 +42,6 @@ public class EffectTemplate
         {
             throw new InvalidOperationException("Override templates must have a template override");
         }
-        else if (referenceMetadata.Kind != EReferenceKind.Ref)
-        {
-            throw new InvalidOperationException("Invalid reference kind");
-        }
 
         this.ReferenceMetadata = referenceMetadata;
         this.TemplateOverride = templateOverride;

@@ -35,10 +35,6 @@ public class UsableTemplate : ITemplate<UsableOverrideRecord>
         {
             throw new InvalidOperationException("Override templates must have a template override");
         }
-        else if (referenceMetadata.Kind != EReferenceKind.Ref)
-        {
-            throw new InvalidOperationException("Invalid reference kind");
-        }
 
         this.ReferenceMetadata = referenceMetadata;
         this.TemplateOverride = templateOverride;
@@ -150,7 +146,7 @@ public class UsableTemplate : ITemplate<UsableOverrideRecord>
 
     public Usable Instantiate()
     {
-        return UsableFactory.CreateUsableFromTemplate(this);
+        return new Usable(this);
     }
 
     public UsableTemplate DeepCopy()
@@ -184,6 +180,13 @@ public class Usable : UsableTemplate, IUsable, IInstance<UsableRecord>, IDeepCop
         : base((usable as UsableTemplate).DeepCopy())
     {
         this.InstanceState = usable.InstanceState;
+        this.InstanceId = Ids.Instance();
+    }
+
+    // Create a new usable from a template
+    public Usable(UsableTemplate template)
+        : base(template)
+    {
         this.InstanceId = Ids.Instance();
     }
 
