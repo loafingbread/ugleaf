@@ -47,7 +47,6 @@ public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
         this.ApplyTemplateRecord(templateRecord);
         this.TemplateOverride = templateOverride;
 
-
         this.InstanceState = instanceState;
         this.ApplyTemplateRecord(instanceState);
 
@@ -109,4 +108,10 @@ public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
     /// Should be called when the stat is updated.
     /// </summary>
     public abstract void OnUpdate();
+}
+
+public sealed class StatReference : Reference<Stat>
+{
+    public StatReference(ReferenceUnionMetadata metadata, Stat? value)
+        : base(metadata, value) { }
 }

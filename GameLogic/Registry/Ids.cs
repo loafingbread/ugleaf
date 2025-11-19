@@ -10,9 +10,17 @@ public readonly record struct InstanceId(string value)
     public override string ToString() => value;
 }
 
+public readonly record struct ReferenceId(string value)
+{
+    public override string ToString() => value;
+}
+
 public static class Ids
 {
     public static TemplateId Template(string value) => new(value);
+
+    public static ReferenceId Reference(string value) => new(value);
+    public static ReferenceId NewReferenceId() => new(System.Guid.NewGuid().ToString());
 
     public static TemplateId NewTemplateId() => new(System.Guid.NewGuid().ToString());
 

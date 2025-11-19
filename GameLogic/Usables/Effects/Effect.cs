@@ -220,3 +220,15 @@ public abstract class Effect : EffectTemplate, IEffect, IInstance<EffectRecord>
         return new EffectResult(this, user.GetEntity(), target.GetEntity(), 5, false, true, 0);
     }
 }
+
+public sealed class EffectTemplateReference : Reference<EffectTemplate>
+{
+    public EffectTemplateReference(ReferenceUnionMetadata metadata, EffectTemplate? value)
+        : base(metadata, value) { }
+}
+
+public sealed class EffectInstanceReference : Reference<Effect>
+{
+    public EffectInstanceReference(ReferenceUnionMetadata metadata, Effect? value)
+        : base(metadata, value) { }
+}

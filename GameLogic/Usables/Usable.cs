@@ -245,3 +245,15 @@ public class Usable : UsableTemplate, IUsable, IInstance<UsableRecord>, IDeepCop
         return results;
     }
 }
+
+public sealed class UsableTemplateReference : Reference<UsableTemplate>
+{
+    public UsableTemplateReference(ReferenceUnionMetadata referenceMetadata, UsableTemplate? value)
+        : base(referenceMetadata, value) { }
+}
+
+public sealed class UsableInstanceReference : Reference<Usable>
+{
+    public UsableInstanceReference(ReferenceUnionMetadata metadata, Usable? value)
+        : base(metadata, value) { }
+}

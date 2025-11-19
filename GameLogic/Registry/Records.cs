@@ -25,7 +25,14 @@ public record ReferenceUnionMetadata
     public required ETemplateType TemplateType { get; init; }
     public ETemplateSubType TemplateSubType { get; init; } = ETemplateSubType.None;
 
+    // TODO: Remove TemplateId and use ReferenceId instead. Used to identify the template in the registry
     public TemplateId TemplateId { get; init; } = Ids.NewTemplateId();
+
+    // Used to identify the reference in the registry
+    public ReferenceId ReferenceId { get; init; } = Ids.NewReferenceId();
+
+    // Used to identify the dependency in the registry
+    public ReferenceId? DependencyId { get; init; } = null;
 };
 
 /// <summary>

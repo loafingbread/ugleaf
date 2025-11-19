@@ -227,3 +227,15 @@ public class Character : CharacterTemplate, IInstance<CharacterRecord>, IDeepCop
         return new Character(this);
     }
 }
+
+public sealed class CharacterReference : Reference<Character>
+{
+    public CharacterReference(ReferenceUnionMetadata metadata, Character? value)
+        : base(metadata, value) { }
+}
+
+public sealed class CharacterTemplateReference : Reference<CharacterTemplate>
+{
+    public CharacterTemplateReference(ReferenceUnionMetadata metadata, CharacterTemplate? value)
+        : base(metadata, value) { }
+}

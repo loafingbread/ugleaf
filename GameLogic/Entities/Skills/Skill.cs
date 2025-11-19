@@ -237,3 +237,18 @@ public class Skill : SkillTemplate, IInstance<SkillRecord>, IDeepCopyable<Skill>
 
     public bool CanUse() => this.Usables.Count > 0;
 }
+
+public sealed class SkillTemplateReference : Reference<SkillTemplate>
+{
+    public SkillTemplateReference(
+        ReferenceUnionMetadata metadata,
+        SkillTemplate? value
+    )
+        : base(metadata, value) { }
+}
+
+public sealed class SkillInstanceReference : Reference<Skill>
+{
+    public SkillInstanceReference(ReferenceUnionMetadata metadata, Skill? value)
+        : base(metadata, value) { }
+}
