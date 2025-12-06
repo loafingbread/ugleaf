@@ -21,11 +21,14 @@ public interface IRegistry
         out TReference? referenceValue
     )
         where TReference : class;
+
+    bool TryGetDependency(ReferenceId dependencyId, out ReferenceUnionSpec dependencyValue);
 }
 
 // TODO: Circular dep if I import entity since they use registry?
 public class Registry
 {
+    private Dictionary<ReferenceId, ReferenceUnionSpec> records = new();
     private List<CharacterTemplateReference> characterTemplates = new();
     private List<SkillTemplateReference> skillTemplates = new();
     private List<UsableTemplateReference> usableTemplates = new();
@@ -34,7 +37,7 @@ public class Registry
 
     public void Load(List<string> paths)
     {
-        List<ReferenceUnionSpec> records = new();
+        this.records = new();
         foreach (string path in paths)
         {
             ReferenceUnionSpec record = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(path);
@@ -43,10 +46,10 @@ public class Registry
                 throw new InvalidOperationException($"Failed to load record from {path}");
             }
 
-            records.Add(record);
+            this.records.Add(record.Metadata.ReferenceId, record);
         }
 
-        this.Load(records);
+        this.Load(this.records.Values.ToList());
     }
 
     public void Load(List<ReferenceUnionSpec> records)
@@ -149,6 +152,19 @@ public class Registry
         }
 
         return null;
+    }
+
+    public bool TryGetDependency(ReferenceId dependencyId, out ReferenceUnionSpec? dependencyValue)
+    {
+        this.records.TryGetValue(dependencyId, out ReferenceUnionSpec? record);
+        if (record is null)
+        {
+            dependencyValue = null;
+            return false;
+        }
+
+        dependencyValue = record;
+        return true;
     }
 }
 

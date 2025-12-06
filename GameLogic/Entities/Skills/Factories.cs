@@ -5,9 +5,7 @@ using GameLogic.Usables;
 
 public static class SkillFactory
 {
-    public static Reference<SkillTemplate, Skill> CreateSkillReferenceFromRecord(
-        ReferenceUnionSpec record
-    )
+    public static IRegistryReference CreateSkillReferenceFromRecord(ReferenceUnionSpec record)
     {
         switch (record.Metadata.Kind)
         {
@@ -51,7 +49,7 @@ public static class SkillFactory
             throw new InvalidOperationException("Inline spec is not a skill template");
         }
 
-        return new Reference<SkillTemplate, Skill>(
+        return new SkillTemplateReference(
             inlineSpec.Metadata,
             new SkillTemplate(inlineSpec.Metadata, inlineSpec.Template, null),
             null
