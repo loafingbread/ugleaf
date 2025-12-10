@@ -46,7 +46,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         // this._output.WriteLine(facePalmJson);
 
         Reference<SkillTemplate, Skill> facePalmReference =
-            SkillFactory.CreateSkillReferenceFromRecord(this._fixture.FacePalmRecord);
+            SkillFactory.CreateSkillInstanceSpecFromRecord(this._fixture.FacePalmRecord);
 
         if (facePalmReference.Template is null)
         {
@@ -90,7 +90,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     // public void Skill_CanLoadFullFromFile()
     // {
     //     Reference<SkillTemplate, Skill> igniteReference =
-    //         SkillFactory.CreateSkillReferenceFromRecord(this._fixture.IgniteRecord);
+    //         SkillFactory.CreateSkillInstanceSpecFromRecord(this._fixture.IgniteRecord);
 
     //     if (igniteReference.Template is null)
     //     {

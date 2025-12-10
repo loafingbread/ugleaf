@@ -7,15 +7,15 @@ using GameLogic.Registry;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
 
-public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSpec>
+public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
 {
-    public override ReferenceUnionSpec Read(
+    public override ReferenceSpec Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
         JsonSerializerOptions options
     )
     {
-        Console.WriteLine("ReferenceUnionSpecConverter.Read called");
+        Console.WriteLine("ReferenceSpecConverter.Read called");
         if (reader.TokenType != JsonTokenType.StartObject)
         {
             throw new JsonException("Expected start of object");
@@ -83,7 +83,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         return referenceMetadata;
     }
 
-    private ReferenceUnionSpec DeserializeRefSpec(
+    private ReferenceSpec DeserializeRefSpec(
         JsonElement rootElement,
         JsonSerializerOptions options,
         ReferenceUnionMetadata referenceMetadata
@@ -92,7 +92,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         return JsonSerializer.Deserialize<RefSpec>(rootElement.GetRawText(), options)!;
     }
 
-    private ReferenceUnionSpec DeserializeOverrideSpec(
+    private ReferenceSpec DeserializeOverrideSpec(
         JsonElement rootElement,
         JsonSerializerOptions options,
         ReferenceUnionMetadata referenceMetadata
@@ -103,11 +103,11 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         ];
         Type genericType = typeof(OverrideSpec<,>).MakeGenericType(templateType, overrideType);
 
-        return (ReferenceUnionSpec)
+        return (ReferenceSpec)
             JsonSerializer.Deserialize(rootElement.GetRawText(), genericType, options)!;
     }
 
-    private ReferenceUnionSpec DeserializeInlineSpec(
+    private ReferenceSpec DeserializeInlineSpec(
         JsonElement element,
         JsonSerializerOptions options,
         ReferenceUnionMetadata referenceMetadata
@@ -123,7 +123,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
                 return this.CreateInlineSpec(
                     element,
                     referenceMetadata,
-                    typeof(SkillTemplateRecord),
+                    typeof(SkillTemplateSpec),
                     options
                 );
             }
@@ -132,7 +132,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
                 return this.CreateInlineSpec(
                     element,
                     referenceMetadata,
-                    typeof(UsableTemplateRecord),
+                    typeof(UsableTemplateSpec),
                     options
                 );
             }
@@ -141,7 +141,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
                 return this.CreateInlineSpec(
                     element,
                     referenceMetadata,
-                    typeof(EffectTemplateRecord),
+                    typeof(EffectTemplateSpec),
                     options
                 );
             }
@@ -152,7 +152,7 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         }
     }
 
-    private ReferenceUnionSpec CreateInlineSpec(
+    private ReferenceSpec CreateInlineSpec(
         JsonElement element,
         ReferenceUnionMetadata referenceMetadata,
         Type templateType,
@@ -169,10 +169,10 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         object template = JsonConverter.GetProperty(element, "Template", templateType, options);
         inlineSpecType.GetProperty("Template")?.SetValue(inlineSpec, template);
 
-        return (ReferenceUnionSpec)inlineSpec;
+        return (ReferenceSpec)inlineSpec;
     }
 
-    private ReferenceUnionSpec DeserializeInstanceSpec(
+    private ReferenceSpec DeserializeInstanceSpec(
         JsonElement rootElement,
         JsonSerializerOptions options,
         ReferenceUnionMetadata referenceMetadata
@@ -183,13 +183,13 @@ public sealed class ReferenceUnionSpecConverter : JsonConverter<ReferenceUnionSp
         ];
         Type genericType = typeof(InstanceSpec<,>).MakeGenericType(templateType, overrideType);
 
-        return (ReferenceUnionSpec)
+        return (ReferenceSpec)
             JsonSerializer.Deserialize(rootElement.GetRawText(), genericType, options)!;
     }
 
     public override void Write(
         Utf8JsonWriter writer,
-        ReferenceUnionSpec value,
+        ReferenceSpec value,
         JsonSerializerOptions options
     )
     {

@@ -5,7 +5,7 @@ using GameLogic.Registry;
 public static class EffectFactory
 {
     public static Reference<EffectTemplate, IEffect> CreateEffectReferenceFromRecord(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         switch (record.Metadata.Kind)
@@ -24,7 +24,7 @@ public static class EffectFactory
     }
 
     public static Reference<EffectTemplate, IEffect> CreateEffectTemplateFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         var refSpec = record as RefSpec;
@@ -37,10 +37,10 @@ public static class EffectFactory
     }
 
     public static Reference<EffectTemplate, IEffect> CreateEffectTemplateFromInline(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var inlineSpec = record as InlineSpec<EffectTemplateRecord>;
+        var inlineSpec = record as InlineSpec<EffectTemplateSpec>;
         if (inlineSpec is null)
         {
             throw new InvalidOperationException("Inline spec is not a effect template");
@@ -54,10 +54,10 @@ public static class EffectFactory
     }
 
     public static Reference<EffectTemplate, IEffect> CreateEffectTemplateFromOverride(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var overrideSpec = record as OverrideSpec<EffectTemplateRecord, EffectOverrideRecord>;
+        var overrideSpec = record as OverrideSpec<EffectTemplateSpec, EffectOverrideSpec>;
         if (overrideSpec is null)
         {
             throw new InvalidOperationException("Override spec is not a effect template");
@@ -71,10 +71,10 @@ public static class EffectFactory
     }
 
     public static Reference<EffectTemplate, IEffect> CreateInstanceFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var instanceSpec = record as InstanceSpec<EffectTemplateRecord, EffectRecord>;
+        var instanceSpec = record as InstanceSpec<EffectTemplateSpec, EffectInstanceSpec>;
         if (instanceSpec is null)
         {
             throw new InvalidOperationException("Instance spec is not a effect template");
@@ -88,7 +88,7 @@ public static class EffectFactory
     }
 
     public static IEffect CreateEffectFromInstanceSpec(
-        InstanceSpec<EffectTemplateRecord, EffectRecord> instanceSpec
+        InstanceSpec<EffectTemplateSpec, EffectInstanceSpec> instanceSpec
     )
     {
         if (instanceSpec.Instance is null)
@@ -127,7 +127,7 @@ public static class EffectFactory
     }
 
     private static IEffect CreateStatusEffectFromRecord(
-        InstanceSpec<EffectTemplateRecord, EffectRecord> instanceSpec
+        InstanceSpec<EffectTemplateSpec, EffectInstanceSpec> instanceSpec
     )
     {
         if (instanceSpec.Instance is null)

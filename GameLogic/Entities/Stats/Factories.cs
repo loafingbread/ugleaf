@@ -4,7 +4,7 @@ using GameLogic.Registry;
 
 public static class StatFactory
 {
-    public static Reference<Stat, Stat> CreateStatReferenceFromRecord(ReferenceUnionSpec record)
+    public static Reference<Stat, Stat> CreateStatReferenceFromRecord(ReferenceSpec record)
     {
         switch (record.Metadata.Kind)
         {
@@ -21,7 +21,7 @@ public static class StatFactory
         }
     }
 
-    public static Reference<Stat, Stat> CreateStatFromReference(ReferenceUnionSpec record)
+    public static Reference<Stat, Stat> CreateStatFromReference(ReferenceSpec record)
     {
         var refSpec = record as RefSpec;
         if (refSpec is null)
@@ -58,7 +58,7 @@ public static class StatFactory
         throw new InvalidOperationException("Invalid stat sub type");
     }
 
-    public static Reference<Stat, Stat> CreateStatFromInline(ReferenceUnionSpec record)
+    public static Reference<Stat, Stat> CreateStatFromInline(ReferenceSpec record)
     {
         var inlineSpec = record as InlineSpec<StatTemplateRecord>;
         if (inlineSpec is null)
@@ -73,7 +73,7 @@ public static class StatFactory
         );
     }
 
-    public static Reference<Stat, Stat> CreateStatFromOverride(ReferenceUnionSpec record)
+    public static Reference<Stat, Stat> CreateStatFromOverride(ReferenceSpec record)
     {
         var overrideSpec = record as OverrideSpec<StatTemplateRecord, StatOverrideRecord>;
         if (overrideSpec is null)
@@ -88,7 +88,7 @@ public static class StatFactory
         );
     }
 
-    public static Reference<Stat, Stat> CreateStatFromInstance(ReferenceUnionSpec record)
+    public static Reference<Stat, Stat> CreateStatFromInstance(ReferenceSpec record)
     {
         var instanceSpec = record as InstanceSpec<StatTemplateRecord, StatRecord>;
         if (instanceSpec is null)
@@ -106,7 +106,7 @@ public static class StatFactory
     public static StatBlock CreateStatBlockFromRecord(IStatBlockRecord record)
     {
         List<Stat> stats = new();
-        foreach (ReferenceUnionSpec statRecord in record.Stats)
+        foreach (ReferenceSpec statRecord in record.Stats)
         {
             Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(statRecord);
             if (stat.Instance is not null)
@@ -118,10 +118,10 @@ public static class StatFactory
         return new StatBlock(stats);
     }
 
-    public static StatBlock CreateStatBlockFromReferences(List<ReferenceUnionSpec> records)
+    public static StatBlock CreateStatBlockFromReferences(List<ReferenceSpec> records)
     {
         List<Stat> stats = new();
-        foreach (ReferenceUnionSpec statRecord in records)
+        foreach (ReferenceSpec statRecord in records)
         {
             Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(statRecord);
             if (stat.Instance is not null)

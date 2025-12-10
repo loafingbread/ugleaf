@@ -7,7 +7,7 @@ public abstract class StatusEffect : Effect
     public StatusEffect(
         ReferenceUnionMetadata referenceMetadata,
         InstanceId id,
-        EffectRecord? instanceState
+        EffectInstanceSpec? instanceState
     )
         : base(referenceMetadata, id, instanceState) { }
 

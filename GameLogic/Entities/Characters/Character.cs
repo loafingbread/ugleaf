@@ -69,15 +69,15 @@ public class CharacterTemplate
     }
 #pragma warning restore CS8618
 
-    protected List<Skill> CreateSkillsFromReferences(List<ReferenceUnionSpec> skills)
+    protected List<Skill> CreateSkillsFromReferences(List<ReferenceSpec> skills)
     {
         return skills
             .Select(
-                (ReferenceUnionSpec record) =>
+                (ReferenceSpec record) =>
                 {
-                    Reference<SkillTemplate, Skill> skillReference =
-                        SkillFactory.CreateSkillReferenceFromRecord(record);
-                    return skillReference.Template?.Instantiate();
+                    Reference<SkillTemplate, Skill> SkillInstanceSpec =
+                        SkillFactory.CreateSkillInstanceSpecFromRecord(record);
+                    return SkillInstanceSpec.Template?.Instantiate();
                 }
             )
             .Select(

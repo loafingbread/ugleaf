@@ -6,27 +6,27 @@ using GameLogic.Registry;
 
 public class SkillTestFixture
 {
-    public ReferenceUnionSpec FacePalmRecord { get; }
-    public ReferenceUnionSpec IgniteRecord { get; }
-    public ReferenceUnionSpec MugRecord { get; }
-    public ReferenceUnionSpec SprayAndPrayRecord { get; }
-    public ReferenceUnionSpec StealRecord { get; }
+    public ReferenceSpec FacePalmRecord { get; }
+    public ReferenceSpec IgniteRecord { get; }
+    public ReferenceSpec MugRecord { get; }
+    public ReferenceSpec SprayAndPrayRecord { get; }
+    public ReferenceSpec StealRecord { get; }
 
     public SkillTestFixture()
     {
-        IgniteRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        IgniteRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.SkillTemplate.Ignite
         );
-        FacePalmRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        FacePalmRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.SkillTemplate.FacePalm
         );
-        MugRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        MugRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.SkillTemplate.Mug
         );
-        SprayAndPrayRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        SprayAndPrayRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.SkillTemplate.SprayAndPray
         );
-        StealRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        StealRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.SkillTemplate.Steal
         );
     }

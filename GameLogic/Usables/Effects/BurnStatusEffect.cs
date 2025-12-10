@@ -7,7 +7,7 @@ public class BurnStatusEffect : StatusEffect
     public BurnStatusEffect(
         ReferenceUnionMetadata referenceMetadata,
         InstanceId id,
-        EffectRecord? instanceState
+        EffectInstanceSpec? instanceState
     )
         : base(referenceMetadata, id, instanceState) { }
 

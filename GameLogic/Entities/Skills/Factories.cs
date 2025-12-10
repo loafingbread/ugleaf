@@ -5,7 +5,7 @@ using GameLogic.Usables;
 
 public static class SkillFactory
 {
-    public static IRegistryReference CreateSkillReferenceFromRecord(ReferenceUnionSpec record)
+    public static IRegistryReference CreateSkillInstanceSpecFromRecord(ReferenceSpec record)
     {
         switch (record.Metadata.Kind)
         {
@@ -23,7 +23,7 @@ public static class SkillFactory
     }
 
     public static Reference<SkillTemplate, Skill> CreateSkillTemplateFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         var refSpec = record as RefSpec;
@@ -40,16 +40,16 @@ public static class SkillFactory
     }
 
     public static Reference<SkillTemplate, Skill> CreateSkillTemplateFromInline(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var inlineSpec = record as InlineSpec<SkillTemplateRecord>;
+        var inlineSpec = record as InlineSpec<SkillTemplateSpec>;
         if (inlineSpec is null)
         {
             throw new InvalidOperationException("Inline spec is not a skill template");
         }
 
-        return new SkillTemplateReference(
+        return new SkillTemplateSpec(
             inlineSpec.Metadata,
             new SkillTemplate(inlineSpec.Metadata, inlineSpec.Template, null),
             null
@@ -57,10 +57,10 @@ public static class SkillFactory
     }
 
     public static Reference<SkillTemplate, Skill> CreateSkillTemplateFromOverride(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var overrideSpec = record as OverrideSpec<SkillTemplateRecord, SkillOverrideRecord>;
+        var overrideSpec = record as OverrideSpec<SkillTemplateSpec, SkillOverrideSpec>;
         if (overrideSpec is null)
         {
             throw new InvalidOperationException("Override spec is not a skill template");
@@ -74,10 +74,10 @@ public static class SkillFactory
     }
 
     public static Reference<SkillTemplate, Skill> CreateInstanceFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var instanceSpec = record as InstanceSpec<SkillTemplateRecord, SkillRecord>;
+        var instanceSpec = record as InstanceSpec<SkillTemplateSpec, SkillInstanceSpec>;
         if (instanceSpec is null)
         {
             throw new InvalidOperationException("Instance spec is not a skill template");
@@ -94,7 +94,7 @@ public static class SkillFactory
     {
         return template.Instantiate();
     }
-    // public static Skill CreateSkillFromRecord(ReferenceUnionSpec record)
+    // public static Skill CreateSkillFromRecord(ReferenceSpec record)
     // {
     //     return new Skill(
     //         record.Metadata.InstanceId,
@@ -108,7 +108,7 @@ public static class SkillFactory
     //     );
     // }
 
-    // public static SkillTemplate CreateSkillTemplateFromRecord(SkillTemplateRecord record)
+    // public static SkillTemplate CreateSkillTemplateFromRecord(SkillTemplateSpec record)
     // {
     //     return new SkillTemplate(
     //         record.TemplateIdentifier,

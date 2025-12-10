@@ -46,11 +46,11 @@ public abstract class RegistryReferenceBase<T> : IRegistryReference<T>
     public ReferenceUnionMetadata Metadata { get; }
     public bool IsResolved { get; set; } = false;
 
-    protected ReferenceUnionSpec Spec { get; }
+    protected ReferenceSpec Spec { get; }
 
     protected T? Value { get; set; } = default(T);
 
-    protected RegistryReferenceBase(ReferenceUnionSpec spec)
+    protected RegistryReferenceBase(ReferenceSpec spec)
     {
         this.Metadata = spec.Metadata;
         this.Spec = spec;
@@ -79,20 +79,20 @@ public abstract class RegistryReferenceBase<T> : IRegistryReference<T>
         this.Value ?? throw new InvalidOperationException("Reference is not initialized");
 }
 
-public class SkillTemplateReference : RegistryReferenceBase<SkillTemplate>
+public class SkillTemplateSpec : RegistryReferenceBase<SkillTemplate>
 {
-    private SkillTemplateRecord? templateRecord { get; set; } = null;
-    private SkillOverrideRecord? overrideRecord { get; set; } = null;
+    private SkillTemplateSpec? templateRecord { get; set; } = null;
+    private SkillOverrideSpec? overrideRecord { get; set; } = null;
     private SkillTemplate? value { get; set; } = null;
 
-    public SkillTemplateReference(ReferenceUnionSpec referenceSpec)
+    public SkillTemplateSpec(ReferenceSpec referenceSpec)
         : base(referenceSpec) { }
 
     public override void ResolveDependencies(IRegistry registry)
     {
         if (this.Spec.Metadata.Kind == EReferenceKind.Inline)
         {
-            var inlineSpec = this.Spec as InlineSpec<SkillTemplateRecord>;
+            var inlineSpec = this.Spec as InlineSpec<SkillTemplateSpec>;
             if (inlineSpec is null)
             {
                 throw new InvalidOperationException("Inline spec is not a skill template");
@@ -116,10 +116,10 @@ public class SkillTemplateReference : RegistryReferenceBase<SkillTemplate>
 
 public class SkillInstanceReference : RegistryReferenceBase<Skill>
 {
-    private SkillRecord? instanceRecord { get; set; } = null;
+    private SkillInstanceSpec? instanceRecord { get; set; } = null;
     private Skill? value { get; set; } = null;
 
-    public SkillInstanceReference(ReferenceUnionSpec spec)
+    public SkillInstanceReference(ReferenceSpec spec)
         : base(spec) { }
 
     public override void ResolveDependencies(IRegistry registry)
@@ -140,25 +140,25 @@ public class SkillInstanceReference : RegistryReferenceBase<Skill>
 
 public static class ReferenceFactory
 {
-    public static IRegistryReference CreateReferenceFromRecord(ReferenceUnionSpec record)
+    public static IRegistryReference CreateReferenceFromRecord(ReferenceSpec record)
     {
         switch (record.Metadata.TemplateType)
         {
             case ETemplateType.Skill:
-                return CreateSkillReference(record);
+                return CreateSkillInstanceSpec(record);
             default:
                 throw new InvalidOperationException("Invalid template type");
         }
     }
 
-    private static IRegistryReference CreateSkillReference(ReferenceUnionSpec record)
+    private static IRegistryReference CreateSkillInstanceSpec(ReferenceSpec record)
     {
         switch (record.Metadata.Kind)
         {
             case EReferenceKind.Ref:
             case EReferenceKind.Inline:
             case EReferenceKind.Override:
-                return new SkillTemplateReference(record);
+                return new SkillTemplateSpec(record);
             case EReferenceKind.Instance:
                 return new SkillInstanceReference(record);
             default:

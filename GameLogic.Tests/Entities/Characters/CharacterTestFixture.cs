@@ -6,27 +6,27 @@ using GameLogic.Registry;
 
 public class CharacterTestFixture
 {
-    public ReferenceUnionSpec AliceRecord { get; }
-    public ReferenceUnionSpec AshRecord { get; }
-    public ReferenceUnionSpec BrockRecord { get; }
-    public ReferenceUnionSpec GoblinRecord { get; }
-    public ReferenceUnionSpec MissyRecord { get; }
+    public ReferenceSpec AliceRecord { get; }
+    public ReferenceSpec AshRecord { get; }
+    public ReferenceSpec BrockRecord { get; }
+    public ReferenceSpec GoblinRecord { get; }
+    public ReferenceSpec MissyRecord { get; }
 
     public CharacterTestFixture()
     {
-        AliceRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        AliceRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.CharacterTemplate.Alice
         );
-        AshRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        AshRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.CharacterTemplate.Ash
         );
-        BrockRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        BrockRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.CharacterTemplate.Brock
         );
-        GoblinRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        GoblinRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.CharacterTemplate.Goblin
         );
-        MissyRecord = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(
+        MissyRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.CharacterTemplate.Missy
         );
     }

@@ -9,7 +9,7 @@ using GameLogic.Utils;
 public static class CharacterFactory
 {
     public static Reference<CharacterTemplate, Character> CreateCharacterReferenceFromRecord(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         switch (record.Metadata.Kind)
@@ -27,7 +27,7 @@ public static class CharacterFactory
     }
 
     public static Reference<CharacterTemplate, Character> CreateCharacterTemplateFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         var refSpec = record as RefSpec;
@@ -44,7 +44,7 @@ public static class CharacterFactory
     }
 
     public static Reference<CharacterTemplate, Character> CreateCharacterTemplateFromInline(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         var inlineSpec = record as InlineSpec<CharacterTemplateRecord>;
@@ -61,7 +61,7 @@ public static class CharacterFactory
     }
 
     public static Reference<CharacterTemplate, Character> CreateCharacterTemplateFromOverride(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         var overrideSpec = record as OverrideSpec<CharacterTemplateRecord, CharacterOverrideRecord>;
@@ -78,7 +78,7 @@ public static class CharacterFactory
     }
 
     public static Reference<CharacterTemplate, Character> CreateInstanceFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         var instanceSpec = record as InstanceSpec<CharacterTemplateRecord, CharacterRecord>;
@@ -104,7 +104,7 @@ public static class CharacterFactory
     //         record.Tags,
     //         StatFactory.CreateStatBlockFromRecord(record),
     //         record
-    //             .Skills.Select((SkillRecord skill) => SkillFactory.CreateSkillFromRecord(skill))
+    //             .Skills.Select((SkillInstanceSpec skill) => SkillFactory.CreateSkillFromRecord(skill))
     //             .ToList()
     //     );
     // }

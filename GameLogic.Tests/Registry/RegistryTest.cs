@@ -20,7 +20,7 @@ public class RegistryTest
         );
 
         Assert.True(
-            registry.TryGetValue<SkillReference>(new ReferenceUnionMetadata(ETemplateType.Skill, EReferenceKind.Ref), out var skill)
+            registry.TryGetValue<SkillInstanceSpec>(new ReferenceUnionMetadata(ETemplateType.Skill, EReferenceKind.Ref), out var skill)
         );
         Assert.True(registry.TryGetValue(ConfigPaths.SkillTemplate.FacePalm, out var skill));
     }

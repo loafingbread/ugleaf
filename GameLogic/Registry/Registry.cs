@@ -10,7 +10,7 @@ using GameLogic.Usables.Effects;
 
 public interface IRegistry
 {
-    void Load(List<ReferenceUnionSpec> records);
+    void Load(List<ReferenceSpec> records);
 
     bool TryGetValue<T>(ReferenceUnionMetadata referenceMetadata, out T referenceValue)
         where T : class;
@@ -22,15 +22,15 @@ public interface IRegistry
     )
         where TReference : class;
 
-    bool TryGetDependency(ReferenceId dependencyId, out ReferenceUnionSpec dependencyValue);
+    bool TryGetDependency(ReferenceId dependencyId, out ReferenceSpec dependencyValue);
 }
 
 // TODO: Circular dep if I import entity since they use registry?
 public class Registry
 {
-    private Dictionary<ReferenceId, ReferenceUnionSpec> records = new();
+    private Dictionary<ReferenceId, ReferenceSpec> records = new();
     private List<CharacterTemplateReference> characterTemplates = new();
-    private List<SkillTemplateReference> skillTemplates = new();
+    private List<SkillTemplateSpec> skillTemplates = new();
     private List<UsableTemplateReference> usableTemplates = new();
     private List<EffectTemplateReference> effectTemplates = new();
     private List<StatReference> stats = new();
@@ -40,7 +40,7 @@ public class Registry
         this.records = new();
         foreach (string path in paths)
         {
-            ReferenceUnionSpec record = JsonConfigLoader.LoadFromFile<ReferenceUnionSpec>(path);
+            ReferenceSpec record = JsonConfigLoader.LoadFromFile<ReferenceSpec>(path);
             if (record is null)
             {
                 throw new InvalidOperationException($"Failed to load record from {path}");
@@ -52,9 +52,9 @@ public class Registry
         this.Load(this.records.Values.ToList());
     }
 
-    public void Load(List<ReferenceUnionSpec> records)
+    public void Load(List<ReferenceSpec> records)
     {
-        foreach (ReferenceUnionSpec record in records)
+        foreach (ReferenceSpec record in records)
         {
             if (record.Metadata.Kind == EReferenceKind.Instance)
             {
@@ -74,7 +74,7 @@ public class Registry
                     break;
                 // case ETemplateType.Item:
                 case ETemplateType.Skill:
-                    this.skillTemplates.Add(SkillFactory.CreateSkillReferenceFromRecord(record));
+                    this.skillTemplates.Add(SkillFactory.CreateSkillInstanceSpecFromRecord(record));
                     break;
                 case ETemplateType.Usable:
                     this.usableTemplates.Add(UsableFactory.CreateUsableReferenceFromRecord(record));
@@ -110,7 +110,7 @@ public class Registry
             case ETemplateType.Skill:
                 referenceValue =
                     this.TryGetReferenceFromList(this.skillTemplates, referenceId, templateType)
-                    as SkillTemplateReference;
+                    as SkillTemplateSpec;
                 break;
             case ETemplateType.Usable:
                 referenceValue =
@@ -154,9 +154,9 @@ public class Registry
         return null;
     }
 
-    public bool TryGetDependency(ReferenceId dependencyId, out ReferenceUnionSpec? dependencyValue)
+    public bool TryGetDependency(ReferenceId dependencyId, out ReferenceSpec? dependencyValue)
     {
-        this.records.TryGetValue(dependencyId, out ReferenceUnionSpec? record);
+        this.records.TryGetValue(dependencyId, out ReferenceSpec? record);
         if (record is null)
         {
             dependencyValue = null;

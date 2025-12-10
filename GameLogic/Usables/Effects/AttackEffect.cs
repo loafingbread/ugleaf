@@ -8,7 +8,7 @@ public class AttackEffect : Effect
     public AttackEffect(
         ReferenceUnionMetadata referenceMetadata,
         InstanceId id,
-        EffectRecord? instanceState
+        EffectInstanceSpec? instanceState
     )
         : base(referenceMetadata, id, instanceState) { }
 

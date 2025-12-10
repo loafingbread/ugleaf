@@ -7,7 +7,7 @@ public class PoisonStatusEffect : StatusEffect
     public PoisonStatusEffect(
         ReferenceUnionMetadata referenceMetadata,
         InstanceId id,
-        EffectRecord? instanceState
+        EffectInstanceSpec? instanceState
     )
         : base(referenceMetadata, id, instanceState) { }
 

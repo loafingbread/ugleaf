@@ -7,11 +7,11 @@ using GameLogic.Utils;
 
 public class EffectTemplate
     : IReferenceUnion,
-        ITemplate<EffectOverrideRecord>,
+        ITemplate<EffectOverrideSpec>,
         IDeepCopyable<EffectTemplate>
 {
     public ReferenceUnionMetadata ReferenceMetadata { get; set; }
-    public EffectOverrideRecord? TemplateOverride { get; set; }
+    public EffectOverrideSpec? TemplateOverride { get; set; }
     public EEffectType Type { get; set; }
     public string Subtype { get; set; }
     public string Variant { get; set; }
@@ -26,8 +26,8 @@ public class EffectTemplate
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public EffectTemplate(
         ReferenceUnionMetadata referenceMetadata,
-        EffectTemplateRecord? templateRecord,
-        EffectOverrideRecord? templateOverride
+        EffectTemplateSpec? templateRecord,
+        EffectOverrideSpec? templateOverride
     )
     {
         if (referenceMetadata.Kind == EReferenceKind.Instance)
@@ -49,7 +49,7 @@ public class EffectTemplate
     }
 #pragma warning restore CS8618
 
-    private void ApplyTemplateRecord(EffectTemplateRecord? templateRecord)
+    private void ApplyTemplateRecord(EffectTemplateSpec? templateRecord)
     {
         if (templateRecord is null)
         {
@@ -114,7 +114,7 @@ public class EffectTemplate
         this.Duration = template.Duration;
     }
 
-    private void ApplyOverrides(EffectOverrideRecord? templateOverride)
+    private void ApplyOverrides(EffectOverrideSpec? templateOverride)
     {
         if (templateOverride is null)
         {
@@ -144,15 +144,15 @@ public class EffectTemplate
     }
 }
 
-public abstract class Effect : EffectTemplate, IEffect, IInstance<EffectRecord>
+public abstract class Effect : EffectTemplate, IEffect, IInstance<EffectInstanceSpec>
 {
     public InstanceId InstanceId { get; set; }
-    public EffectRecord? InstanceState { get; set; }
+    public EffectInstanceSpec? InstanceState { get; set; }
 
     public Effect(
         ReferenceUnionMetadata referenceMetadata,
         InstanceId instanceId,
-        EffectRecord? instanceState
+        EffectInstanceSpec? instanceState
     )
         : base(referenceMetadata, null, null)
     {

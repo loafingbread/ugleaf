@@ -7,7 +7,7 @@ using GameLogic.Usables.Effects;
 public static class UsableFactory
 {
     public static Reference<UsableTemplate, Usable> CreateUsableReferenceFromRecord(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         switch (record.Metadata.Kind)
@@ -26,7 +26,7 @@ public static class UsableFactory
     }
 
     public static Reference<UsableTemplate, Usable> CreateUsableTemplateFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
         var refSpec = record as RefSpec;
@@ -43,10 +43,10 @@ public static class UsableFactory
     }
 
     public static Reference<UsableTemplate, Usable> CreateUsableTemplateFromInline(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var inlineSpec = record as InlineSpec<UsableTemplateRecord>;
+        var inlineSpec = record as InlineSpec<UsableTemplateSpec>;
         if (inlineSpec is null)
         {
             throw new InvalidOperationException("Inline spec is not a usable template");
@@ -60,10 +60,10 @@ public static class UsableFactory
     }
 
     public static Reference<UsableTemplate, Usable> CreateUsableTemplateFromOverride(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var overrideSpec = record as OverrideSpec<UsableTemplateRecord, UsableOverrideRecord>;
+        var overrideSpec = record as OverrideSpec<UsableTemplateSpec, UsableOverrideSpec>;
         if (overrideSpec is null)
         {
             throw new InvalidOperationException("Override spec is not a usable template");
@@ -77,10 +77,10 @@ public static class UsableFactory
     }
 
     public static Reference<UsableTemplate, Usable> CreateInstanceFromReference(
-        ReferenceUnionSpec record
+        ReferenceSpec record
     )
     {
-        var instanceSpec = record as InstanceSpec<UsableTemplateRecord, UsableRecord>;
+        var instanceSpec = record as InstanceSpec<UsableTemplateSpec, UsableInstanceSpec>;
         if (instanceSpec is null)
         {
             throw new InvalidOperationException("Instance spec is not a usable template");
@@ -99,7 +99,7 @@ public static class UsableFactory
         return template.Instantiate();
     }
 
-    // public static Usable CreateUsableFromRecord(UsableRecord record)
+    // public static Usable CreateUsableFromRecord(UsableInstanceSpec record)
     // {
     //     return new Usable(
     //         GameLogic.Registry.Ids.Instance(record.InstanceId),
@@ -112,7 +112,7 @@ public static class UsableFactory
     //     );
     // }
 
-    // public static UsableTemplate CreateUsableTemplateFromRecord(UsableTemplateRecord record)
+    // public static UsableTemplate CreateUsableTemplateFromRecord(UsableTemplateSpec record)
     // {
     //     return new UsableTemplate(
     //         record.TemplateIdentifier,

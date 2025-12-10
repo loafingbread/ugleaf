@@ -7,11 +7,11 @@ using GameLogic.Utils;
 
 public class SkillTemplate
     : IReferenceUnion,
-        ITemplate<SkillOverrideRecord>,
+        ITemplate<SkillOverrideSpec>,
         IDeepCopyable<SkillTemplate>
 {
     public ReferenceUnionMetadata ReferenceMetadata { get; set; }
-    public SkillOverrideRecord? TemplateOverride { get; set; }
+    public SkillOverrideSpec? TemplateOverride { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     public List<string> Tags { get; set; } = new();
@@ -21,8 +21,8 @@ public class SkillTemplate
 
     public SkillTemplate(
         ReferenceUnionMetadata referenceMetadata,
-        SkillTemplateRecord? templateRecord,
-        SkillOverrideRecord? templateOverride
+        SkillTemplateSpec? templateRecord,
+        SkillOverrideSpec? templateOverride
     )
     {
         if (referenceMetadata.Kind == EReferenceKind.Instance)
@@ -43,7 +43,7 @@ public class SkillTemplate
         this.ApplyTemplateRecord(templateRecord);
     }
 
-    private void ApplyTemplateRecord(SkillTemplateRecord? templateRecord)
+    private void ApplyTemplateRecord(SkillTemplateSpec? templateRecord)
     {
         if (templateRecord is null)
         {
@@ -104,7 +104,7 @@ public class SkillTemplate
         this.Usables = template.Usables.DeepCopyList();
     }
 
-    private void ApplyOverrides(SkillOverrideRecord? templateOverride)
+    private void ApplyOverrides(SkillOverrideSpec? templateOverride)
     {
         if (templateOverride is null)
         {
@@ -123,11 +123,11 @@ public class SkillTemplate
             : this.CreateUsablesFromReferences(templateOverride.Usables);
     }
 
-    protected List<Usable> CreateUsablesFromReferences(List<ReferenceUnionSpec> usables)
+    protected List<Usable> CreateUsablesFromReferences(List<ReferenceSpec> usables)
     {
         return usables
             .Select(
-                (ReferenceUnionSpec record) =>
+                (ReferenceSpec record) =>
                 {
                     Reference<UsableTemplate, Usable> usableReference =
                         UsableFactory.CreateUsableReferenceFromRecord(record);
@@ -156,15 +156,15 @@ public class SkillTemplate
     }
 }
 
-public class Skill : SkillTemplate, IInstance<SkillRecord>, IDeepCopyable<Skill>
+public class Skill : SkillTemplate, IInstance<SkillInstanceSpec>, IDeepCopyable<Skill>
 {
     public InstanceId InstanceId { get; set; }
-    public SkillRecord? InstanceState { get; set; }
+    public SkillInstanceSpec? InstanceState { get; set; }
 
     public Skill(
         ReferenceUnionMetadata referenceMetadata,
         InstanceId instanceId,
-        SkillRecord? instanceState
+        SkillInstanceSpec? instanceState
     )
         : base(referenceMetadata, null, null)
     {
@@ -238,9 +238,9 @@ public class Skill : SkillTemplate, IInstance<SkillRecord>, IDeepCopyable<Skill>
     public bool CanUse() => this.Usables.Count > 0;
 }
 
-public sealed class SkillTemplateReference : Reference<SkillTemplate>
+public sealed class SkillTemplateSpec : Reference<SkillTemplate>
 {
-    public SkillTemplateReference(
+    public SkillTemplateSpec(
         ReferenceUnionMetadata metadata,
         SkillTemplate? value
     )

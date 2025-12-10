@@ -19,7 +19,7 @@ public static class JsonConfigLoader
         {
             new JsonStringEnumConverter(),
             // new StatConfigRecordConverter(),
-            new GameLogic.Config.JsonLoader.ReferenceUnionSpecConverter(),
+            new GameLogic.Config.JsonLoader.ReferenceSpecConverter(),
         },
     };
 
@@ -30,19 +30,19 @@ public static class JsonConfigLoader
             ?? throw new InvalidOperationException($"Failed to load {typeof(T).Name} from {path}");
     }
 
-    // public static ReferenceUnionSpec LoadReferenceUnionSpecFromFile(string path)
+    // public static ReferenceSpec LoadReferenceSpecFromFile(string path)
     // {
     //     string json = File.ReadAllText(path);
-    //     ReferenceUnionSpec referenceUnionSpec =
-    //         System.Text.Json.JsonSerializer.Deserialize<ReferenceUnionSpec>(json, options)
+    //     ReferenceSpec ReferenceSpec =
+    //         System.Text.Json.JsonSerializer.Deserialize<ReferenceSpec>(json, options)
     //         ?? throw new InvalidOperationException(
     //             $"Failed to load {typeof(ReferenceUnionMetadata).Name} from {path}"
     //         );
 
-    //     return LoadReferenceUnionSpecKind(path, options, referenceUnionSpec.Metadata);
+    //     return LoadReferenceSpecKind(path, options, ReferenceSpec.Metadata);
     // }
 
-    // private static ReferenceUnionSpec LoadReferenceUnionSpecKind(
+    // private static ReferenceSpec LoadReferenceSpecKind(
     //     string path,
     //     JsonSerializerOptions options,
     //     ReferenceUnionMetadata referenceMetadata
@@ -70,7 +70,7 @@ public static class JsonConfigLoader
     //     }
     // }
 
-    // private static ReferenceUnionSpec LoadOverrideSpec(
+    // private static ReferenceSpec LoadOverrideSpec(
     //     string path,
     //     ReferenceUnionMetadata referenceMetadata
     // )
@@ -81,24 +81,24 @@ public static class JsonConfigLoader
     //     {
     //         case ETemplateType.Skill:
     //             return System.Text.Json.JsonSerializer.Deserialize<
-    //                     OverrideSpec<SkillTemplateRecord, SkillOverrideRecord>
+    //                     OverrideSpec<SkillTemplateSpec, SkillOverrideSpec>
     //                 >(json, options)
     //                 ?? throw new InvalidOperationException(
-    //                     $"Failed to load {typeof(OverrideSpec<SkillTemplateRecord, SkillOverrideRecord>).Name} from {path}"
+    //                     $"Failed to load {typeof(OverrideSpec<SkillTemplateSpec, SkillOverrideSpec>).Name} from {path}"
     //                 );
     //         case ETemplateType.Usable:
     //             return System.Text.Json.JsonSerializer.Deserialize<
-    //                     OverrideSpec<UsableTemplateRecord, UsableOverrideRecord>
+    //                     OverrideSpec<UsableTemplateSpec, UsableOverrideSpec>
     //                 >(json, options)
     //                 ?? throw new InvalidOperationException(
-    //                     $"Failed to load {typeof(OverrideSpec<UsableTemplateRecord, UsableOverrideRecord>).Name} from {path}"
+    //                     $"Failed to load {typeof(OverrideSpec<UsableTemplateSpec, UsableOverrideSpec>).Name} from {path}"
     //                 );
     //         case ETemplateType.Effect:
     //             return System.Text.Json.JsonSerializer.Deserialize<
-    //                     OverrideSpec<EffectTemplateRecord, EffectOverrideRecord>
+    //                     OverrideSpec<EffectTemplateSpec, EffectOverrideSpec>
     //                 >(json, options)
     //                 ?? throw new InvalidOperationException(
-    //                     $"Failed to load {typeof(OverrideSpec<EffectTemplateRecord, EffectOverrideRecord>).Name} from {path}"
+    //                     $"Failed to load {typeof(OverrideSpec<EffectTemplateSpec, EffectOverrideSpec>).Name} from {path}"
     //                 );
     //         case ETemplateType.Character:
     //             return System.Text.Json.JsonSerializer.Deserialize<
@@ -121,7 +121,7 @@ public static class JsonConfigLoader
     //     }
     // }
 
-    // private static ReferenceUnionSpec LoadInlineSpec(
+    // private static ReferenceSpec LoadInlineSpec(
     //     string path,
     //     ReferenceUnionMetadata referenceMetadata
     // )
@@ -133,9 +133,9 @@ public static class JsonConfigLoader
 
     //     try
     //     {
-    //         // Use the converter by deserializing as ReferenceUnionSpec
+    //         // Use the converter by deserializing as ReferenceSpec
     //         // The converter will handle the polymorphic deserialization correctly
-    //         return System.Text.Json.JsonSerializer.Deserialize<ReferenceUnionSpec>(json, options)
+    //         return System.Text.Json.JsonSerializer.Deserialize<ReferenceSpec>(json, options)
     //             ?? throw new InvalidOperationException($"Failed to load InlineSpec from {path}");
     //     }
     //     catch (Exception ex)
@@ -147,7 +147,7 @@ public static class JsonConfigLoader
     //     }
     // }
 
-    // private static ReferenceUnionSpec LoadInstanceSpec(
+    // private static ReferenceSpec LoadInstanceSpec(
     //     string path,
     //     ReferenceUnionMetadata referenceMetadata
     // )
@@ -158,24 +158,24 @@ public static class JsonConfigLoader
     //     {
     //         case ETemplateType.Skill:
     //             return System.Text.Json.JsonSerializer.Deserialize<
-    //                     InstanceSpec<SkillTemplateRecord, Skill>
+    //                     InstanceSpec<SkillTemplateSpec, Skill>
     //                 >(json, options)
     //                 ?? throw new InvalidOperationException(
-    //                     $"Failed to load {typeof(InstanceSpec<SkillTemplateRecord, Skill>).Name} from {path}"
+    //                     $"Failed to load {typeof(InstanceSpec<SkillTemplateSpec, Skill>).Name} from {path}"
     //                 );
     //         case ETemplateType.Usable:
     //             return System.Text.Json.JsonSerializer.Deserialize<
-    //                     InstanceSpec<UsableTemplateRecord, Usable>
+    //                     InstanceSpec<UsableTemplateSpec, Usable>
     //                 >(json, options)
     //                 ?? throw new InvalidOperationException(
-    //                     $"Failed to load {typeof(InstanceSpec<UsableTemplateRecord, Usable>).Name} from {path}"
+    //                     $"Failed to load {typeof(InstanceSpec<UsableTemplateSpec, Usable>).Name} from {path}"
     //                 );
     //         case ETemplateType.Effect:
     //             return System.Text.Json.JsonSerializer.Deserialize<
-    //                     InstanceSpec<EffectTemplateRecord, Effect>
+    //                     InstanceSpec<EffectTemplateSpec, Effect>
     //                 >(json, options)
     //                 ?? throw new InvalidOperationException(
-    //                     $"Failed to load {typeof(InstanceSpec<EffectTemplateRecord, Effect>).Name} from {path}"
+    //                     $"Failed to load {typeof(InstanceSpec<EffectTemplateSpec, Effect>).Name} from {path}"
     //                 );
     //         case ETemplateType.Character:
     //             return System.Text.Json.JsonSerializer.Deserialize<

@@ -1,13 +1,13 @@
 namespace GameLogic.Targeting;
 
-public interface ITargeterRecord
+public interface ITargeterData
 {
     public ETargetQuantity TargetQuantity { get; }
     public List<EFactionRelationship> AllowedTargets { get; }
     public int Count { get; }
 }
 
-public record TargeterRecord : ITargeterRecord
+public record TargeterData : ITargeterData
 {
     public required ETargetQuantity TargetQuantity { get; init; } = ETargetQuantity.None;
     public required List<EFactionRelationship> AllowedTargets { get; init; } = new();

@@ -6,10 +6,10 @@ using GameLogic.Targeting;
 using GameLogic.Usables.Effects;
 using GameLogic.Utils;
 
-public class UsableTemplate : ITemplate<UsableOverrideRecord>
+public class UsableTemplate : ITemplate<UsableOverrideSpec>
 {
     public ReferenceUnionMetadata ReferenceMetadata { get; set; }
-    public UsableOverrideRecord? TemplateOverride { get; set; }
+    public UsableOverrideSpec? TemplateOverride { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public List<string> Tags { get; set; }
@@ -19,8 +19,8 @@ public class UsableTemplate : ITemplate<UsableOverrideRecord>
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public UsableTemplate(
         ReferenceUnionMetadata referenceMetadata,
-        UsableTemplateRecord? templateRecord,
-        UsableOverrideRecord? templateOverride
+        UsableTemplateSpec? templateRecord,
+        UsableOverrideSpec? templateOverride
     )
     {
         if (referenceMetadata.Kind == EReferenceKind.Instance)
@@ -42,7 +42,7 @@ public class UsableTemplate : ITemplate<UsableOverrideRecord>
     }
 #pragma warning restore CS8618
 
-    private void ApplyTemplateRecord(UsableTemplateRecord? templateRecord)
+    private void ApplyTemplateRecord(UsableTemplateSpec? templateRecord)
     {
         if (templateRecord is null)
         {
@@ -56,11 +56,11 @@ public class UsableTemplate : ITemplate<UsableOverrideRecord>
         this.Effects = this.CreateEffectsFromReferences(templateRecord.Effects);
     }
 
-    protected List<IEffect> CreateEffectsFromReferences(List<ReferenceUnionSpec> effects)
+    protected List<IEffect> CreateEffectsFromReferences(List<ReferenceSpec> effects)
     {
         return effects
             .Select(
-                (ReferenceUnionSpec record) =>
+                (ReferenceSpec record) =>
                 {
                     Reference<EffectTemplate, IEffect> effectReference =
                         EffectFactory.CreateEffectReferenceFromRecord(record);
@@ -125,7 +125,7 @@ public class UsableTemplate : ITemplate<UsableOverrideRecord>
         this.Effects = template.Effects.DeepCopyList();
     }
 
-    public void ApplyOverrides(UsableOverrideRecord? templateOverride)
+    public void ApplyOverrides(UsableOverrideSpec? templateOverride)
     {
         if (templateOverride is null)
         {
@@ -155,15 +155,15 @@ public class UsableTemplate : ITemplate<UsableOverrideRecord>
     }
 }
 
-public class Usable : UsableTemplate, IUsable, IInstance<UsableRecord>, IDeepCopyable<Usable>
+public class Usable : UsableTemplate, IUsable, IInstance<UsableInstanceSpec>, IDeepCopyable<Usable>
 {
     public InstanceId InstanceId { get; set; }
-    public UsableRecord? InstanceState { get; set; }
+    public UsableInstanceSpec? InstanceState { get; set; }
 
     public Usable(
         ReferenceUnionMetadata referenceMetadata,
         InstanceId? instanceId,
-        UsableRecord? instanceState
+        UsableInstanceSpec? instanceState
     )
         : base(referenceMetadata, null, null)
     {

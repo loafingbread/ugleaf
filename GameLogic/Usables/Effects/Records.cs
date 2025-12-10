@@ -2,7 +2,7 @@ namespace GameLogic.Usables.Effects;
 
 using GameLogic.Registry;
 
-public record EffectTemplateRecord
+public record EffectTemplateSpec
 {
     public required string Type { get; init; }
     public required string Subtype { get; init; }
@@ -10,10 +10,10 @@ public record EffectTemplateRecord
     public required string Name { get; init; } = "";
     public required string Description { get; init; } = "";
     public required List<string> Tags { get; init; } = new();
-    public required EffectConfigRecord Config { get; init; }
+    public required EffectConfigData Config { get; init; }
 }
 
-public record EffectOverrideRecord : ITemplateOverride<EffectTemplateRecord>
+public record EffectOverrideSpec : ITemplateOverride<EffectTemplateSpec>
 {
     public string? Type { get; init; }
     public string? Subtype { get; init; }
@@ -21,12 +21,14 @@ public record EffectOverrideRecord : ITemplateOverride<EffectTemplateRecord>
     public string? Name { get; init; }
     public string? Description { get; init; }
     public List<string>? Tags { get; init; }
-    public EffectConfigRecord? Config { get; init; }
+    public EffectConfigData? Config { get; init; }
 }
 
-public record EffectRecord : EffectTemplateRecord { }
+public record EffectInstanceSpec : EffectTemplateSpec { }
 
-public record EffectConfigRecord
+public record EffectData : EffectTemplateSpec { }
+
+public record EffectConfigData
 {
     public int Value { get; init; } = 0;
     public int Duration { get; init; } = 0;
