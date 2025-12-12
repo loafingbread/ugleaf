@@ -10,7 +10,7 @@ public class CharacterTemplate
     : ITemplate<CharacterOverrideRecord>,
         IDeepCopyable<CharacterTemplate>
 {
-    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
+    public ReferenceMetadata ReferenceMetadata { get; set; }
     public CharacterOverrideRecord? TemplateOverride { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
@@ -20,7 +20,7 @@ public class CharacterTemplate
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public CharacterTemplate(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         CharacterTemplateRecord? templateRecord,
         CharacterOverrideRecord? templateOverride
     )
@@ -166,7 +166,7 @@ public class Character : CharacterTemplate, IInstance<CharacterRecord>, IDeepCop
     public CharacterRecord? InstanceState { get; set; }
 
     public Character(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId instanceId,
         CharacterRecord? instanceState
     )
@@ -230,12 +230,12 @@ public class Character : CharacterTemplate, IInstance<CharacterRecord>, IDeepCop
 
 public sealed class CharacterReference : Reference<Character>
 {
-    public CharacterReference(ReferenceUnionMetadata metadata, Character? value)
+    public CharacterReference(ReferenceMetadata metadata, Character? value)
         : base(metadata, value) { }
 }
 
 public sealed class CharacterTemplateReference : Reference<CharacterTemplate>
 {
-    public CharacterTemplateReference(ReferenceUnionMetadata metadata, CharacterTemplate? value)
+    public CharacterTemplateReference(ReferenceMetadata metadata, CharacterTemplate? value)
         : base(metadata, value) { }
 }

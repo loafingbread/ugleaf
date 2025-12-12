@@ -10,7 +10,7 @@ using GameLogic.Registry;
 public class ValueStat : Stat
 {
     public ValueStat(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         StatRecord? instanceState,
         StatTemplateRecord? templateRecord,
         StatOverrideRecord? templateOverride

@@ -6,7 +6,7 @@ using GameLogic.Targeting;
 public class AttackEffect : Effect
 {
     public AttackEffect(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId id,
         EffectInstanceSpec? instanceState
     )

@@ -5,7 +5,7 @@ using GameLogic.Registry;
 public class PoisonStatusEffect : StatusEffect
 {
     public PoisonStatusEffect(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId id,
         EffectInstanceSpec? instanceState
     )

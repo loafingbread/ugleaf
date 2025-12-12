@@ -10,7 +10,7 @@ public class EffectTemplate
         ITemplate<EffectOverrideSpec>,
         IDeepCopyable<EffectTemplate>
 {
-    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
+    public ReferenceMetadata ReferenceMetadata { get; set; }
     public EffectOverrideSpec? TemplateOverride { get; set; }
     public EEffectType Type { get; set; }
     public string Subtype { get; set; }
@@ -25,7 +25,7 @@ public class EffectTemplate
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public EffectTemplate(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         EffectTemplateSpec? templateRecord,
         EffectOverrideSpec? templateOverride
     )
@@ -150,7 +150,7 @@ public abstract class Effect : EffectTemplate, IEffect, IInstance<EffectInstance
     public EffectInstanceSpec? InstanceState { get; set; }
 
     public Effect(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId instanceId,
         EffectInstanceSpec? instanceState
     )
@@ -223,12 +223,12 @@ public abstract class Effect : EffectTemplate, IEffect, IInstance<EffectInstance
 
 public sealed class EffectTemplateReference : Reference<EffectTemplate>
 {
-    public EffectTemplateReference(ReferenceUnionMetadata metadata, EffectTemplate? value)
+    public EffectTemplateReference(ReferenceMetadata metadata, EffectTemplate? value)
         : base(metadata, value) { }
 }
 
 public sealed class EffectInstanceReference : Reference<Effect>
 {
-    public EffectInstanceReference(ReferenceUnionMetadata metadata, Effect? value)
+    public EffectInstanceReference(ReferenceMetadata metadata, Effect? value)
         : base(metadata, value) { }
 }

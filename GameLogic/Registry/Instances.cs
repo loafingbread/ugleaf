@@ -15,7 +15,7 @@ public interface IInstance<TInstanceState>
 // {
 //     public InstanceId InstanceId { get; } = Ids.Instance();
 
-//     protected InstanceBase(ReferenceUnionMetadata referenceMetadata)
+//     protected InstanceBase(ReferenceMetadata referenceMetadata)
 //     {
 //         this.ReferenceMetadata = referenceMetadata;
 //     }

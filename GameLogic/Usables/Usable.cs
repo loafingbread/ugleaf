@@ -8,7 +8,7 @@ using GameLogic.Utils;
 
 public class UsableTemplate : ITemplate<UsableOverrideSpec>
 {
-    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
+    public ReferenceMetadata ReferenceMetadata { get; set; }
     public UsableOverrideSpec? TemplateOverride { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -18,7 +18,7 @@ public class UsableTemplate : ITemplate<UsableOverrideSpec>
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public UsableTemplate(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         UsableTemplateSpec? templateRecord,
         UsableOverrideSpec? templateOverride
     )
@@ -161,7 +161,7 @@ public class Usable : UsableTemplate, IUsable, IInstance<UsableInstanceSpec>, ID
     public UsableInstanceSpec? InstanceState { get; set; }
 
     public Usable(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId? instanceId,
         UsableInstanceSpec? instanceState
     )
@@ -248,12 +248,12 @@ public class Usable : UsableTemplate, IUsable, IInstance<UsableInstanceSpec>, ID
 
 public sealed class UsableTemplateReference : Reference<UsableTemplate>
 {
-    public UsableTemplateReference(ReferenceUnionMetadata referenceMetadata, UsableTemplate? value)
+    public UsableTemplateReference(ReferenceMetadata referenceMetadata, UsableTemplate? value)
         : base(referenceMetadata, value) { }
 }
 
 public sealed class UsableInstanceReference : Reference<Usable>
 {
-    public UsableInstanceReference(ReferenceUnionMetadata metadata, Usable? value)
+    public UsableInstanceReference(ReferenceMetadata metadata, Usable? value)
         : base(metadata, value) { }
 }

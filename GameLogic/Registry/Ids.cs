@@ -24,18 +24,6 @@ public static class Ids
 
     public static TemplateId NewTemplateId() => new(System.Guid.NewGuid().ToString());
 
-    public static ReferenceUnionMetadata NewReferenceUnionMetadata(
-        ETemplateType templateType,
-        EReferenceKind referenceKind,
-        string templateId
-    ) =>
-        new()
-        {
-            TemplateId = templateId == "" ? NewTemplateId() : new(templateId),
-            TemplateType = templateType,
-            Kind = referenceKind,
-        };
-
     public static InstanceId Instance(string? value = null)
     {
         if (value is null)

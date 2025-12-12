@@ -8,36 +8,68 @@ using GameLogic.Entities.Stats;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
 
+public class EntityRegistry<T>
+{
+    private Dictionary<ReferenceId, T> entitiesById = new();
+
+    public EntityRegistry() { }
+
+    public bool TryAdd(T entity, ReferenceId referenceId)
+    {
+        return this.entitiesById.TryAdd(referenceId, entity);
+    }
+
+    public bool TryGet(ReferenceId referenceId, out T? entity)
+    {
+        return this.entitiesById.TryGetValue(referenceId, out entity);
+    }
+}
+
+public class EntitiesRegistry
+{
+    private EntityRegistry<Skill> skillRegistry = new();
+}
+
 public interface IRegistry
 {
-    void Load(List<ReferenceSpec> records);
+    public void Load(List<string> paths);
 
-    bool TryGetValue<T>(ReferenceUnionMetadata referenceMetadata, out T referenceValue)
-        where T : class;
+    public void Load(List<ReferenceSpec> records);
 
-    bool TryGetReference<TReference>(
+    /// <summary>
+    /// Get a reference by its id. Should only be called at during initialization
+    /// so that the program fails fast if references are not setup correctly. Do
+    /// not call this after initialization.
+    /// </summary>
+    /// <param name="referenceId">The id of the reference to get.</param>
+    /// <returns>The reference.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown if the reference is not found.</exception>
+    public IReference<object, ReferenceSpec> GetReference(ReferenceId referenceId);
+
+    /// <summary>
+    /// Try to get a reference by its id. This should be called after initialization
+    /// to get the reference value as it will fail gracefully if the reference is not found.
+    /// </summary>
+    /// <typeparam name="TReference">The type of the reference to get.</typeparam>
+    /// <param name="referenceId">The id of the reference to get.</param>
+    /// <param name="referenceValue">The reference value. Null if the reference is not found.</param>
+    /// <returns>True if the reference is found, false otherwise.</returns>
+    public bool TryGetReference<TReference>(
         ReferenceId referenceId,
-        ETemplateType templateType,
-        out TReference? referenceValue
+        out IReference<TReference, ReferenceSpec>? referenceValue
     )
         where TReference : class;
-
-    bool TryGetDependency(ReferenceId dependencyId, out ReferenceSpec dependencyValue);
 }
 
 // TODO: Circular dep if I import entity since they use registry?
 public class Registry
 {
-    private Dictionary<ReferenceId, ReferenceSpec> records = new();
-    private List<CharacterTemplateReference> characterTemplates = new();
-    private List<SkillTemplateSpec> skillTemplates = new();
-    private List<UsableTemplateReference> usableTemplates = new();
-    private List<EffectTemplateReference> effectTemplates = new();
-    private List<StatReference> stats = new();
+    private EntityRegistry<object> entityRegistry = new();
+    private Dictionary<ReferenceId, IReference<object, ReferenceSpec>> referencesById = new();
 
     public void Load(List<string> paths)
     {
-        this.records = new();
+        List<ReferenceSpec> records = new();
         foreach (string path in paths)
         {
             ReferenceSpec record = JsonConfigLoader.LoadFromFile<ReferenceSpec>(path);
@@ -46,192 +78,55 @@ public class Registry
                 throw new InvalidOperationException($"Failed to load record from {path}");
             }
 
-            this.records.Add(record.Metadata.ReferenceId, record);
+            records.Add(record);
         }
 
-        this.Load(this.records.Values.ToList());
+        this.Load(records);
     }
 
     public void Load(List<ReferenceSpec> records)
     {
-        foreach (ReferenceSpec record in records)
-        {
-            if (record.Metadata.Kind == EReferenceKind.Instance)
-            {
-                continue;
-            }
-            else if (record.Metadata.Kind == EReferenceKind.Ref)
-            {
-                continue;
-            }
-
-            switch (record.Metadata.TemplateType)
-            {
-                case ETemplateType.Character:
-                    this.characterTemplates.Add(
-                        CharacterFactory.CreateCharacterReferenceFromRecord(record)
-                    );
-                    break;
-                // case ETemplateType.Item:
-                case ETemplateType.Skill:
-                    this.skillTemplates.Add(SkillFactory.CreateSkillInstanceSpecFromRecord(record));
-                    break;
-                case ETemplateType.Usable:
-                    this.usableTemplates.Add(UsableFactory.CreateUsableReferenceFromRecord(record));
-                    break;
-                case ETemplateType.Effect:
-                    this.effectTemplates.Add(EffectFactory.CreateEffectReferenceFromRecord(record));
-                    break;
-                // TODO: How to implement statblock references on top of stat reference?
-                // Custom logic?
-                case ETemplateType.Stat:
-                    this.stats.Add(StatFactory.CreateStatReferenceFromRecord(record));
-                    break;
-                default:
-                    throw new NotImplementedException("Reference type not implemented for loading");
-            }
-        }
-    }
-
-    public bool TryGetReference(
-        ReferenceId referenceId,
-        ETemplateType templateType,
-        out IReference? referenceValue
-    )
-    {
-        switch (templateType)
-        {
-            case ETemplateType.Character:
-                referenceValue =
-                    this.TryGetReferenceFromList(this.characterTemplates, referenceId, templateType)
-                    as CharacterTemplateReference;
-                break;
-            // case ETemplateType.Item:
-            case ETemplateType.Skill:
-                referenceValue =
-                    this.TryGetReferenceFromList(this.skillTemplates, referenceId, templateType)
-                    as SkillTemplateSpec;
-                break;
-            case ETemplateType.Usable:
-                referenceValue =
-                    this.TryGetReferenceFromList(this.usableTemplates, referenceId, templateType)
-                    as UsableTemplateReference;
-                break;
-            case ETemplateType.Effect:
-                referenceValue =
-                    this.TryGetReferenceFromList(this.effectTemplates, referenceId, templateType)
-                    as EffectTemplateReference;
-                break;
-            case ETemplateType.Stat:
-                referenceValue =
-                    this.TryGetReferenceFromList(this.stats, referenceId, templateType)
-                    as StatReference;
-                break;
-            default:
-                throw new NotImplementedException("Reference type is not implemented for getting");
-        }
-
-        return referenceValue is not null;
-    }
-
-    private IReference? TryGetReferenceFromList(
-        IEnumerable<IReference> references,
-        ReferenceId referenceId,
-        ETemplateType templateType
-    )
-    {
-        foreach (IReference reference in references)
-        {
-            if (
-                reference.Metadata.ReferenceId == referenceId
-                && reference.Metadata.TemplateType == templateType
-            )
-            {
-                return reference;
-            }
-        }
-
-        return null;
-    }
-
-    public bool TryGetDependency(ReferenceId dependencyId, out ReferenceSpec? dependencyValue)
-    {
-        this.records.TryGetValue(dependencyId, out ReferenceSpec? record);
-        if (record is null)
-        {
-            dependencyValue = null;
-            return false;
-        }
-
-        dependencyValue = record;
-        return true;
-    }
-}
-
-// public class TemplateRegistry : IRegistry
-// {
-//     private readonly Dictionary<TemplateIdentifier, object> _characters = new();
-//     private readonly Dictionary<TemplateIdentifier, object> _skills = new();
-//     private readonly Dictionary<TemplateIdentifier, object> _usables = new();
-//     private readonly Dictionary<TemplateIdentifier, object> _effects = new();
-// }
-
-// TODO: How do I store all the different types of references in a list? Or do I
-// separate by type? I think I separate by type
-
-public interface IReference
-{
-    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
-
-    /// <summary>
-    /// Resolve the reference using the registry recursively. 
-    /// This will set the value of the reference.
-    /// Should throw an exception if the reference is not found.
-    /// </summary>
-    /// <param name="registry"></param>
-    public void Resolve(IRegistry registry);
-}
-
-public class Reference<T> : IReference
-    where T : class
-{
-    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
-    public T? Value { get; set; }
-
-    public Reference(ReferenceUnionMetadata referenceMetadata, T? value)
-    {
-        this.ReferenceMetadata = referenceMetadata;
-
-        this.Value = value;
-    }
-
-    public T GetValue() =>
-        this.Value
-        ?? throw new InvalidOperationException(
-            "Reference value is null. Should have been resolved before getting value."
+        // Dependencies can only be resolved after all references are created.
+        // References can only be initialized (wrapped types created) after all
+        //  dependencies are resolved.
+        this.referencesById = records.ToDictionary(
+            record => record.Metadata.ReferenceId,
+            record =>
+                (IReference<object, ReferenceSpec>)
+                    ReferenceFactory.CreateReferenceFromRecord(record)
         );
 
-    public Reference<T>? GetDependency()
-    {
-        if (this.ReferenceMetadata.TemplateId.value is null)
+        foreach (var (referenceId, reference) in this.referencesById)
         {
-            return null;
+            reference.ResolveDependencies((IRegistry)this);
         }
 
-        return new Reference<T>(this.ReferenceMetadata, this.Value);
+        foreach (var (referenceId, reference) in this.referencesById)
+        {
+            reference.Initialize();
+        }
     }
 
-    public void Resolve(IRegistry registry)
+    public IReference<object, ReferenceSpec> GetReference(ReferenceId referenceId)
     {
-        if (this.ReferenceMetadata.DependencyId is null)
+        IReference<object, ReferenceSpec>? reference = this.referencesById[referenceId];
+        if (reference is null)
         {
-            return;
+            throw new KeyNotFoundException($"Reference {referenceId} not found");
         }
 
-        this.Value = registry.TryGetValue<T>(this.ReferenceMetadata, out var referenceValue)
-            ? referenceValue
-            : throw new KeyNotFoundException(
-                $"Missing reference {this.ReferenceMetadata} of type {typeof(T).Name}"
-            );
+        return reference;
+    }
+
+    public bool TryGetReference<TReference>(
+        ReferenceId referenceId,
+        out IReference<TReference, ReferenceSpec>? referenceValue
+    )
+    {
+        IReference<object, ReferenceSpec>? genericReference;
+        this.referencesById.TryGetValue(referenceId, out genericReference);
+
+        referenceValue = genericReference as IReference<TReference, ReferenceSpec>;
+        return referenceValue is not null;
     }
 }

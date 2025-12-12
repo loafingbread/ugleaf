@@ -5,7 +5,7 @@ using GameLogic.Registry;
 public abstract class StatusEffect : Effect
 {
     public StatusEffect(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId id,
         EffectInstanceSpec? instanceState
     )

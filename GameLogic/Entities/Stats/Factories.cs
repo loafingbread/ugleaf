@@ -40,7 +40,7 @@ public static class StatFactory
     // until they are resolved
 
     public static Stat CreateStat(
-        ReferenceUnionMetadata metadata,
+        ReferenceMetadata metadata,
         StatRecord? instanceState,
         StatTemplateRecord? templateRecord,
         StatOverrideRecord? overrideRecord

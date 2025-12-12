@@ -5,7 +5,7 @@ using GameLogic.Registry;
 public class HealEffect : Effect
 {
     public HealEffect(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId id,
         EffectInstanceSpec? instanceState
     )

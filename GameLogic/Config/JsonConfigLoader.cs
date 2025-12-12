@@ -36,7 +36,7 @@ public static class JsonConfigLoader
     //     ReferenceSpec ReferenceSpec =
     //         System.Text.Json.JsonSerializer.Deserialize<ReferenceSpec>(json, options)
     //         ?? throw new InvalidOperationException(
-    //             $"Failed to load {typeof(ReferenceUnionMetadata).Name} from {path}"
+    //             $"Failed to load {typeof(ReferenceMetadata).Name} from {path}"
     //         );
 
     //     return LoadReferenceSpecKind(path, options, ReferenceSpec.Metadata);
@@ -45,7 +45,7 @@ public static class JsonConfigLoader
     // private static ReferenceSpec LoadReferenceSpecKind(
     //     string path,
     //     JsonSerializerOptions options,
-    //     ReferenceUnionMetadata referenceMetadata
+    //     ReferenceMetadata referenceMetadata
     // )
     // {
     //     string json = File.ReadAllText(path);
@@ -72,7 +72,7 @@ public static class JsonConfigLoader
 
     // private static ReferenceSpec LoadOverrideSpec(
     //     string path,
-    //     ReferenceUnionMetadata referenceMetadata
+    //     ReferenceMetadata referenceMetadata
     // )
     // {
     //     string json = File.ReadAllText(path);
@@ -123,7 +123,7 @@ public static class JsonConfigLoader
 
     // private static ReferenceSpec LoadInlineSpec(
     //     string path,
-    //     ReferenceUnionMetadata referenceMetadata
+    //     ReferenceMetadata referenceMetadata
     // )
     // {
     //     string json = File.ReadAllText(path);
@@ -149,7 +149,7 @@ public static class JsonConfigLoader
 
     // private static ReferenceSpec LoadInstanceSpec(
     //     string path,
-    //     ReferenceUnionMetadata referenceMetadata
+    //     ReferenceMetadata referenceMetadata
     // )
     // {
     //     string json = File.ReadAllText(path);

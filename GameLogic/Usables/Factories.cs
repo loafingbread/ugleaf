@@ -6,6 +6,16 @@ using GameLogic.Usables.Effects;
 
 public static class UsableFactory
 {
+    public static List<Usable> CreateUsablesFromData(List<UsableData> data)
+    {
+        return data.Select(CreateUsableFromData).ToList();
+    }
+
+    public static Usable CreateUsableFromData(UsableData data)
+    {
+        return new Usable(data.Name, data.Description, data.Tags, data.Targeter, data.Effects);
+    }
+
     public static Reference<UsableTemplate, Usable> CreateUsableReferenceFromRecord(
         ReferenceSpec record
     )

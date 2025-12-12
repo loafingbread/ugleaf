@@ -5,7 +5,7 @@ using GameLogic.Registry;
 public class BurnStatusEffect : StatusEffect
 {
     public BurnStatusEffect(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         InstanceId id,
         EffectInstanceSpec? instanceState
     )

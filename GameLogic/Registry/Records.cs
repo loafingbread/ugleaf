@@ -15,11 +15,11 @@ using GameLogic.Usables.Effects;
 /// </summary>
 public record ReferenceSpec
 {
-    public required ReferenceUnionMetadata Metadata { get; init; }
+    public required ReferenceMetadata Metadata { get; init; }
 };
 
 // TODO: Ask chat how to support sub types of stats or other classes in factory
-public record ReferenceUnionMetadata
+public record ReferenceMetadata
 {
     public required EReferenceKind Kind { get; init; }
     public required ETemplateType TemplateType { get; init; }

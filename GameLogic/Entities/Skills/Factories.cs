@@ -3,20 +3,74 @@ using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
+public class SkillArtifact 
+{
+    public SkillTemplate? Template { get; set; }
+    public Skill? Instance { get; set; }
+
+    public SkillArtifact(SkillTemplate? template, Skill? instance)
+    {
+        this.Template = template;
+        this.Instance = instance;
+    }
+
+    public static SkillArtifact FromTemplate(SkillTemplate template)
+    {
+        return new SkillArtifact(template, null);
+    }
+
+    public static SkillArtifact FromInstance(Skill instance)
+    {
+        return new SkillArtifact(null, instance);
+    }
+}
+
 public static class SkillFactory
 {
-    public static IRegistryReference CreateSkillInstanceSpecFromRecord(ReferenceSpec record)
+    public static SkillTemplateSpec MergeTemplateAndOverride(
+        SkillTemplateSpec templateSpec,
+        SkillOverrideSpec overrideSpec
+    )
     {
-        switch (record.Metadata.Kind)
+        return new SkillTemplateSpec
+        {
+            Name = overrideSpec.Name ?? templateSpec.Name,
+            Description = overrideSpec.Description ?? templateSpec.Description,
+            Tags = overrideSpec.Tags ?? templateSpec.Tags,
+            Targeter = overrideSpec.Targeter ?? templateSpec.Targeter,
+            Usables = overrideSpec.Usables ?? templateSpec.Usables,
+        };
+    }
+
+    public static SkillArtifact CreateSkillArtifactFromData(SkillData data, EReferenceKind kind)
+    {
+        switch (kind)
         {
             case EReferenceKind.Ref:
-                return CreateSkillTemplateFromReference(record);
             case EReferenceKind.Inline:
-                return CreateSkillTemplateFromInline(record);
             case EReferenceKind.Override:
-                return CreateSkillTemplateFromOverride(record);
+                return SkillArtifact.FromTemplate(new SkillTemplate(data));
             case EReferenceKind.Instance:
-                return CreateInstanceFromReference(record);
+                return SkillArtifact.FromInstance(new Skill(data));
+            default: 
+                throw new NotImplementedException("Invalid skill artifact kind");
+        }
+    }
+
+    public static IReference<SkillTemplate, Skill> CreateSkillInstanceSpecFromRecord(
+        ReferenceSpec spec
+    )
+    {
+        switch (spec.Metadata.Kind)
+        {
+            case EReferenceKind.Ref:
+                return CreateSkillTemplateFromReference(spec);
+            case EReferenceKind.Inline:
+                return CreateSkillTemplateFromInline(spec);
+            case EReferenceKind.Override:
+                return CreateSkillTemplateFromOverride(spec);
+            case EReferenceKind.Instance:
+                return CreateInstanceFromReference(spec);
             default:
                 throw new NotImplementedException();
         }
@@ -73,9 +127,7 @@ public static class SkillFactory
         );
     }
 
-    public static Reference<SkillTemplate, Skill> CreateInstanceFromReference(
-        ReferenceSpec record
-    )
+    public static Reference<SkillTemplate, Skill> CreateInstanceFromReference(ReferenceSpec record)
     {
         var instanceSpec = record as InstanceSpec<SkillTemplateSpec, SkillInstanceSpec>;
         if (instanceSpec is null)

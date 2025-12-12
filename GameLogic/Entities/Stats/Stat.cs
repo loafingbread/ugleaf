@@ -8,7 +8,7 @@ using GameLogic.Utils;
 /// </summary>
 public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
 {
-    public ReferenceUnionMetadata ReferenceMetadata { get; set; }
+    public ReferenceMetadata ReferenceMetadata { get; set; }
     public StatOverrideRecord? TemplateOverride { get; set; }
     public StatRecord? InstanceState { get; set; }
     public StatMetadataRecord Metadata { get; private set; }
@@ -20,7 +20,7 @@ public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
     public int CurrentValue { get; protected set; }
 
     public Stat(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         StatRecord? instanceState,
         StatTemplateRecord? templateRecord,
         StatOverrideRecord? templateOverride
@@ -112,6 +112,6 @@ public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
 
 public sealed class StatReference : Reference<Stat>
 {
-    public StatReference(ReferenceUnionMetadata metadata, Stat? value)
+    public StatReference(ReferenceMetadata metadata, Stat? value)
         : base(metadata, value) { }
 }

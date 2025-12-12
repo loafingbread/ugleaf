@@ -13,7 +13,7 @@ public class ResourceStat : Stat
     public int CurrentCapacity { get; private set; }
 
     public ResourceStat(
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         StatRecord? instanceState,
         StatTemplateRecord? templateRecord,
         StatOverrideRecord? templateOverride

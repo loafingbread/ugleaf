@@ -24,8 +24,8 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
         using JsonDocument jsonDocument = JsonDocument.ParseValue(ref reader);
         JsonElement rootElement = jsonDocument.RootElement;
 
-        ReferenceUnionMetadata referenceMetadata =
-            JsonConverter.GetProperty<ReferenceUnionMetadata>(rootElement, "Metadata", options);
+        ReferenceMetadata referenceMetadata =
+            JsonConverter.GetProperty<ReferenceMetadata>(rootElement, "Metadata", options);
 
         return referenceMetadata.Kind switch
         {
@@ -62,7 +62,7 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
         return kind;
     }
 
-    private ReferenceUnionMetadata ParseReferenceMetadata(
+    private ReferenceMetadata ParseReferenceMetadata(
         JsonElement rootElement,
         JsonSerializerOptions options
     )
@@ -70,8 +70,8 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
         if (!rootElement.TryGetProperty("Metadata", out JsonElement referenceMetadataElement))
             throw new JsonException("Expected 'Metadata' property");
 
-        ReferenceUnionMetadata? referenceMetadata =
-            JsonSerializer.Deserialize<ReferenceUnionMetadata>(
+        ReferenceMetadata? referenceMetadata =
+            JsonSerializer.Deserialize<ReferenceMetadata>(
                 referenceMetadataElement.GetRawText(),
                 options
             );
@@ -86,7 +86,7 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
     private ReferenceSpec DeserializeRefSpec(
         JsonElement rootElement,
         JsonSerializerOptions options,
-        ReferenceUnionMetadata referenceMetadata
+        ReferenceMetadata referenceMetadata
     )
     {
         return JsonSerializer.Deserialize<RefSpec>(rootElement.GetRawText(), options)!;
@@ -95,7 +95,7 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
     private ReferenceSpec DeserializeOverrideSpec(
         JsonElement rootElement,
         JsonSerializerOptions options,
-        ReferenceUnionMetadata referenceMetadata
+        ReferenceMetadata referenceMetadata
     )
     {
         (Type templateType, Type overrideType) = TemplateTypeMaps.ETemplateTypeToOverrideType[
@@ -110,7 +110,7 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
     private ReferenceSpec DeserializeInlineSpec(
         JsonElement element,
         JsonSerializerOptions options,
-        ReferenceUnionMetadata referenceMetadata
+        ReferenceMetadata referenceMetadata
     )
     {
         Console.WriteLine(
@@ -154,7 +154,7 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
 
     private ReferenceSpec CreateInlineSpec(
         JsonElement element,
-        ReferenceUnionMetadata referenceMetadata,
+        ReferenceMetadata referenceMetadata,
         Type templateType,
         JsonSerializerOptions options
     )
@@ -175,7 +175,7 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
     private ReferenceSpec DeserializeInstanceSpec(
         JsonElement rootElement,
         JsonSerializerOptions options,
-        ReferenceUnionMetadata referenceMetadata
+        ReferenceMetadata referenceMetadata
     )
     {
         (Type templateType, Type overrideType) = TemplateTypeMaps.ETemplateTypeToOverrideType[
