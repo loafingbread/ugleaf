@@ -1,5 +1,7 @@
 namespace GameLogic.Targeting;
 
+using System.Diagnostics.CodeAnalysis;
+
 public interface ITargeterData
 {
     public ETargetQuantity TargetQuantity { get; }
@@ -9,9 +11,17 @@ public interface ITargeterData
 
 public record TargeterData : ITargeterData
 {
-    public required ETargetQuantity TargetQuantity { get; init; } = ETargetQuantity.None;
-    public required List<EFactionRelationship> AllowedTargets { get; init; } = new();
-    public int Count { get; init; } = 0;
+    public required ETargetQuantity TargetQuantity { get; init; }
+    public required List<EFactionRelationship> AllowedTargets { get; init; }
+    public int Count { get; init; }
+
+    [SetsRequiredMembers]
+    public TargeterData()
+    {
+        this.TargetQuantity = ETargetQuantity.None;
+        this.AllowedTargets = new();
+        this.Count = 0;
+    }
 }
 
 public enum ETargetQuantity

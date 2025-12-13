@@ -18,6 +18,10 @@ public record ReferenceSpec
     public required ReferenceMetadata Metadata { get; init; }
 };
 
+public record ReferenceSpec<TSpec> : ReferenceSpecBase<TSpec> where TSpec : ReferenceSpecBase<TSpec> {
+    public required TSpec Spec { get; init; }
+ }
+
 // TODO: Ask chat how to support sub types of stats or other classes in factory
 public record ReferenceMetadata
 {
@@ -56,7 +60,6 @@ public enum EReferenceKind
 public interface ITemplateOverride<TTemplate> { }
 
 public sealed record OverrideSpec<TTemplate, TOverride> : ReferenceSpec
-    where TOverride : ITemplateOverride<TTemplate>
 {
     public required TOverride Override { get; init; }
 };
@@ -82,8 +85,7 @@ public sealed record InlineSpec<TTemplate> : ReferenceSpec
 public sealed record InstanceSpec<TTemplate, TInstance> : ReferenceSpec
 {
     // TODO: Include custom TInstance fields to use instead of TTemplate again
-    public InstanceId InstanceId { get; init; } = Ids.Instance();
-    public TInstance? Instance { get; init; } // optional
+    public required TInstance Instance { get; init; } // optional
 };
 
 public static class TemplateTypeMaps

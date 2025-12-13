@@ -27,7 +27,7 @@ public class EntityRegistry<T>
 
 public class EntitiesRegistry
 {
-    private EntityRegistry<Skill> skillRegistry = new();
+    public EntityRegistry<SkillTemplate> Skills { get; set; } = new();
 }
 
 public interface IRegistry
@@ -44,7 +44,7 @@ public interface IRegistry
     /// <param name="referenceId">The id of the reference to get.</param>
     /// <returns>The reference.</returns>
     /// <exception cref="KeyNotFoundException">Thrown if the reference is not found.</exception>
-    public IReference<object, ReferenceSpec> GetReference(ReferenceId referenceId);
+    public IReference<object, ReferenceSpec> GetReference(ReferenceId? referenceId);
 
     /// <summary>
     /// Try to get a reference by its id. This should be called after initialization
@@ -55,7 +55,7 @@ public interface IRegistry
     /// <param name="referenceValue">The reference value. Null if the reference is not found.</param>
     /// <returns>True if the reference is found, false otherwise.</returns>
     public bool TryGetReference<TReference>(
-        ReferenceId referenceId,
+        ReferenceId? referenceId,
         out IReference<TReference, ReferenceSpec>? referenceValue
     )
         where TReference : class;

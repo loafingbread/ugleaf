@@ -1,110 +1,85 @@
 namespace GameLogic.Registry;
 
 using GameLogic.Entities.Skills;
+using GameLogic.Usables;
 
-public class SkillTemplateReference : ReferenceBase<SkillTemplate, SkillTemplateSpec>
+public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
 {
-    private SkillTemplateSpec? templateRecord { get; set; } = null;
-    private SkillOverrideSpec? overrideRecord { get; set; } = null;
-    private SkillTemplate? value { get; set; } = null;
+    public SkillReference(
+        EntityRegistry<SkillTemplate> entityRegistry,
+        ReferenceSpec spec,
+        SkillTemplate? value
+    )
+        : base(entityRegistry, spec, value)
+    {
+        this.Data = new SkillData(spec);
+    }
 
-    public SkillTemplateReference(EntityRegistry<SkillTemplate> entityRegistry, SkillTemplateSpec spec)
-        : base(entityRegistry, spec) { }
+    protected Func<ReferenceId?, SkillData> GetSkillData(IRegistry registry)
+    {
+        return (ReferenceId? referenceId) =>
+        {
+            var skillRef =
+                registry.GetReference(referenceId) as IReference<SkillTemplate, SkillData>
+                ?? throw new InvalidOperationException("Skill reference not found");
+
+            skillRef.Resolve(registry);
+            return skillRef.GetData();
+        };
+    }
+
+    protected Func<ReferenceId?, UsableData> GetUsableData(IRegistry registry)
+    {
+        return (ReferenceId? referenceId) =>
+        {
+            var usableRef =
+                registry.GetReference(referenceId) as IReference<UsableTemplate, UsableData>
+                ?? throw new InvalidOperationException("Usable reference not found");
+
+            usableRef.Resolve(registry);
+            return usableRef.GetData();
+        };
+    }
 
     public override void ResolveDependencies(IRegistry registry)
     {
-        // 1. Go through all nested objects and resolve them (create references for them e.g. usables). This will
-        // allow us to get them by reference id later. Need to store any newly created ids to be able to resolve them later.
-        // 2. Resolve all deps to template and override records
-        // 3. Merge template and override records into a single template record
-        if (this.Spec.Metadata.Kind == EReferenceKind.Inline)
-        {
-            var inlineSpec = this.Spec as InlineSpec<SkillTemplateSpec>;
-            if (inlineSpec is null)
-            {
-                throw new InvalidOperationException("Inline spec is not a skill template");
-            }
-
-            this.templateRecord = new SkillTemplateSpec{
-                Name = inlineSpec.Template.Name,
-                Description = inlineSpec.Template.Description,
-                Tags = [.. inlineSpec.Template.Tags],
-                Targeter = inlineSpec.Template.Targeter,
-                Usables = [.. inlineSpec.Template.Usables.Select(dep => dep.Resolve(registry))],
-            };
-        } else if (this.Spec.Metadata.Kind == EReferenceKind.Ref)
-        {
-            var refSpec = this.Spec as RefSpec;
-            if (refSpec is null)
-            {
-                throw new InvalidOperationException("Ref spec is not a skill template");
-            }
-            
-            this.templateRecord = 
-        }
+        this.Data.Resolve(this.Spec, this.GetSkillData(registry), this.GetUsableData(registry));
     }
 
     public override void Initialize()
     {
-        if (this.templateRecord is null && this.overrideRecord is null)
+        if (this.Data is null)
         {
-            throw new InvalidOperationException("Template or override record is required");
+            throw new InvalidOperationException(
+                "Skill data should be resolved before initializing the reference"
+            );
         }
 
-        throw new NotImplementedException();
-    }
-
-}
-
-public class SkillInstanceReference : ReferenceBase<Skill, SkillInstanceSpec>
-{
-    private SkillInstanceSpec? instanceRecord { get; set; } = null;
-    private Skill? value { get; set; } = null;
-
-    public SkillInstanceReference(SkillInstanceSpec spec)
-        : base(spec) { }
-
-    public override void ResolveDependencies(IRegistry registry)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Initialize()
-    {
-        if (this.instanceRecord is null)
+        if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
         {
-            throw new InvalidOperationException("Instance record is required");
+            Skill skill = new Skill(this.Data);
+            this.entityRegistry.TryAdd(skill, this.Spec.Metadata.ReferenceId);
+            return;
         }
 
-        throw new NotImplementedException();
+        SkillTemplate skillTemplate = new SkillTemplate(this.Data);
+        this.entityRegistry.TryAdd(skillTemplate, this.Spec.Metadata.ReferenceId);
     }
 }
 
 public static class ReferenceFactory
 {
-    public static IReference CreateReferenceFromRecord(ReferenceSpec record, EntityRegistry<object> entityRegistry)
+    public static IReference CreateReferenceFromRecord(
+        ReferenceSpec record,
+        EntitiesRegistry entitiesRegistry
+    )
     {
         switch (record.Metadata.TemplateType)
         {
             case ETemplateType.Skill:
-                return CreateSkillInstanceSpec(record);
+                return new SkillReference(entitiesRegistry.Skills, record, null);
             default:
                 throw new InvalidOperationException("Invalid template type");
-        }
-    }
-
-    private static IReference CreateSkillInstanceSpec(ReferenceSpec record)
-    {
-        switch (record.Metadata.Kind)
-        {
-            case EReferenceKind.Ref:
-            case EReferenceKind.Inline:
-            case EReferenceKind.Override:
-                return new SkillTemplateReference(record);
-            case EReferenceKind.Instance:
-                return new SkillInstanceReference(record);
-            default:
-                throw new InvalidOperationException("Invalid skill reference kind");
         }
     }
 }

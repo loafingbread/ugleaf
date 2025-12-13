@@ -33,6 +33,8 @@ public class SkillTemplate : IDeepCopyable<SkillTemplate>
         }
     }
 
+    public virtual bool IsInstance() => false;
+
     // Copy constructor
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public SkillTemplate(SkillTemplate template)
@@ -74,4 +76,6 @@ public class Skill : SkillTemplate, IDeepCopyable<Skill>
     public bool CanTarget() => this.Targeter != null;
 
     public bool CanUse() => this.Usables.Count > 0;
+
+    public override bool IsInstance() => true;
 }

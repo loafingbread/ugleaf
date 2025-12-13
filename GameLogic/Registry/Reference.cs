@@ -1,14 +1,10 @@
 namespace GameLogic.Registry;
 
 using GameLogic.Entities.Skills;
+using GameLogic.Targeting;
 
 public interface IReference
 {
-    /// <summary>
-    /// The metadata of the reference in the registry.
-    /// </summary>
-    ReferenceMetadata Metadata { get; }
-
     /// <summary>
     /// Whether the reference is resolved.
     /// </summary>
@@ -37,8 +33,7 @@ public interface IReference
     void Initialize();
 }
 
-public interface IReference<out TValue, out TSpec> : IReference
-    where TSpec : ReferenceSpec
+public interface IReference<out TValue, out TData> : IReference
 {
     /// <summary>
     /// Get the value of the reference. Should only be called after initializing the reference.
@@ -48,32 +43,42 @@ public interface IReference<out TValue, out TSpec> : IReference
     TValue GetValue();
 
     /// <summary>
-    /// Get the spec of the reference. Should only be called after resolving dependencies.
+    /// Get the data of the reference. Should only be called after resolving dependencies.
     /// </summary>
     /// <returns>The spec of the reference.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the reference is not resolved.</exception>
-    TSpec GetSpec();
+    TData GetData();
+
+    ReferenceSpec GetSpec();
 }
 
 // TODO: Add record to store all deps in generic type TDeps
-public abstract class ReferenceBase<TValue, TSpec> : IReference<TValue, TSpec>
-    where TSpec : ReferenceSpec
+public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
 {
-    private EntityRegistry<TValue> entityRegistry { get; init; }
-    public ReferenceMetadata Metadata { get; }
+    protected EntityRegistry<TValue> entityRegistry { get; init; }
+
     public bool IsResolved { get; set; } = false;
 
-    protected TSpec Spec { get; }
+    protected ReferenceSpec Spec { get; }
+    protected TData? Data { get; set; }
 
-    protected TValue? Value { get; set; } = default(TValue);
+    protected TValue? Value { get; set; }
 
-    protected ReferenceBase(EntityRegistry<TValue> entityRegistry, TSpec spec)
+    protected ReferenceBase(
+        EntityRegistry<TValue> entityRegistry,
+        ReferenceSpec spec,
+        TValue? value
+    )
     {
         this.entityRegistry = entityRegistry;
-        this.Metadata = spec.Metadata;
         this.Spec = spec;
 
-        if (this.Metadata.Kind == EReferenceKind.Inline)
+        if (value is not null)
+        {
+            this.Value = value;
+            this.IsResolved = true;
+        }
+        else if (this.Spec.Metadata.Kind == EReferenceKind.Inline)
         {
             this.IsResolved = true;
         }
@@ -95,7 +100,7 @@ public abstract class ReferenceBase<TValue, TSpec> : IReference<TValue, TSpec>
 
     public virtual TValue GetValue()
     {
-        this.entityRegistry.TryGet(this.Metadata.ReferenceId, out TValue? value);
+        this.entityRegistry.TryGet(this.Spec.Metadata.ReferenceId, out TValue? value);
 
         return value
             ?? throw new InvalidOperationException(
@@ -103,5 +108,8 @@ public abstract class ReferenceBase<TValue, TSpec> : IReference<TValue, TSpec>
             );
     }
 
-    public virtual TSpec GetSpec() => this.Spec;
+    public virtual ReferenceSpec GetSpec() => this.Spec;
+
+    public virtual TData GetData() =>
+        this.Data ?? throw new InvalidOperationException("Data is not set");
 }
