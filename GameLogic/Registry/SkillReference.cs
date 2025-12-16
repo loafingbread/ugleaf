@@ -15,6 +15,31 @@ public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
         this.Data = new SkillData(spec);
     }
 
+    public override void ResolveDependencies(IRegistry registry)
+    {
+        this.Data.Resolve(this.Spec, this.GetSkillData(registry), this.GetUsableData(registry));
+    }
+
+    public override void Initialize()
+    {
+        if (this.Data is null)
+        {
+            throw new InvalidOperationException(
+                "Skill data should be resolved before initializing the reference"
+            );
+        }
+
+        if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
+        {
+            Skill skill = new Skill(this.Data);
+            this.entityRegistry.TryAdd(skill, this.Spec.Metadata.ReferenceId);
+            return;
+        }
+
+        SkillTemplate skillTemplate = new SkillTemplate(this.Data);
+        this.entityRegistry.TryAdd(skillTemplate, this.Spec.Metadata.ReferenceId);
+    }
+
     protected Func<ReferenceId?, SkillData> GetSkillData(IRegistry registry)
     {
         return (ReferenceId? referenceId) =>
@@ -39,31 +64,6 @@ public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
             usableRef.Resolve(registry);
             return usableRef.GetData();
         };
-    }
-
-    public override void ResolveDependencies(IRegistry registry)
-    {
-        this.Data.Resolve(this.Spec, this.GetSkillData(registry), this.GetUsableData(registry));
-    }
-
-    public override void Initialize()
-    {
-        if (this.Data is null)
-        {
-            throw new InvalidOperationException(
-                "Skill data should be resolved before initializing the reference"
-            );
-        }
-
-        if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
-        {
-            Skill skill = new Skill(this.Data);
-            this.entityRegistry.TryAdd(skill, this.Spec.Metadata.ReferenceId);
-            return;
-        }
-
-        SkillTemplate skillTemplate = new SkillTemplate(this.Data);
-        this.entityRegistry.TryAdd(skillTemplate, this.Spec.Metadata.ReferenceId);
     }
 }
 

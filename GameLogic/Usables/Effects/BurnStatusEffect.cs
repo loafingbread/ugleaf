@@ -4,12 +4,8 @@ using GameLogic.Registry;
 
 public class BurnStatusEffect : StatusEffect
 {
-    public BurnStatusEffect(
-        ReferenceMetadata referenceMetadata,
-        InstanceId id,
-        EffectInstanceSpec? instanceState
-    )
-        : base(referenceMetadata, id, instanceState) { }
+    public BurnStatusEffect(EffectData data)
+        : base(data) { }
 
     public BurnStatusEffect(EffectTemplate template)
         : base(template) { }

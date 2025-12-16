@@ -64,7 +64,7 @@ public interface IRegistry
 // TODO: Circular dep if I import entity since they use registry?
 public class Registry
 {
-    private EntityRegistry<object> entityRegistry = new();
+    private EntitiesRegistry entitiesRegistry = new();
     private Dictionary<ReferenceId, IReference<object, ReferenceSpec>> referencesById = new();
 
     public void Load(List<string> paths)
@@ -93,12 +93,12 @@ public class Registry
             record => record.Metadata.ReferenceId,
             record =>
                 (IReference<object, ReferenceSpec>)
-                    ReferenceFactory.CreateReferenceFromRecord(record)
+                    ReferenceFactory.CreateReferenceFromRecord(record, this.entitiesRegistry)
         );
 
         foreach (var (referenceId, reference) in this.referencesById)
         {
-            reference.ResolveDependencies((IRegistry)this);
+            reference.Resolve((IRegistry)this);
         }
 
         foreach (var (referenceId, reference) in this.referencesById)

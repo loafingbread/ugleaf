@@ -5,12 +5,8 @@ using GameLogic.Targeting;
 
 public class AttackEffect : Effect
 {
-    public AttackEffect(
-        ReferenceMetadata referenceMetadata,
-        InstanceId id,
-        EffectInstanceSpec? instanceState
-    )
-        : base(referenceMetadata, id, instanceState) { }
+    public AttackEffect(EffectData data)
+        : base(data) { }
 
     public AttackEffect(EffectTemplate template)
         : base(template) { }

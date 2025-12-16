@@ -4,12 +4,8 @@ using GameLogic.Registry;
 
 public abstract class StatusEffect : Effect
 {
-    public StatusEffect(
-        ReferenceMetadata referenceMetadata,
-        InstanceId id,
-        EffectInstanceSpec? instanceState
-    )
-        : base(referenceMetadata, id, instanceState) { }
+    public StatusEffect(EffectData data)
+        : base(data) { }
 
     public StatusEffect(EffectTemplate template)
         : base(template) { }

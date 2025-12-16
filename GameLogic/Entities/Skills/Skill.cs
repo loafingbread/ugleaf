@@ -18,35 +18,29 @@ public class SkillTemplate : IDeepCopyable<SkillTemplate>
     public SkillTemplate(SkillData data)
     {
         this.ReferenceId = data.ReferenceId;
+
         this.Name = data.Name;
         this.Description = data.Description;
         this.Tags = [.. data.Tags];
+
         this.Targeter = TargetingFactory.CreateFromRecord(data.Targeter);
         this.Usables = UsableFactory.CreateUsablesFromData(data.Usables);
     }
 
-    private void ApplyTemplateRecord(SkillTemplateSpec? templateRecord)
-    {
-        if (templateRecord is null)
-        {
-            return;
-        }
-    }
-
-    public virtual bool IsInstance() => false;
-
     // Copy constructor
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public SkillTemplate(SkillTemplate template)
     {
         this.ReferenceId = Ids.NewReferenceId();
+
         this.Name = template.Name;
         this.Description = template.Description;
         this.Tags = [.. template.Tags];
+
         this.Targeter = template.Targeter.DeepCopy();
         this.Usables = template.Usables.DeepCopyList();
     }
-#pragma warning restore CS8618
+
+    public virtual bool IsInstance() => false;
 
     public Skill Instantiate()
     {
@@ -64,12 +58,12 @@ public class Skill : SkillTemplate, IDeepCopyable<Skill>
     public Skill(SkillData data)
         : base(data) { }
 
+    public Skill(Skill skill)
+        : base((skill as SkillTemplate).DeepCopy()) { }
+
     // Create a new skill from a template
     public Skill(SkillTemplate template)
         : base(template) { }
-
-    public Skill(Skill skill)
-        : base((skill as SkillTemplate).DeepCopy()) { }
 
     public new Skill DeepCopy() => new(this);
 

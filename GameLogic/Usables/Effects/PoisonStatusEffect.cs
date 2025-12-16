@@ -4,12 +4,8 @@ using GameLogic.Registry;
 
 public class PoisonStatusEffect : StatusEffect
 {
-    public PoisonStatusEffect(
-        ReferenceMetadata referenceMetadata,
-        InstanceId id,
-        EffectInstanceSpec? instanceState
-    )
-        : base(referenceMetadata, id, instanceState) { }
+    public PoisonStatusEffect(EffectData data)
+        : base(data) { }
 
     public PoisonStatusEffect(EffectTemplate template)
         : base(template) { }

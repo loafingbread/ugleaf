@@ -4,12 +4,8 @@ using GameLogic.Registry;
 
 public class HealEffect : Effect
 {
-    public HealEffect(
-        ReferenceMetadata referenceMetadata,
-        InstanceId id,
-        EffectInstanceSpec? instanceState
-    )
-        : base(referenceMetadata, id, instanceState) { }
+    public HealEffect(EffectData data)
+        : base(data) { }
 
     public HealEffect(EffectTemplate template)
         : base(template) { }
