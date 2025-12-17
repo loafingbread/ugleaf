@@ -11,9 +11,9 @@ public class ValueStat : Stat
 {
     public ValueStat(
         ReferenceMetadata referenceMetadata,
-        StatRecord? instanceState,
-        StatTemplateRecord? templateRecord,
-        StatOverrideRecord? templateOverride
+        StatData? instanceState,
+        StatTemplateSpec? templateRecord,
+        StatOverrideSpec? templateOverride
     )
         : base(referenceMetadata, instanceState, templateRecord, templateOverride)
     {
@@ -33,9 +33,9 @@ public class ValueStat : Stat
         return new ValueStat(this);
     }
 
-    public ValueStatConfigRecord GetConfig()
+    public ValueStatConfigData GetConfig()
     {
-        return (ValueStatConfigRecord)this.Config;
+        return (ValueStatConfigData)this.Config;
     }
 
     public override bool IsFormulaCalculated()

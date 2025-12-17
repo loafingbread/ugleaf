@@ -2,39 +2,48 @@ namespace GameLogic.Entities.Stats;
 
 using GameLogic.Registry;
 
-public interface IStatBlockRecord
+public interface IStatBlockSpec
 {
     public List<ReferenceSpec> Stats { get; init; }
 }
 
-
-public record StatBlockRecord : IStatBlockRecord
+public record StatBlockSpec : IStatBlockSpec
 {
     public required List<ReferenceSpec> Stats { get; init; } = new();
 }
 
-public interface IStatRecord
+public interface IStatBlockData
+{
+    public List<StatData> Stats { get; init; }
+}
+
+public record StatBlockData : IStatBlockData
+{
+    public required List<StatData> Stats { get; init; } = new();
+}
+
+public interface IStatSpec
 {
     public StatType Type { get; init; }
 }
 
-public record StatTemplateRecord : IStatRecord
+public record StatTemplateSpec : IStatSpec
 {
-    public required StatMetadataRecord Metadata { get; init; }
-    public required IStatConfigRecord Config { get; init; }
+    public required StatMetadata Metadata { get; init; }
+    public required IStatConfigData Config { get; init; }
     public required StatType Type { get; init; }
 }
 
-public record StatOverrideRecord : ITemplateOverride<StatTemplateRecord>, IStatRecord
+public record StatOverrideSpec : ITemplateOverride<StatTemplateSpec>, IStatSpec
 {
-    public required StatMetadataRecord Metadata { get; init; }
-    public required IStatConfigRecord Config { get; init; }
+    public required StatMetadata Metadata { get; init; }
+    public required IStatConfigData Config { get; init; }
     public required StatType Type { get; init; }
 }
 
-public record StatRecord : StatTemplateRecord { }
+public record StatData : StatTemplateSpec { }
 
-public record StatMetadataRecord
+public record StatMetadata
 {
     public required string Name { get; init; }
     public required string DisplayName { get; init; }
@@ -42,16 +51,16 @@ public record StatMetadataRecord
     public required List<string> Tags { get; init; }
 }
 
-public interface IStatConfigRecord { }
+public interface IStatConfigData { }
 
-public record ValueStatConfigRecord : IStatConfigRecord
+public record ValueStatConfigData : IStatConfigData
 {
     public required int BaseValueCap { get; init; }
     public required int CurrentValueCap { get; init; }
     public required StatFormula BaseValueFormula { get; init; }
 }
 
-public record ResourceStatConfigRecord : IStatConfigRecord
+public record ResourceStatConfigData : IStatConfigData
 {
     public required int BaseCapacityCap { get; init; }
     public required int CurrentCapacityCap { get; init; }
@@ -66,9 +75,9 @@ public enum StatType
     Any,
 }
 
-public record StatFormulaRecord
+public record StatFormulaData
 {
     public required StatFormulaType Type { get; init; }
-    public required List<StatFormulaRecord> Operands { get; init; }
+    public required List<StatFormulaData> Operands { get; init; }
     public required int Value { get; init; }
 }

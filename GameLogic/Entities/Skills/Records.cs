@@ -57,7 +57,7 @@ public record SkillData
         {
             case EReferenceKind.Ref:
             {
-                this.ResolveReference(spec.Metadata.ReferenceId, getSkillData);
+                this.ResolveReference(spec, getSkillData);
                 return;
             }
             case EReferenceKind.Inline:
@@ -82,12 +82,10 @@ public record SkillData
         }
     }
 
-    private void ResolveReference(
-        ReferenceId? referenceId,
-        Func<ReferenceId?, SkillData> getSkillData
-    )
+    private void ResolveReference(ReferenceSpec spec, Func<ReferenceId?, SkillData> getSkillData)
     {
-        SkillData skillData = getSkillData(referenceId);
+        SkillData skillData = getSkillData(spec.Metadata.ReferenceId);
+
         this.Name = skillData.Name;
         this.Description = skillData.Description;
         this.Tags = skillData.Tags;
@@ -123,7 +121,7 @@ public record SkillData
             throw new InvalidOperationException("Override spec is not a skill template");
         }
 
-        SkillData skillData = getSkillData(overrideSpec.Metadata.ReferenceId);
+        SkillData skillData = getSkillData(overrideSpec.Metadata.DependencyId);
 
         this.Name = overrideSpec.Override.Name ?? skillData.Name;
         this.Description = overrideSpec.Override.Description ?? skillData.Description;

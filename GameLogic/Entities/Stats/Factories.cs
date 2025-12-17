@@ -41,9 +41,9 @@ public static class StatFactory
 
     public static Stat CreateStat(
         ReferenceMetadata metadata,
-        StatRecord? instanceState,
-        StatTemplateRecord? templateRecord,
-        StatOverrideRecord? overrideRecord
+        StatData? instanceState,
+        StatTemplateSpec? templateRecord,
+        StatOverrideSpec? overrideRecord
     )
     {
         if (metadata.TemplateSubType == ETemplateSubType.StatValue)
@@ -60,7 +60,7 @@ public static class StatFactory
 
     public static Reference<Stat, Stat> CreateStatFromInline(ReferenceSpec record)
     {
-        var inlineSpec = record as InlineSpec<StatTemplateRecord>;
+        var inlineSpec = record as InlineSpec<StatTemplateSpec>;
         if (inlineSpec is null)
         {
             throw new InvalidOperationException("Inline spec is not a stat");
@@ -75,7 +75,7 @@ public static class StatFactory
 
     public static Reference<Stat, Stat> CreateStatFromOverride(ReferenceSpec record)
     {
-        var overrideSpec = record as OverrideSpec<StatTemplateRecord, StatOverrideRecord>;
+        var overrideSpec = record as OverrideSpec<StatTemplateSpec, StatOverrideSpec>;
         if (overrideSpec is null)
         {
             throw new InvalidOperationException("Override spec is not a stat");
@@ -90,7 +90,7 @@ public static class StatFactory
 
     public static Reference<Stat, Stat> CreateStatFromInstance(ReferenceSpec record)
     {
-        var instanceSpec = record as InstanceSpec<StatTemplateRecord, StatRecord>;
+        var instanceSpec = record as InstanceSpec<StatTemplateSpec, StatData>;
         if (instanceSpec is null)
         {
             throw new InvalidOperationException("Instance spec is not a stat");
@@ -103,12 +103,12 @@ public static class StatFactory
         );
     }
 
-    public static StatBlock CreateStatBlockFromRecord(IStatBlockRecord record)
+    public static StatBlock CreateStatBlockFromRecord(IStatBlockSpec record)
     {
         List<Stat> stats = new();
-        foreach (ReferenceSpec statRecord in record.Stats)
+        foreach (ReferenceSpec StatData in record.Stats)
         {
-            Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(statRecord);
+            Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(StatData);
             if (stat.Instance is not null)
             {
                 stats.Add(stat.Instance);
@@ -121,9 +121,9 @@ public static class StatFactory
     public static StatBlock CreateStatBlockFromReferences(List<ReferenceSpec> records)
     {
         List<Stat> stats = new();
-        foreach (ReferenceSpec statRecord in records)
+        foreach (ReferenceSpec StatData in records)
         {
-            Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(statRecord);
+            Reference<Stat, Stat> stat = StatFactory.CreateStatReferenceFromRecord(StatData);
             if (stat.Instance is not null)
             {
                 stats.Add(stat.Instance);
@@ -133,31 +133,31 @@ public static class StatFactory
         return new StatBlock(stats);
     }
 
-    public static IStatConfigRecord CopyStatConfig(IStatConfigRecord record)
+    public static IStatConfigData CopyStatConfig(IStatConfigData record)
     {
         switch (record)
         {
-            case ValueStatConfigRecord:
-                var valueConfigRecord = record as ValueStatConfigRecord;
+            case ValueStatConfigData:
+                var valueConfigRecord = record as ValueStatConfigData;
                 if (valueConfigRecord is null)
                 {
                     throw new ArgumentException($"Invalid stat config type: {record.GetType()}");
                 }
 
-                return new ValueStatConfigRecord
+                return new ValueStatConfigData
                 {
                     BaseValueCap = valueConfigRecord.BaseValueCap,
                     CurrentValueCap = valueConfigRecord.CurrentValueCap,
                     BaseValueFormula = valueConfigRecord.BaseValueFormula,
                 };
-            case ResourceStatConfigRecord:
-                var resourceConfigRecord = record as ResourceStatConfigRecord;
+            case ResourceStatConfigData:
+                var resourceConfigRecord = record as ResourceStatConfigData;
                 if (resourceConfigRecord is null)
                 {
                     throw new ArgumentException($"Invalid stat config type: {record.GetType()}");
                 }
 
-                return new ResourceStatConfigRecord
+                return new ResourceStatConfigData
                 {
                     BaseCapacityCap = resourceConfigRecord.BaseCapacityCap,
                     CurrentCapacityCap = resourceConfigRecord.CurrentCapacityCap,

@@ -8,7 +8,7 @@ public class StatTestFixture
 {
     public ReferenceSpec ValueStatStrengthRecord { get; }
     public ReferenceSpec ResourceStatHealthRecord { get; }
-    public StatBlockRecord TestStatBlockRecord { get; }
+    public StatBlockSpec TestStatBlockSpec { get; }
 
     public StatTestFixture()
     {
@@ -18,7 +18,7 @@ public class StatTestFixture
         this.ResourceStatHealthRecord = JsonConfigLoader.LoadFromFile<ReferenceSpec>(
             ConfigPaths.Stat.ResourceStatHealth
         );
-        this.TestStatBlockRecord = JsonConfigLoader.LoadFromFile<StatBlockRecord>(
+        this.TestStatBlockSpec = JsonConfigLoader.LoadFromFile<StatBlockSpec>(
             ConfigPaths.Stat.TestStatBlock
         );
     }

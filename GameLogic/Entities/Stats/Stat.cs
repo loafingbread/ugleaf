@@ -3,16 +3,27 @@ namespace GameLogic.Entities.Stats;
 using GameLogic.Registry;
 using GameLogic.Utils;
 
+// TODO: Implement stat template vs stat value/instance
+
+public class StatTemplate : IDeepCopyable<StatTemplate>
+{
+    public ReferenceId ReferenceId { get; set; }
+    public StatMetadata Metadata { get; set; }
+    public IStatConfigData Config { get; set; }
+    public StatType Type { get; set; }
+}
+
+public class StatValue : IDeepCopyable<StatValue>
 /// <summary>
 /// A stat is a value that can be modified by modifiers.
 /// </summary>
 public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
 {
     public ReferenceMetadata ReferenceMetadata { get; set; }
-    public StatOverrideRecord? TemplateOverride { get; set; }
-    public StatRecord? InstanceState { get; set; }
-    public StatMetadataRecord Metadata { get; private set; }
-    public IStatConfigRecord Config { get; private set; }
+    public StatOverrideSpec? TemplateOverride { get; set; }
+    public StatData? InstanceState { get; set; }
+    public StatMetadata Metadata { get; private set; }
+    public IStatConfigData Config { get; private set; }
     public StatType Type { get; private set; }
 
     public StatModifiers Modifiers { get; private set; } = new();
@@ -21,9 +32,9 @@ public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
 
     public Stat(
         ReferenceMetadata referenceMetadata,
-        StatRecord? instanceState,
-        StatTemplateRecord? templateRecord,
-        StatOverrideRecord? templateOverride
+        StatData? instanceState,
+        StatTemplateSpec? templateRecord,
+        StatOverrideSpec? templateOverride
     )
     {
         if (referenceMetadata.Kind == EReferenceKind.Inline && templateRecord is null)
@@ -54,7 +65,7 @@ public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
     }
 
     // TODO Remove ApplyInstanceState since this can replace it
-    private void ApplyTemplateRecord(StatTemplateRecord? templateRecord)
+    private void ApplyTemplateRecord(StatTemplateSpec? templateRecord)
     {
         if (templateRecord is null)
         {
@@ -69,7 +80,7 @@ public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
     public Stat(Stat stat)
     {
         this.ReferenceMetadata = stat.ReferenceMetadata;
-        this.Metadata = new StatMetadataRecord
+        this.Metadata = new StatMetadata
         {
             Name = stat.Metadata.Name,
             DisplayName = stat.Metadata.DisplayName,

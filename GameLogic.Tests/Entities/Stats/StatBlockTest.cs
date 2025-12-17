@@ -16,7 +16,7 @@ public class StatBlockTest : IClassFixture<StatTestFixture>
     public void StatBlock_CanLoadFromFile()
     {
         StatBlock statBlock = StatFactory.CreateStatBlockFromRecord(
-            this._fixture.TestStatBlockRecord
+            this._fixture.TestStatBlockSpec
         );
 
         Stat? strengthStat = statBlock.GetStat("value_stat_strength", StatType.Value);
@@ -36,7 +36,7 @@ public class StatBlockTest : IClassFixture<StatTestFixture>
     public void StatBlock_GetStatByNameAndType()
     {
         StatBlock statBlock = StatFactory.CreateStatBlockFromRecord(
-            this._fixture.TestStatBlockRecord
+            this._fixture.TestStatBlockSpec
         );
 
         Stat? strengthStatIsValueStat = statBlock.GetStat("value_stat_strength", StatType.Value);
@@ -61,7 +61,7 @@ public class StatBlockTest : IClassFixture<StatTestFixture>
     public void StatBlock_SetResourceStat()
     {
         StatBlock statBlock = StatFactory.CreateStatBlockFromRecord(
-            this._fixture.TestStatBlockRecord
+            this._fixture.TestStatBlockSpec
         );
 
         ResourceStat? healthStat =
@@ -85,7 +85,7 @@ public class StatBlockTest : IClassFixture<StatTestFixture>
     public void StatBlock_ModifyResourceStat()
     {
         StatBlock statBlock = StatFactory.CreateStatBlockFromRecord(
-            this._fixture.TestStatBlockRecord
+            this._fixture.TestStatBlockSpec
         );
 
         ResourceStat? healthStat =

@@ -10,9 +10,11 @@ public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
         ReferenceSpec spec,
         SkillTemplate? value
     )
-        : base(entityRegistry, spec, value)
+        : base(entityRegistry, spec, value) { }
+
+    protected override SkillData InitData()
     {
-        this.Data = new SkillData(spec);
+        return new SkillData(this.Spec);
     }
 
     public override void ResolveDependencies(IRegistry registry)

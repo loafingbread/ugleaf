@@ -24,8 +24,11 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
         using JsonDocument jsonDocument = JsonDocument.ParseValue(ref reader);
         JsonElement rootElement = jsonDocument.RootElement;
 
-        ReferenceMetadata referenceMetadata =
-            JsonConverter.GetProperty<ReferenceMetadata>(rootElement, "Metadata", options);
+        ReferenceMetadata referenceMetadata = JsonConverter.GetProperty<ReferenceMetadata>(
+            rootElement,
+            "Metadata",
+            options
+        );
 
         return referenceMetadata.Kind switch
         {
@@ -70,11 +73,10 @@ public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
         if (!rootElement.TryGetProperty("Metadata", out JsonElement referenceMetadataElement))
             throw new JsonException("Expected 'Metadata' property");
 
-        ReferenceMetadata? referenceMetadata =
-            JsonSerializer.Deserialize<ReferenceMetadata>(
-                referenceMetadataElement.GetRawText(),
-                options
-            );
+        ReferenceMetadata? referenceMetadata = JsonSerializer.Deserialize<ReferenceMetadata>(
+            referenceMetadataElement.GetRawText(),
+            options
+        );
         if (referenceMetadata is null)
             throw new JsonException(
                 "Expected 'Metadata' property to be a valid reference metadata"

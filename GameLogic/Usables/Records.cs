@@ -42,15 +42,15 @@ public record UsableData
 
     public void Resolve(
         ReferenceSpec spec,
-        Func<ReferenceId?, EffectData> getEffectData,
-        Func<ReferenceId?, UsableData> getUsableData
+        Func<ReferenceId?, UsableData> getUsableData,
+        Func<ReferenceId?, EffectData> getEffectData
     )
     {
         switch (spec.Metadata.Kind)
         {
             case EReferenceKind.Ref:
             {
-                this.ResolveReference(spec.Metadata.ReferenceId, getUsableData);
+                this.ResolveReference(spec, getUsableData);
                 return;
             }
             case EReferenceKind.Inline:
@@ -75,12 +75,9 @@ public record UsableData
         }
     }
 
-    private void ResolveReference(
-        ReferenceId? referenceId,
-        Func<ReferenceId?, UsableData> getUsableData
-    )
+    private void ResolveReference(ReferenceSpec spec, Func<ReferenceId?, UsableData> getUsableData)
     {
-        UsableData usableData = getUsableData(referenceId);
+        UsableData usableData = getUsableData(spec.Metadata.ReferenceId);
 
         this.Name = usableData.Name;
         this.Description = usableData.Description;
@@ -116,7 +113,7 @@ public record UsableData
             throw new InvalidOperationException("Override spec is not a usable template");
         }
 
-        UsableData usableData = getUsableData(overrideSpec.Metadata.ReferenceId);
+        UsableData usableData = getUsableData(overrideSpec.Metadata.DependencyId);
 
         this.Name = overrideSpec.Override.Name ?? usableData.Name;
         this.Description = overrideSpec.Override.Description ?? usableData.Description;

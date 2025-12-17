@@ -14,9 +14,9 @@ public class ResourceStat : Stat
 
     public ResourceStat(
         ReferenceMetadata referenceMetadata,
-        StatRecord? instanceState,
-        StatTemplateRecord? templateRecord,
-        StatOverrideRecord? templateOverride
+        StatData? instanceState,
+        StatTemplateSpec? templateRecord,
+        StatOverrideSpec? templateOverride
     )
         : base(referenceMetadata, instanceState, templateRecord, templateOverride)
     {
@@ -38,9 +38,9 @@ public class ResourceStat : Stat
         return new ResourceStat(this);
     }
 
-    public ResourceStatConfigRecord GetConfig()
+    public ResourceStatConfigData GetConfig()
     {
-        return (ResourceStatConfigRecord)this.Config;
+        return (ResourceStatConfigData)this.Config;
     }
 
     public override bool IsFormulaCalculated()

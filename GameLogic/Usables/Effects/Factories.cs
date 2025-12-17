@@ -4,33 +4,28 @@ using GameLogic.Registry;
 
 public static class EffectFactory
 {
-    public static IEffect CreateEffect(EffectTemplate template)
+    public static Effect CreateEffect(EffectTemplate template)
     {
         return CreateEffectFromData(
-            new EffectData
-            {
-                ReferenceId = template.ReferenceId,
-                Type = template.Type.ToString(),
-                Subtype = template.Subtype,
-                Variant = template.Variant,
-                Name = template.Name,
-                Description = template.Description,
-                Tags = template.Tags,
-                Config = new EffectConfigData
-                {
-                    Value = template.Value,
-                    Duration = template.Duration,
-                },
-            }
+            new EffectData(
+                template.ReferenceId,
+                template.Type.ToString(),
+                template.Subtype,
+                template.Variant,
+                template.Name,
+                template.Description,
+                template.Tags,
+                new EffectConfigData { Value = template.Value, Duration = template.Duration }
+            )
         );
     }
 
-    public static List<IEffect> CreateEffectsFromData(List<EffectData> data)
+    public static List<Effect> CreateEffectsFromData(List<EffectData> data)
     {
         return data.Select(CreateEffectFromData).ToList();
     }
 
-    public static IEffect CreateEffectFromData(EffectData data)
+    public static Effect CreateEffectFromData(EffectData data)
     {
         return Enum.Parse<EEffectType>(data.Type) switch
         {
@@ -41,7 +36,7 @@ public static class EffectFactory
         };
     }
 
-    public static IEffect CreateStatusEffectFromData(EffectData data)
+    public static Effect CreateStatusEffectFromData(EffectData data)
     {
         return data.Subtype switch
         {

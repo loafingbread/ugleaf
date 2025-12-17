@@ -23,9 +23,9 @@ public record PlayerState
 
     public PlayerState(PlayerStateRecord playerStateRecord)
     {
-        // foreach (CharacterRecord characterRecord in playerStateRecord.Characters)
+        // foreach (CharacterData CharacterData in playerStateRecord.Characters)
         // {
-        //     Character character = CharacterFactory.CreateCharacterReferenceFromRecord(characterRecord);
+        //     Character character = CharacterFactory.CreateCharacterReferenceFromRecord(CharacterData);
         //     this.Characters.Add(character);
         // }
     }
@@ -33,7 +33,7 @@ public record PlayerState
 
 public record PlayerStateRecord
 {
-    public List<CharacterRecord> Characters { get; init; } = new();
+    public List<CharacterData> Characters { get; init; } = new();
 }
 
 public class GameStateFactory

@@ -60,7 +60,7 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
     public bool IsResolved { get; set; } = false;
 
     protected ReferenceSpec Spec { get; }
-    protected TData? Data { get; set; }
+    protected TData Data { get; set; }
 
     protected TValue? Value { get; set; }
 
@@ -72,6 +72,7 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
     {
         this.entityRegistry = entityRegistry;
         this.Spec = spec;
+        this.Data = this.InitData();
 
         if (value is not null)
         {
@@ -83,6 +84,8 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
             this.IsResolved = true;
         }
     }
+
+    protected abstract TData InitData();
 
     public void Resolve(IRegistry registry)
     {

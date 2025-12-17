@@ -36,7 +36,7 @@ public class StatTest : IClassFixture<StatTestFixture>
         );
         Assert.Equal(["physical", "strength"], valueStatStrength.Metadata.Tags);
 
-        ValueStatConfigRecord valueStatConfig = ((ValueStat)valueStatStrength).GetConfig()!;
+        ValueStatConfigData valueStatConfig = ((ValueStat)valueStatStrength).GetConfig()!;
         Assert.Equal(50, valueStatConfig.BaseValueCap);
         Assert.Equal(70, valueStatConfig.CurrentValueCap);
         Assert.Equal(StatFormulaType.Constant, valueStatConfig.BaseValueFormula.Type);
@@ -66,7 +66,7 @@ public class StatTest : IClassFixture<StatTestFixture>
         );
         Assert.Equal(["physical", "health"], resourceStatHealth.Metadata.Tags);
 
-        ResourceStatConfigRecord resourceStatConfig = (
+        ResourceStatConfigData resourceStatConfig = (
             (ResourceStat)resourceStatHealth
         ).GetConfig()!;
         Assert.Equal(200, resourceStatConfig.BaseCapacityCap);

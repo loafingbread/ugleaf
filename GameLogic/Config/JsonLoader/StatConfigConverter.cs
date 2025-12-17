@@ -5,11 +5,11 @@ using System.Text.Json.Serialization;
 using GameLogic.Entities.Stats;
 
 /// <summary>
-/// Custom JSON converter for IStatConfigRecord to handle polymorphic deserialization.
+/// Custom JSON converter for IStatConfigData to handle polymorphic deserialization.
 /// </summary>
-public class StatConfigRecordConverter : JsonConverter<IStatConfigRecord>
+public class StatConfigRecordConverter : JsonConverter<IStatConfigData>
 {
-    public override IStatConfigRecord Read(
+    public override IStatConfigData Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
         JsonSerializerOptions options
@@ -29,13 +29,13 @@ public class StatConfigRecordConverter : JsonConverter<IStatConfigRecord>
             || rootElement.TryGetProperty("BaseCapacityCap", out _)
         )
         {
-            return JsonSerializer.Deserialize<ResourceStatConfigRecord>(
+            return JsonSerializer.Deserialize<ResourceStatConfigData>(
                 rootElement.GetRawText(),
                 options
             )!;
         }
 
-        return JsonSerializer.Deserialize<ValueStatConfigRecord>(
+        return JsonSerializer.Deserialize<ValueStatConfigData>(
             rootElement.GetRawText(),
             options
         )!;
@@ -43,7 +43,7 @@ public class StatConfigRecordConverter : JsonConverter<IStatConfigRecord>
 
     public override void Write(
         Utf8JsonWriter writer,
-        IStatConfigRecord value,
+        IStatConfigData value,
         JsonSerializerOptions options
     )
     {

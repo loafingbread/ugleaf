@@ -97,7 +97,7 @@ public static class TemplateTypeMaps
     {
         {
             ETemplateType.Character,
-            (typeof(CharacterTemplateRecord), typeof(CharacterOverrideRecord))
+            (typeof(CharacterTemplateSpec), typeof(CharacterOverrideSpec))
         },
         { ETemplateType.Skill, (typeof(SkillTemplateSpec), typeof(SkillOverrideSpec)) },
         { ETemplateType.Usable, (typeof(UsableTemplateSpec), typeof(UsableOverrideSpec)) },
@@ -106,7 +106,7 @@ public static class TemplateTypeMaps
 
     public static readonly Dictionary<ETemplateType, Type> ETemplateTypeToTemplateType = new()
     {
-        { ETemplateType.Character, typeof(CharacterTemplateRecord) },
+        { ETemplateType.Character, typeof(CharacterTemplateSpec) },
         { ETemplateType.Skill, typeof(SkillTemplateSpec) },
         { ETemplateType.Usable, typeof(UsableTemplateSpec) },
         { ETemplateType.Effect, typeof(EffectTemplateSpec) },
