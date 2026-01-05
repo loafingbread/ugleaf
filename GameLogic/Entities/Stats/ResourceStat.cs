@@ -15,7 +15,7 @@ public class ResourceStat : Stat
     public ResourceStat(
         ReferenceMetadata referenceMetadata,
         StatData? instanceState,
-        StatTemplateSpec? templateRecord,
+        StatSpec? templateRecord,
         StatOverrideSpec? templateOverride
     )
         : base(referenceMetadata, instanceState, templateRecord, templateOverride)

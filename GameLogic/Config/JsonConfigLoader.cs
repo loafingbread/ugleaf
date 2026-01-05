@@ -17,8 +17,10 @@ public static class JsonConfigLoader
         PropertyNameCaseInsensitive = true,
         Converters =
         {
+            // Convert string enums to enum values
             new JsonStringEnumConverter(),
             // new StatConfigRecordConverter(),
+            // Convert custom Reference Specification json to their respective types
             new GameLogic.Config.JsonLoader.ReferenceSpecConverter(),
         },
     };

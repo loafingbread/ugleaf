@@ -1,128 +1,87 @@
 namespace GameLogic.Entities.Stats;
 
+using System.ComponentModel;
 using GameLogic.Registry;
 using GameLogic.Utils;
 
 // TODO: Implement stat template vs stat value/instance
 
-public class StatTemplate : IDeepCopyable<StatTemplate>
+public class Stat
 {
     public ReferenceId ReferenceId { get; set; }
-    public StatMetadata Metadata { get; set; }
-    public IStatConfigData Config { get; set; }
-    public StatType Type { get; set; }
+    public IStatModel Model { get; set; }
+    public StatModifiers Modifiers { get; set; } = new();
+    public float BaseValue => this.Model.GetValue();
+    public float Value => this.Modifiers.GetModifiedValueFromBase(this.ReferenceId, this.BaseValue);
+
+    public Stat(ReferenceId referenceId, IStatModel model)
+    {
+        this.ReferenceId = referenceId;
+        this.Model = model;
+    }
+
+    public bool AddModifier(StatModifier modifier)
+    {
+        return this.Modifiers.AddModifier(modifier);
+    }
+
+    public bool RemoveModifier(StatModifier modifier)
+    {
+        return this.Modifiers.RemoveModifier(modifier);
+    }
 }
 
-public class StatValue : IDeepCopyable<StatValue>
-/// <summary>
-/// A stat is a value that can be modified by modifiers.
-/// </summary>
-public abstract class Stat : IDeepCopyable<Stat>, IReferenceUnion
+public interface IStatModel
 {
-    public ReferenceMetadata ReferenceMetadata { get; set; }
-    public StatOverrideSpec? TemplateOverride { get; set; }
-    public StatData? InstanceState { get; set; }
-    public StatMetadata Metadata { get; private set; }
-    public IStatConfigData Config { get; private set; }
-    public StatType Type { get; private set; }
+    public IHasBounds? Bounds { get; }
+    public IHasMax? Max { get; }
+    public IMutableValue? MutableValue { get; }
+    public IImmutableValue? ImmutableValue { get; }
 
-    public StatModifiers Modifiers { get; private set; } = new();
-    public int BaseValue { get; protected set; }
-    public int CurrentValue { get; protected set; }
+    public float GetValue();
+}
 
-    public Stat(
-        ReferenceMetadata referenceMetadata,
-        StatData? instanceState,
-        StatTemplateSpec? templateRecord,
-        StatOverrideSpec? templateOverride
+public class StatModel : IStatModel
+{
+    public IHasBounds? Bounds { get; init; }
+    public IHasMax? Max { get; init; }
+    public IMutableValue? MutableValue { get; init; }
+    public IImmutableValue? ImmutableValue { get; init; }
+
+    public StatModel(
+        IHasBounds? bounds,
+        IMutableValue? mutableValue,
+        IImmutableValue? immutableValue
     )
     {
-        if (referenceMetadata.Kind == EReferenceKind.Inline && templateRecord is null)
+        this.Bounds = bounds;
+
+        if (mutableValue is not null && immutableValue is not null)
         {
-            throw new InvalidOperationException("Inline stats must have a template record");
+            throw new InvalidOperationException("Cannot have both mutable and immutable value");
         }
-        else if (referenceMetadata.Kind == EReferenceKind.Override && templateOverride is null)
-        {
-            throw new InvalidOperationException("Override stats must have a template override");
-        }
-        else if (
-            referenceMetadata.Kind != EReferenceKind.Instance
-            && referenceMetadata.Kind != EReferenceKind.Ref
-        )
-        {
-            throw new InvalidOperationException("Invalid reference kind");
-        }
-
-        this.ReferenceMetadata = referenceMetadata;
-
-        this.ApplyTemplateRecord(templateRecord);
-        this.TemplateOverride = templateOverride;
-
-        this.InstanceState = instanceState;
-        this.ApplyTemplateRecord(instanceState);
-
-        this.Modifiers = new StatModifiers();
+        this.MutableValue = mutableValue;
+        this.ImmutableValue = immutableValue;
     }
 
-    // TODO Remove ApplyInstanceState since this can replace it
-    private void ApplyTemplateRecord(StatTemplateSpec? templateRecord)
+    public float GetValue()
     {
-        if (templateRecord is null)
+        float value = 0f;
+        if (this.MutableValue is not null)
         {
-            return;
+            value = this.MutableValue.Value;
+        }
+        else if (this.ImmutableValue is not null)
+        {
+            value = this.ImmutableValue.CalculateValue();
+        }
+        else
+        {
+            throw new InvalidOperationException("No value or formula provided");
         }
 
-        this.Metadata = templateRecord.Metadata;
-        this.Config = StatFactory.CopyStatConfig(templateRecord.Config);
-        this.Type = templateRecord.Type;
+        value = this.Bounds?.ApplyBounds(value) ?? value;
+        value = this.Max?.ApplyMax(value) ?? value;
+        return value;
     }
-
-    public Stat(Stat stat)
-    {
-        this.ReferenceMetadata = stat.ReferenceMetadata;
-        this.Metadata = new StatMetadata
-        {
-            Name = stat.Metadata.Name,
-            DisplayName = stat.Metadata.DisplayName,
-            Description = stat.Metadata.Description,
-            Tags = stat.Metadata.Tags,
-        };
-        this.Config = StatFactory.CopyStatConfig(stat.Config);
-        this.Type = stat.Type;
-        this.Modifiers = new StatModifiers();
-    }
-
-    public void LoadReferences(IRegistry registry) { }
-
-    public abstract Stat DeepCopy();
-
-    /// <summary>
-    /// Checks if the stat is derived from a formula or a constant.
-    ///
-    /// If the stat is derived from a formula, the base value should be calculated using the formula
-    /// every time the stat is refreshed.
-    ///
-    /// If the stat is a constant, the base value should be set using the constant formula and
-    /// updated with ChangeBaseValue method. Formula should never be used except during initialization.
-    /// </summary>
-    /// <returns>
-    /// <c>true</c> if the stat is derived from a formula, <c>false</c> if it is a constant.
-    /// </returns>
-    public abstract bool IsFormulaCalculated();
-
-    /// <summary>
-    /// Updates the stat value to reflect the current base value and current modifiers.
-    ///
-    /// Recalculates the base value if the stat is derived from a formula otherwise
-    /// it uses the current base value.
-    ///
-    /// Should be called when the stat is updated.
-    /// </summary>
-    public abstract void OnUpdate();
-}
-
-public sealed class StatReference : Reference<Stat>
-{
-    public StatReference(ReferenceMetadata metadata, Stat? value)
-        : base(metadata, value) { }
 }

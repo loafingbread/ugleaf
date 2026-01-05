@@ -22,29 +22,62 @@ public record StatBlockData : IStatBlockData
     public required List<StatData> Stats { get; init; } = new();
 }
 
-public interface IStatSpec
+public record StatSpec
 {
-    public StatType Type { get; init; }
+    public required StatMetadata Metadata { get; init; }
+    public required StatState State { get; init; }
+    public required StatCapabilities Capabilities { get; init; }
 }
 
-public record StatTemplateSpec : IStatSpec
+public record StatCapabilities
+{
+    public BoundsData? Bounds { get; init; } = null;
+    public MaxData? Max { get; init; } = null;
+    public FormulaData? ImmutableValue { get; init; } = null;
+
+    public bool HasBounds => this.Bounds is not null;
+    public bool HasMax => this.Max is not null;
+    public bool HasImmutableValue => this.ImmutableValue is not null;
+    public bool HasMutableValue => this.ImmutableValue is null;
+}
+
+public record BoundsData
+{
+    public required float LowerBound { get; init; }
+    public required float UpperBound { get; init; }
+}
+
+public record MaxData
+{
+    public required ReferenceId MaxStatId { get; init; }
+}
+
+public record FormulaData
+{
+    public required StatFormulaType Type { get; init; }
+    public required List<StatFormulaData> Operands { get; init; }
+    public required int Value { get; init; }
+}
+
+public record StatOverrideSpec : ITemplateOverride<StatSpec>
 {
     public required StatMetadata Metadata { get; init; }
     public required IStatConfigData Config { get; init; }
-    public required StatType Type { get; init; }
 }
 
-public record StatOverrideSpec : ITemplateOverride<StatTemplateSpec>, IStatSpec
+public record StatState
 {
-    public required StatMetadata Metadata { get; init; }
-    public required IStatConfigData Config { get; init; }
-    public required StatType Type { get; init; }
+    public required float Value { get; init; }
 }
 
-public record StatData : StatTemplateSpec { }
+public record StatData : StatSpec
+{
+    public required ReferenceId ReferenceId { get; init; }
+}
 
 public record StatMetadata
 {
+    public required StatType Type { get; init; }
     public required string Name { get; init; }
     public required string DisplayName { get; init; }
     public required string Description { get; init; }

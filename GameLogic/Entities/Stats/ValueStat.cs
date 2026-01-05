@@ -12,7 +12,7 @@ public class ValueStat : Stat
     public ValueStat(
         ReferenceMetadata referenceMetadata,
         StatData? instanceState,
-        StatTemplateSpec? templateRecord,
+        StatSpec? templateRecord,
         StatOverrideSpec? templateOverride
     )
         : base(referenceMetadata, instanceState, templateRecord, templateOverride)

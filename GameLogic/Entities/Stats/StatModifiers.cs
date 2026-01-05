@@ -1,5 +1,6 @@
 namespace GameLogic.Entities.Stats;
 
+using GameLogic.Registry;
 using GameLogic.Utils;
 
 public class StatModifiers : IDeepCopyable<StatModifiers>
@@ -25,9 +26,15 @@ public class StatModifiers : IDeepCopyable<StatModifiers>
     /// <returns>True if the modifier was added, false if the modifier already exists and was updated.</returns>
     public bool AddModifier(StatModifier modifier)
     {
+        bool doesStatMatchModifier(StatModifier m, ReferenceId statId) => m.StatId == statId;
+        bool doesStatTypeMatchModifier(StatModifier m, StatModifierType type) => m.Type == type;
+
         StatModifier? existingModifier = this.Modifiers.FirstOrDefault(
-            (StatModifier? m) => m?.StatId == modifier.StatId && m?.Type == modifier.Type
+            (StatModifier modifier) =>
+                doesStatMatchModifier(modifier, modifier.StatId)
+                && doesStatTypeMatchModifier(modifier, modifier.Type)
         );
+
         if (existingModifier == null)
         {
             this.Modifiers.Add(modifier);
@@ -48,19 +55,17 @@ public class StatModifiers : IDeepCopyable<StatModifiers>
         return this.Modifiers.Remove(modifier);
     }
 
-    public int GetModifiedValueFromBase(string statId, int baseValue)
+    public float GetModifiedValueFromBase(ReferenceId statId, float baseValue)
     {
-        int finalValue = baseValue;
-        finalValue += (int)this.SumModifiers(statId, StatModifierType.Flat);
-        finalValue += (int)(
-            (float)baseValue * this.SumModifiers(statId, StatModifierType.PercentAdd)
-        );
-        finalValue *= (int)(1 + this.SumModifiers(statId, StatModifierType.PercentMultiply));
+        float finalValue = baseValue;
+        finalValue += this.SumModifiers(statId, StatModifierType.Flat);
+        finalValue += (baseValue * this.SumModifiers(statId, StatModifierType.PercentAdd));
+        finalValue *= (1 + this.SumModifiers(statId, StatModifierType.PercentMultiply));
 
-        return finalValue;
+        return float.Round(finalValue, 2);
     }
 
-    public float SumModifiers(string statId, StatModifierType type)
+    public float SumModifiers(ReferenceId statId, StatModifierType type)
     {
         float value = 0;
         foreach (var modifier in this.Modifiers)
@@ -74,7 +79,11 @@ public class StatModifiers : IDeepCopyable<StatModifiers>
         return value;
     }
 
-    private bool isModifierApplicable(StatModifier modifier, string statId, StatModifierType type)
+    private bool isModifierApplicable(
+        StatModifier modifier,
+        ReferenceId statId,
+        StatModifierType type
+    )
     {
         return modifier.StatId == statId && modifier.Type == type;
     }
@@ -82,13 +91,13 @@ public class StatModifiers : IDeepCopyable<StatModifiers>
 
 public class StatModifier : IDeepCopyable<StatModifier>
 {
-    public string StatId { get; }
+    public ReferenceId StatId { get; }
     public StatModifierType Type { get; }
     public StatModifierSourceType SourceType { get; }
     public float Value { get; }
 
     public StatModifier(
-        string statId,
+        ReferenceId statId,
         StatModifierType type,
         StatModifierSourceType sourceType,
         float value
