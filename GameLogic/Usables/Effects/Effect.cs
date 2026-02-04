@@ -79,3 +79,51 @@ public abstract class Effect : EffectTemplate, IEffect
         return new EffectResult(this, user.GetEntity(), target.GetEntity(), 5, false, true, 0);
     }
 }
+
+public class EEffect
+{
+    public ReferenceId ReferenceId { get; set; }
+
+    public IEffectModel Model { get; set; }
+
+    public EEffect(ReferenceId referenceId, IEffectModel model)
+    {
+        this.ReferenceId = referenceId;
+        this.Model = model;
+    }
+}
+
+public interface IEffectModel
+{
+    public IAttack? Attack { get; }
+    public IHeal? Heal { get; }
+    public IBuff? Buff { get; }
+    public IDebuff? Debuff { get; }
+    public IStatus? Status { get; }
+}
+
+public interface IAttack
+{
+    public float Value { get; set; }
+    public float CritChance { get; set; }
+}
+
+public interface IHeal
+{
+    public float Value { get; set; }
+}
+
+public interface IBuff
+{
+    public float Value { get; set; }
+}
+
+public interface IDebuff
+{
+    public float Value { get; set; }
+}
+
+public interface IStatus
+{
+    public float Value { get; set; }
+}
