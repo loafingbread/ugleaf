@@ -6,12 +6,8 @@ using GameLogic.Entities.Stats;
 
 public class CharacterReference : ReferenceBase<CharacterTemplate, CharacterData>
 {
-    public CharacterReference(
-        EntityRegistry<CharacterTemplate> entityRegistry,
-        ReferenceSpec spec,
-        CharacterTemplate? value
-    )
-        : base(entityRegistry, spec, value) { }
+    public CharacterReference(IRegistry registry, ReferenceSpec spec, CharacterTemplate? value)
+        : base(registry, spec, value) { }
 
     protected override CharacterData InitData()
     {
@@ -38,7 +34,10 @@ public class CharacterReference : ReferenceBase<CharacterTemplate, CharacterData
         }
 
         Character character = new Character(this.Data);
-        this.entityRegistry.TryAdd(character, this.Spec.Metadata.ReferenceId);
+        this.Registry.TryAdd(
+            (IReference<object, ReferenceSpec>)this,
+            this.Spec.Metadata.ReferenceId
+        );
     }
 
     protected Func<ReferenceId?, CharacterData> GetCharacterData(IRegistry registry)

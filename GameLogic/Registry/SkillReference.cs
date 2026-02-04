@@ -5,12 +5,8 @@ using GameLogic.Usables;
 
 public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
 {
-    public SkillReference(
-        EntityRegistry<SkillTemplate> entityRegistry,
-        ReferenceSpec spec,
-        SkillTemplate? value
-    )
-        : base(entityRegistry, spec, value) { }
+    public SkillReference(IRegistry registry, ReferenceSpec spec, SkillTemplate? value)
+        : base(registry, spec, value) { }
 
     protected override SkillData InitData()
     {
@@ -34,12 +30,18 @@ public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
         if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
         {
             Skill skill = new Skill(this.Data);
-            this.entityRegistry.TryAdd(skill, this.Spec.Metadata.ReferenceId);
+            this.Registry.TryAdd(
+                (IReference<object, ReferenceSpec>)this,
+                this.Spec.Metadata.ReferenceId
+            );
             return;
         }
 
         SkillTemplate skillTemplate = new SkillTemplate(this.Data);
-        this.entityRegistry.TryAdd(skillTemplate, this.Spec.Metadata.ReferenceId);
+        this.Registry.TryAdd(
+            (IReference<object, ReferenceSpec>)this,
+            this.Spec.Metadata.ReferenceId
+        );
     }
 
     protected Func<ReferenceId?, SkillData> GetSkillData(IRegistry registry)
@@ -66,22 +68,5 @@ public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
             usableRef.Resolve(registry);
             return usableRef.GetData();
         };
-    }
-}
-
-public static class ReferenceFactory
-{
-    public static IReference CreateReferenceFromRecord(
-        ReferenceSpec record,
-        EntitiesRegistry entitiesRegistry
-    )
-    {
-        switch (record.Metadata.TemplateType)
-        {
-            case ETemplateType.Skill:
-                return new SkillReference(entitiesRegistry.Skills, record, null);
-            default:
-                throw new InvalidOperationException("Invalid template type");
-        }
     }
 }

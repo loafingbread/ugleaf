@@ -4,12 +4,8 @@ using GameLogic.Usables.Effects;
 
 public class EffectReference : ReferenceBase<EffectTemplate, EffectData>
 {
-    public EffectReference(
-        EntityRegistry<EffectTemplate> entityRegistry,
-        ReferenceSpec spec,
-        EffectTemplate? value
-    )
-        : base(entityRegistry, spec, value) { }
+    public EffectReference(IRegistry registry, ReferenceSpec spec, EffectTemplate? value)
+        : base(registry, spec, value) { }
 
     protected override EffectData InitData()
     {
@@ -33,12 +29,18 @@ public class EffectReference : ReferenceBase<EffectTemplate, EffectData>
         if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
         {
             Effect effect = EffectFactory.CreateEffectFromData(this.Data);
-            this.entityRegistry.TryAdd(effect, this.Spec.Metadata.ReferenceId);
+            this.Registry.TryAdd(
+                (IReference<object, ReferenceSpec>)this,
+                this.Spec.Metadata.ReferenceId
+            );
             return;
         }
 
         EffectTemplate effectTemplate = new EffectTemplate(this.Data);
-        this.entityRegistry.TryAdd(effectTemplate, this.Spec.Metadata.ReferenceId);
+        this.Registry.TryAdd(
+            (IReference<object, ReferenceSpec>)this,
+            this.Spec.Metadata.ReferenceId
+        );
     }
 
     protected Func<ReferenceId?, EffectData> GetEffectData(IRegistry registry)

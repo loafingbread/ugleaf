@@ -73,6 +73,8 @@ public interface IRegistry
         ReferenceId? referenceId,
         out IReference<object, ReferenceSpec>? reference
     );
+
+    public bool TryAdd(IReference<object, ReferenceSpec> reference, ReferenceId referenceId);
 }
 
 // TODO: Circular dep if I import entity since they use registry?
@@ -164,4 +166,16 @@ public class Registry : IRegistry
         this.referencesById.TryGetValue(id, out reference);
         return reference is not null;
     }
+
+    public bool TryAdd(IReference<object, ReferenceSpec> reference, ReferenceId referenceId)
+    {
+        return this.referencesById.TryAdd(
+            referenceId,
+            (IReference<object, ReferenceSpec>)reference
+        );
+    }
 }
+
+// TODO: Consider adding method to stored references that tells the type of
+// their underlying type so that we can avoid casting when getting references.
+// Or allow for searching by type.

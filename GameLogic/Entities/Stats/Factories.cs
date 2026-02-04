@@ -4,17 +4,17 @@ using GameLogic.Registry;
 
 public static class StatFactory
 {
-    public static StatModel CreateStatModelFromSpec(StatSpec spec, BuildContext buildContext)
+    public static StatModel CreateStatModelFromData(StatData data, BuildContext buildContext)
     {
-        IBounds? bounds = CreateBoundsFromSpec(spec.Capabilities.Bounds);
-        IMaxStat? max = CreateMaxStatFromSpec(spec.Capabilities.Max, buildContext);
-        IMutable? mutableValue = CreateMutableFromSpec(spec.Capabilities.MutableValue);
-        IImmutable? immutableValue = CreateImmutableFromSpec(spec.Capabilities.ImmutableValue);
+        IBounds? bounds = CreateBoundsFromData(data.Capabilities.Bounds);
+        IMaxStat? max = CreateMaxStatFromData(data.Capabilities.Max, buildContext);
+        IMutable? mutableValue = CreateMutableFromData(data.Capabilities.MutableValue);
+        IImmutable? immutableValue = CreateImmutableFromData(data.Capabilities.ImmutableValue);
 
         return new StatModel(bounds, max, mutableValue, immutableValue);
     }
 
-    public static BoundsCapability? CreateBoundsFromSpec(BoundsData? bounds)
+    public static BoundsCapability? CreateBoundsFromData(BoundsData? bounds)
     {
         if (bounds is null)
         {
@@ -24,7 +24,7 @@ public static class StatFactory
         return new BoundsCapability(bounds.LowerBound, bounds.UpperBound);
     }
 
-    public static MaxCapability? CreateMaxStatFromSpec(MaxData? max, BuildContext buildContext)
+    public static MaxCapability? CreateMaxStatFromData(MaxData? max, BuildContext buildContext)
     {
         if (max is null)
         {
@@ -57,7 +57,7 @@ public static class StatFactory
         return new MaxCapability(max.MaxStatId, max.ByBaseValue, getMaxValueFunc);
     }
 
-    public static MutableCapability? CreateMutableFromSpec(MutableData? mutableData)
+    public static MutableCapability? CreateMutableFromData(MutableData? mutableData)
     {
         if (mutableData is null)
         {
@@ -67,7 +67,7 @@ public static class StatFactory
         return new MutableCapability(mutableData.Value);
     }
 
-    public static ImmutableCapability? CreateImmutableFromSpec(ImmutableData? immutableData)
+    public static ImmutableCapability? CreateImmutableFromData(ImmutableData? immutableData)
     {
         if (immutableData is null)
         {
@@ -79,7 +79,7 @@ public static class StatFactory
 
     public static Stat CreateStatFromData(StatData data, BuildContext buildContext)
     {
-        return new Stat(data.ReferenceId, StatFactory.CreateStatModelFromSpec(data, buildContext));
+        return new Stat(data.ReferenceId, StatFactory.CreateStatModelFromData(data, buildContext));
     }
 
     public static IStatConfigData CopyStatConfig(IStatConfigData record)

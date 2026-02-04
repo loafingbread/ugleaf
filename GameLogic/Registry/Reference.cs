@@ -54,8 +54,9 @@ public interface IReference<out TValue, out TData> : IReference
 
 // TODO: Add record to store all deps in generic type TDeps
 public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
+    where TValue : class
 {
-    protected IRegistry registry { get; init; }
+    protected IRegistry Registry { get; init; }
 
     public bool IsResolved { get; set; } = false;
 
@@ -64,13 +65,9 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
 
     protected TValue? Value { get; set; }
 
-    protected ReferenceBase(
-        EntityRegistry<TValue> entityRegistry,
-        ReferenceSpec spec,
-        TValue? value
-    )
+    protected ReferenceBase(IRegistry Registry, ReferenceSpec spec, TValue? value)
     {
-        this.entityRegistry = entityRegistry;
+        this.Registry = Registry;
         this.Spec = spec;
         this.Data = this.InitData();
 
@@ -103,10 +100,14 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
 
     public virtual TValue GetValue()
     {
-        this.entityRegistry.TryGet(this.Spec.Metadata.ReferenceId, out TValue? value);
+        this.Registry.TryGetReference(
+            this.Spec.Metadata.ReferenceId,
+            out IReference<TValue, ReferenceSpec>? reference
+        );
 
-        return value
-            ?? throw new InvalidOperationException(
+        return reference is not null
+            ? reference.GetValue()
+            : throw new InvalidOperationException(
                 "Reference is not initialized. Should not have been called before resolving dependencies."
             );
     }
@@ -115,4 +116,26 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
 
     public virtual TData GetData() =>
         this.Data ?? throw new InvalidOperationException("Data is not set");
+}
+
+public static class ReferenceFactory
+{
+    public static IReference CreateReferenceFromRecord(ReferenceSpec record, IRegistry registry)
+    {
+        switch (record.Metadata.TemplateType)
+        {
+            case ETemplateType.Skill:
+                return new SkillReference(registry, record, null);
+            case ETemplateType.Stat:
+                return new StatReference(registry, record, null);
+            case ETemplateType.Usable:
+                return new UsableReference(registry, record, null);
+            case ETemplateType.Effect:
+                return new EffectReference(registry, record, null);
+            case ETemplateType.Character:
+                return new CharacterReference(registry, record, null);
+            default:
+                throw new InvalidOperationException("Invalid template type");
+        }
+    }
 }

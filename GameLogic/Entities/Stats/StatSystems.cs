@@ -27,7 +27,7 @@ public static class StatBoundsSystem
             return value;
         }
 
-        return stat.Model.Max.ApplyMax(value);
+        return stat.Model.Max.ApplyMaxStat(value);
     }
 }
 

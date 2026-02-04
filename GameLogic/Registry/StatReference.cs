@@ -4,8 +4,8 @@ using GameLogic.Entities.Stats;
 
 public class StatReference : ReferenceBase<Stat, StatData>
 {
-    public StatReference(EntityRegistry<Stat> entityRegistry, ReferenceSpec spec, Stat? value)
-        : base(entityRegistry, spec, value) { }
+    public StatReference(IRegistry registry, ReferenceSpec spec, Stat? value)
+        : base(registry, spec, value) { }
 
     protected override StatData InitData()
     {
@@ -39,11 +39,14 @@ public class StatReference : ReferenceBase<Stat, StatData>
             );
         }
 
-        StatModel statModel = StatFactory.CreateStatModelFromSpec(
-            this.Data.Capabilities,
-            new BuildContext(this.entityRegistry)
+        StatModel statModel = StatFactory.CreateStatModelFromData(
+            this.Data,
+            new BuildContext(this.Registry)
         );
-        Stat stat = new Stat(this.Spec.Metadata.ReferenceId, new StatModel(this.Data));
-        this.entityRegistry.TryAdd(stat, this.Spec.Metadata.ReferenceId);
+        this.Value = new Stat(this.Spec.Metadata.ReferenceId, statModel);
+        this.Registry.TryAdd(
+            (IReference<object, ReferenceSpec>)this,
+            this.Spec.Metadata.ReferenceId
+        );
     }
 }

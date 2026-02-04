@@ -5,12 +5,8 @@ using GameLogic.Usables.Effects;
 
 public class UsableReference : ReferenceBase<UsableTemplate, UsableData>
 {
-    public UsableReference(
-        EntityRegistry<UsableTemplate> entityRegistry,
-        ReferenceSpec spec,
-        UsableTemplate? value
-    )
-        : base(entityRegistry, spec, value) { }
+    public UsableReference(IRegistry registry, ReferenceSpec spec, UsableTemplate? value)
+        : base(registry, spec, value) { }
 
     protected override UsableData InitData()
     {
@@ -34,12 +30,18 @@ public class UsableReference : ReferenceBase<UsableTemplate, UsableData>
         if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
         {
             Usable usable = new Usable(this.Data);
-            this.entityRegistry.TryAdd(usable, this.Spec.Metadata.ReferenceId);
+            this.Registry.TryAdd(
+                (IReference<object, ReferenceSpec>)this,
+                this.Spec.Metadata.ReferenceId
+            );
             return;
         }
 
         UsableTemplate usableTemplate = new UsableTemplate(this.Data);
-        this.entityRegistry.TryAdd(usableTemplate, this.Spec.Metadata.ReferenceId);
+        this.Registry.TryAdd(
+            (IReference<object, ReferenceSpec>)this,
+            this.Spec.Metadata.ReferenceId
+        );
     }
 
     private Func<ReferenceId?, UsableData> GetUsableData(IRegistry registry)
