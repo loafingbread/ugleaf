@@ -4,12 +4,13 @@ using System.Text.Json.Serialization;
 
 public class StatFormula
 {
-    public required StatFormulaData Data { get; init; }
+    public required FormulaData Data { get; init; }
 
-    // Default constructor for JSON deserialization
-    public StatFormula() { }
+    // TODO: Remove default constructor for JSON deserialization if not needed
+    // public StatFormula() { }
 
-    public StatFormula(StatFormulaData data)
+    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public StatFormula(FormulaData data)
     {
         this.Data = data;
     }

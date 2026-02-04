@@ -4,18 +4,82 @@ using GameLogic.Registry;
 
 public static class StatFactory
 {
-    public static StatModel CreateStatModelFromSpec(StatSpec spec)
+    public static StatModel CreateStatModelFromSpec(StatSpec spec, BuildContext buildContext)
     {
-        IHasBounds? bounds = null;
-        if (spec.Capabilities.HasBounds)
-        {
-            bounds = new BoundsData(spec.Capabilities.Bounds.LowerBound, spec.Capabilities.Bounds.UpperBound);
-        }
+        IBounds? bounds = CreateBoundsFromSpec(spec.Capabilities.Bounds);
+        IMaxStat? max = CreateMaxStatFromSpec(spec.Capabilities.Max, buildContext);
+        IMutable? mutableValue = CreateMutableFromSpec(spec.Capabilities.MutableValue);
+        IImmutable? immutableValue = CreateImmutableFromSpec(spec.Capabilities.ImmutableValue);
+
+        return new StatModel(bounds, max, mutableValue, immutableValue);
     }
 
-    public static Stat CreateStatFromData(StatData data)
+    public static BoundsCapability? CreateBoundsFromSpec(BoundsData? bounds)
     {
-        return new Stat(data.ReferenceId);
+        if (bounds is null)
+        {
+            return null;
+        }
+
+        return new BoundsCapability(bounds.LowerBound, bounds.UpperBound);
+    }
+
+    public static MaxCapability? CreateMaxStatFromSpec(MaxData? max, BuildContext buildContext)
+    {
+        if (max is null)
+        {
+            return null;
+        }
+
+        Func<ReferenceId, bool, float> getMaxValueFunc = (
+            ReferenceId maxStatId,
+            bool byBaseValue
+        ) =>
+        {
+            buildContext.Registry.TryGetReference<Stat>(
+                maxStatId,
+                out IReference<Stat, ReferenceSpec>? stat
+            );
+
+            if (stat is null)
+            {
+                throw new InvalidOperationException($"Stat not found: {maxStatId}");
+            }
+
+            if (byBaseValue == true)
+            {
+                return stat.GetValue().BaseValue;
+            }
+
+            return stat.GetValue().Value;
+        };
+
+        return new MaxCapability(max.MaxStatId, max.ByBaseValue, getMaxValueFunc);
+    }
+
+    public static MutableCapability? CreateMutableFromSpec(MutableData? mutableData)
+    {
+        if (mutableData is null)
+        {
+            return null;
+        }
+
+        return new MutableCapability(mutableData.Value);
+    }
+
+    public static ImmutableCapability? CreateImmutableFromSpec(ImmutableData? immutableData)
+    {
+        if (immutableData is null)
+        {
+            return null;
+        }
+
+        return new ImmutableCapability(new StatFormula(immutableData));
+    }
+
+    public static Stat CreateStatFromData(StatData data, BuildContext buildContext)
+    {
+        return new Stat(data.ReferenceId, StatFactory.CreateStatModelFromSpec(data, buildContext));
     }
 
     public static IStatConfigData CopyStatConfig(IStatConfigData record)

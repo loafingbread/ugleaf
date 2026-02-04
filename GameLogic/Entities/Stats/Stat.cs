@@ -33,25 +33,26 @@ public class Stat
 
 public interface IStatModel
 {
-    public IHasBounds? Bounds { get; }
-    public IHasMax? Max { get; }
-    public IMutableValue? MutableValue { get; }
-    public IImmutableValue? ImmutableValue { get; }
+    public IBounds? Bounds { get; }
+    public IMaxStat? Max { get; }
+    public IMutable? MutableValue { get; }
+    public IImmutable? ImmutableValue { get; }
 
     public float GetValue();
 }
 
 public class StatModel : IStatModel
 {
-    public IHasBounds? Bounds { get; init; }
-    public IHasMax? Max { get; init; }
-    public IMutableValue? MutableValue { get; init; }
-    public IImmutableValue? ImmutableValue { get; init; }
+    public IBounds? Bounds { get; init; }
+    public IMaxStat? Max { get; init; }
+    public IMutable? MutableValue { get; init; }
+    public IImmutable? ImmutableValue { get; init; }
 
     public StatModel(
-        IHasBounds? bounds,
-        IMutableValue? mutableValue,
-        IImmutableValue? immutableValue
+        IBounds? bounds,
+        IMaxStat? max,
+        IMutable? mutableValue,
+        IImmutable? immutableValue
     )
     {
         this.Bounds = bounds;
@@ -81,7 +82,7 @@ public class StatModel : IStatModel
         }
 
         value = this.Bounds?.ApplyBounds(value) ?? value;
-        value = this.Max?.ApplyMax(value) ?? value;
+        value = this.Max?.ApplyMaxStat(value) ?? value;
         return value;
     }
 }

@@ -1,6 +1,7 @@
 namespace GameLogic.Registry;
 
 using System.Linq;
+using System.Reflection.Metadata;
 using GameLogic.Config;
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
@@ -37,7 +38,7 @@ public interface IRegistry
     public void Load(List<ReferenceSpec> records);
 
     /// <summary>
-    /// Get a reference by its id. Should only be called at during initialization
+    /// Get a reference by its id. Should only be called during initialization
     /// so that the program fails fast if references are not setup correctly. Do
     /// not call this after initialization.
     /// </summary>
@@ -56,13 +57,26 @@ public interface IRegistry
     /// <returns>True if the reference is found, false otherwise.</returns>
     public bool TryGetReference<TReference>(
         ReferenceId? referenceId,
-        out IReference<TReference, ReferenceSpec>? referenceValue
+        out IReference<TReference, ReferenceSpec>? reference
     )
         where TReference : class;
+
+    /// <summary>
+    /// Try to get a reference by its id. This should be called after initialization
+    /// to get the reference value as it will fail gracefully if the reference.
+    /// Returns a generic reference that can be cast to the specific reference type.
+    /// </summary>
+    /// <param name="referenceId"></param>
+    /// <param name="reference"></param>
+    /// <returns></returns>
+    public bool TryGetReference(
+        ReferenceId? referenceId,
+        out IReference<object, ReferenceSpec>? reference
+    );
 }
 
 // TODO: Circular dep if I import entity since they use registry?
-public class Registry
+public class Registry : IRegistry
 {
     private EntitiesRegistry entitiesRegistry = new();
     private Dictionary<ReferenceId, IReference<object, ReferenceSpec>> referencesById = new();
@@ -107,9 +121,15 @@ public class Registry
         }
     }
 
-    public IReference<object, ReferenceSpec> GetReference(ReferenceId referenceId)
+    public IReference<object, ReferenceSpec> GetReference(ReferenceId? referenceId)
     {
-        IReference<object, ReferenceSpec>? reference = this.referencesById[referenceId];
+        if (referenceId is null)
+        {
+            throw new ArgumentNullException(nameof(referenceId));
+        }
+        ReferenceId id = referenceId.Value;
+
+        this.referencesById.TryGetValue(id, out IReference<object, ReferenceSpec>? reference);
         if (reference is null)
         {
             throw new KeyNotFoundException($"Reference {referenceId} not found");
@@ -119,14 +139,29 @@ public class Registry
     }
 
     public bool TryGetReference<TReference>(
-        ReferenceId referenceId,
-        out IReference<TReference, ReferenceSpec>? referenceValue
+        ReferenceId? referenceId,
+        out IReference<TReference, ReferenceSpec>? reference
+    )
+        where TReference : class
+    {
+        this.TryGetReference(referenceId, out IReference<object, ReferenceSpec>? genericReference);
+        reference = genericReference as IReference<TReference, ReferenceSpec>;
+        return reference is not null;
+    }
+
+    public bool TryGetReference(
+        ReferenceId? referenceId,
+        out IReference<object, ReferenceSpec>? reference
     )
     {
-        IReference<object, ReferenceSpec>? genericReference;
-        this.referencesById.TryGetValue(referenceId, out genericReference);
+        if (referenceId is null)
+        {
+            reference = null;
+            return false;
+        }
+        ReferenceId id = referenceId.Value;
 
-        referenceValue = genericReference as IReference<TReference, ReferenceSpec>;
-        return referenceValue is not null;
+        this.referencesById.TryGetValue(id, out reference);
+        return reference is not null;
     }
 }

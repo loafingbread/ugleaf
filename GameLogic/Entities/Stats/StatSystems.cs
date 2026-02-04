@@ -2,7 +2,6 @@ namespace GameLogic.Entities.Stats;
 
 public static class StatBoundsSystem
 {
-
     public static float ApplyBounds(Stat stat, float value)
     {
         float newValue = StatBoundsSystem.ApplyBoundsToValue(stat, value);

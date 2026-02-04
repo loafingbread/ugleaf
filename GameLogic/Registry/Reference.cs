@@ -55,7 +55,7 @@ public interface IReference<out TValue, out TData> : IReference
 // TODO: Add record to store all deps in generic type TDeps
 public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
 {
-    protected EntityRegistry<TValue> entityRegistry { get; init; }
+    protected IRegistry registry { get; init; }
 
     public bool IsResolved { get; set; } = false;
 

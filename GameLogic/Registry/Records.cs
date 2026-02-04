@@ -18,9 +18,10 @@ public record ReferenceSpec
     public required ReferenceMetadata Metadata { get; init; }
 };
 
-public record ReferenceSpec<TSpec> : ReferenceSpecBase<TSpec> where TSpec : ReferenceSpecBase<TSpec> {
+public record ReferenceSpec<TSpec> : ReferenceSpec
+{
     public required TSpec Spec { get; init; }
- }
+}
 
 // TODO: Ask chat how to support sub types of stats or other classes in factory
 public record ReferenceMetadata
@@ -95,10 +96,7 @@ public static class TemplateTypeMaps
         (Type TemplateType, Type TemplateOverrideType)
     > ETemplateTypeToOverrideType = new()
     {
-        {
-            ETemplateType.Character,
-            (typeof(CharacterTemplateSpec), typeof(CharacterOverrideSpec))
-        },
+        { ETemplateType.Character, (typeof(CharacterTemplateSpec), typeof(CharacterOverrideSpec)) },
         { ETemplateType.Skill, (typeof(SkillTemplateSpec), typeof(SkillOverrideSpec)) },
         { ETemplateType.Usable, (typeof(UsableTemplateSpec), typeof(UsableOverrideSpec)) },
         { ETemplateType.Effect, (typeof(EffectTemplateSpec), typeof(EffectOverrideSpec)) },
@@ -112,3 +110,5 @@ public static class TemplateTypeMaps
         { ETemplateType.Effect, typeof(EffectTemplateSpec) },
     };
 }
+
+public sealed record BuildContext(IRegistry Registry);

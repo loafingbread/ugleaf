@@ -2,19 +2,19 @@ namespace GameLogic.Entities.Stats;
 
 using GameLogic.Registry;
 
-public interface IHasBounds
+public interface IBounds
 {
     float LowerBound { get; set; }
     float UpperBound { get; set; }
     float ApplyBounds(float value);
 }
 
-public class StatBounds : IHasBounds
+public class BoundsCapability : IBounds
 {
     public float LowerBound { get; set; }
     public float UpperBound { get; set; }
 
-    public StatBounds(float lowerBound, float upperBound)
+    public BoundsCapability(float lowerBound, float upperBound)
     {
         this.LowerBound = lowerBound;
         this.UpperBound = upperBound;
@@ -26,7 +26,7 @@ public class StatBounds : IHasBounds
     }
 }
 
-public interface IHasMaxStat
+public interface IMaxStat
 {
     ReferenceId MaxStatId { get; init; }
     bool ByBaseValue { get; init; } // Whether to use the base value or the current value
@@ -34,14 +34,14 @@ public interface IHasMaxStat
     float ApplyMaxStat(float value);
 }
 
-public class StatMaxStat : IHasMaxStat
+public class MaxCapability : IMaxStat
 {
     public ReferenceId MaxStatId { get; init; }
     public bool ByBaseValue { get; init; }
 
     private Func<ReferenceId, bool, float> GetMaxValueFunc { get; init; }
 
-    public StatMaxStat(
+    public MaxCapability(
         ReferenceId maxStatId,
         bool byBaseValue,
         Func<ReferenceId, bool, float> getMaxValueFunc
@@ -56,26 +56,31 @@ public class StatMaxStat : IHasMaxStat
     {
         return this.GetMaxValueFunc(this.MaxStatId, this.ByBaseValue);
     }
+
+    public float ApplyMaxStat(float value)
+    {
+        return System.Math.Min(value, this.GetMaxValue());
+    }
 }
 
-public enum MaxStatType
+public enum MaxReferenceType
 {
     BaseValue,
     CurrentValue,
 }
 
-public interface IMutableValue
+public interface IMutable
 {
     float Value { get; set; }
     float Add(float delta);
     float Set(float value);
 }
 
-public class MutableValue : IMutableValue
+public class MutableCapability : IMutable
 {
     public float Value { get; set; }
 
-    public MutableValue(float value)
+    public MutableCapability(float value)
     {
         this.Value = value;
     }
@@ -94,17 +99,17 @@ public class MutableValue : IMutableValue
     }
 }
 
-public interface IImmutableValue
+public interface IImmutable
 {
     StatFormula Formula { get; set; }
     float CalculateValue();
 }
 
-public class ImmutableValue : IImmutableValue
+public class ImmutableCapability : IImmutable
 {
     public StatFormula Formula { get; set; }
 
-    public ImmutableValue(StatFormula formula)
+    public ImmutableCapability(StatFormula formula)
     {
         this.Formula = formula;
     }
@@ -116,7 +121,7 @@ public class ImmutableValue : IImmutableValue
     }
 }
 
-public interface ICanRegen
+public interface IRegen
 {
     float RegenRate { get; set; }
     float RegenAmount { get; set; }
