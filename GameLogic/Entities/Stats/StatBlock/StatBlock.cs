@@ -1,4 +1,4 @@
-namespace GameLogic.Entities.Stats;
+namespace GameLogic.Entities.Stats.StatBlock;
 
 using GameLogic.Utils;
 

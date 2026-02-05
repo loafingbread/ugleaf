@@ -1,27 +1,7 @@
-namespace GameLogic.Entities.Stats;
+namespace GameLogic.Entities.Stats.Stat;
 
-using System.Diagnostics.CodeAnalysis;
+using GameLogic.Entities.Stats.Capabilities;
 using GameLogic.Registry;
-
-public interface IStatBlockSpec
-{
-    public List<ReferenceSpec> Stats { get; init; }
-}
-
-public record StatBlockSpec : IStatBlockSpec
-{
-    public required List<ReferenceSpec> Stats { get; init; } = new();
-}
-
-public interface IStatBlockData
-{
-    public List<StatData> Stats { get; init; }
-}
-
-public record StatBlockData : IStatBlockData
-{
-    public required List<StatData> Stats { get; init; } = new();
-}
 
 public record StatSpec
 {
@@ -36,52 +16,6 @@ public record StatSpec
         this.State = state;
         this.Capabilities = capabilities;
     }
-}
-
-public record StatCapabilities
-{
-    public BoundsData? Bounds { get; init; } = null;
-    public MaxData? Max { get; init; } = null;
-    public ImmutableData? ImmutableValue { get; init; } = null;
-    public MutableData? MutableValue { get; init; } = null;
-
-    public bool HasBounds => this.Bounds is not null;
-    public bool HasMax => this.Max is not null;
-    public bool HasImmutableValue => this.ImmutableValue is not null;
-    public bool HasMutableValue => this.MutableValue is not null;
-}
-
-public record BoundsData
-{
-    public required float LowerBound { get; init; }
-    public required float UpperBound { get; init; }
-}
-
-public record MaxData
-{
-    /// <summary>
-    /// The reference id of the stat to use as the max value.
-    /// </summary>
-    public required ReferenceId MaxStatId { get; init; }
-
-    /// <summary>
-    /// Whether to use the base value or the current value of the max stat.
-    /// </summary>
-    public required bool ByBaseValue { get; init; }
-}
-
-public record MutableData
-{
-    public required float Value { get; init; }
-}
-
-public record ImmutableData : FormulaData { }
-
-public record FormulaData
-{
-    public required StatFormulaType Type { get; init; }
-    public required List<FormulaData> Operands { get; init; }
-    public required int Value { get; init; }
 }
 
 public record StatOverrideSpec : ITemplateOverride<StatSpec>
@@ -191,28 +125,4 @@ public record StatMetadata
 
     [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
     public StatMetadata() { }
-}
-
-public interface IStatConfigData { }
-
-public record ValueStatConfigData : IStatConfigData
-{
-    public required int BaseValueCap { get; init; }
-    public required int CurrentValueCap { get; init; }
-    public required StatFormula BaseValueFormula { get; init; }
-}
-
-public record ResourceStatConfigData : IStatConfigData
-{
-    public required int BaseCapacityCap { get; init; }
-    public required int CurrentCapacityCap { get; init; }
-    public required StatFormula BaseCapacityFormula { get; init; }
-    public required int StartingCurrentValue { get; init; }
-}
-
-public enum StatType
-{
-    Value,
-    Resource,
-    Any,
 }
