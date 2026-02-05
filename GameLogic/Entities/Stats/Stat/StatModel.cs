@@ -1,9 +1,11 @@
 namespace GameLogic.Entities.Stats.Stat;
 
+using GameLogic.Entities.Stats.Capabilities;
+
 public interface IStatModel
 {
     public IBounds? Bounds { get; }
-    public IMaxStat? Max { get; }
+    public IMax? Max { get; }
     public IMutable? MutableValue { get; }
     public IImmutable? ImmutableValue { get; }
 
@@ -13,23 +15,19 @@ public interface IStatModel
 public class StatModel : IStatModel
 {
     public IBounds? Bounds { get; init; }
-    public IMaxStat? Max { get; init; }
+    public IMax? Max { get; init; }
     public IMutable? MutableValue { get; init; }
     public IImmutable? ImmutableValue { get; init; }
 
-    public StatModel(
-        IBounds? bounds,
-        IMaxStat? max,
-        IMutable? mutableValue,
-        IImmutable? immutableValue
-    )
+    public StatModel(IBounds? bounds, IMax? max, IMutable? mutableValue, IImmutable? immutableValue)
     {
-        this.Bounds = bounds;
-
         if (mutableValue is not null && immutableValue is not null)
         {
             throw new InvalidOperationException("Cannot have both mutable and immutable value");
         }
+
+        this.Bounds = bounds;
+        this.Max = max;
         this.MutableValue = mutableValue;
         this.ImmutableValue = immutableValue;
     }

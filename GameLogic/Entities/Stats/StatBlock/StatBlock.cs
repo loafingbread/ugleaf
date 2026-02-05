@@ -1,5 +1,7 @@
 namespace GameLogic.Entities.Stats.StatBlock;
 
+using GameLogic.Entities.Stats.Modifiers;
+using GameLogic.Entities.Stats.Stat;
 using GameLogic.Utils;
 
 public class StatBlock : IDeepCopyable<StatBlock>

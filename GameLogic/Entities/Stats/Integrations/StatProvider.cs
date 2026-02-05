@@ -1,22 +1,14 @@
-namespace GameLogic.Entities.Stats;
+namespace GameLogic.Entities.Stats.Integrations;
 
+using GameLogic.Entities.Stats.Query;
+using GameLogic.Entities.Stats.Stat;
 using GameLogic.Registry;
 
-/// <summary>
-/// A stat getter is a class that can get the base value and current value of a stat.
-/// </summary>
-public interface IStatGetter
-{
-    StatBase GetStat(ReferenceId referenceId);
-    float GetBaseValue(ReferenceId referenceId);
-    float GetCurrentValue(ReferenceId referenceId);
-}
-
-public class StatGetter : IStatGetter
+public class StatProvider : IStatProvider
 {
     private IRegistry registry { get; init; }
 
-    public StatGetter(IRegistry registry)
+    public StatProvider(IRegistry registry)
     {
         this.registry = registry;
     }

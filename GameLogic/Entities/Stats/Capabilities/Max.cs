@@ -15,28 +15,28 @@ public record MaxData
     public required bool ByBaseValue { get; init; }
 }
 
-public interface IMaxStat
+public interface IMax
 {
-    ReferenceId MaxStatId { get; init; }
+    ReferenceId MaxReferenceId { get; init; }
     bool ByBaseValue { get; init; } // Whether to use the base value or the current value
     float GetMaxValue();
     float ApplyMaxStat(float value);
 }
 
-public class MaxCapability : IMaxStat
+public class MaxCapability : IMax
 {
-    public ReferenceId MaxStatId { get; init; }
+    public ReferenceId MaxReferenceId { get; init; }
     public bool ByBaseValue { get; init; }
 
     private Func<ReferenceId, bool, float> GetMaxValueFunc { get; init; }
 
     public MaxCapability(
-        ReferenceId maxStatId,
+        ReferenceId maxReferenceId,
         bool byBaseValue,
         Func<ReferenceId, bool, float> getMaxValueFunc
     )
     {
-        this.MaxStatId = maxStatId;
+        this.MaxReferenceId = maxReferenceId;
         this.ByBaseValue = byBaseValue;
         this.GetMaxValueFunc = getMaxValueFunc;
     }
