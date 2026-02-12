@@ -26,7 +26,7 @@ public record EffectOverrideSpec
 
 public record EffectInstanceSpec : EffectTemplateSpec { }
 
-public record EffectData
+public record EffectData : IDeepCopyable<EffectData>
 {
     public required ReferenceId ReferenceId { get; init; }
     public string Type { get; set; } = "";
@@ -40,7 +40,25 @@ public record EffectData
     [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
     public EffectData(ReferenceSpec spec)
     {
-        this.ReferenceId = spec.Metadata.ReferenceId;
+        this.ReferenceId = spec.ReferenceMetadata.ReferenceId;
+    }
+
+    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public EffectData() { }
+
+    public EffectData DeepCopy()
+    {
+        return new EffectData()
+        {
+            ReferenceId = Ids.NewReferenceId(),
+            Type = this.Type,
+            Subtype = this.Subtype,
+            Variant = this.Variant,
+            Name = this.Name,
+            Description = this.Description,
+            Tags = [.. this.Tags],
+            Config = this.Config.DeepCopy(),
+        };
     }
 
     [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
@@ -69,16 +87,16 @@ public record EffectData
     {
         switch (spec.Metadata.Kind)
         {
-            case EReferenceKind.Ref:
+            case ETemplateKind.Ref:
                 this.ResolveReference(spec, getEffectData);
                 break;
-            case EReferenceKind.Inline:
+            case ETemplateKind.Inline:
                 this.ResolveInline(spec);
                 break;
-            case EReferenceKind.Override:
+            case ETemplateKind.Override:
                 this.ResolveOverride(spec, getEffectData);
                 break;
-            case EReferenceKind.Instance:
+            case ETemplateKind.Instance:
                 this.ResolveInstance(spec);
                 break;
             default:

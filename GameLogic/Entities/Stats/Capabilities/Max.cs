@@ -13,6 +13,11 @@ public record MaxData
     /// Whether to use the base value or the current value of the max stat.
     /// </summary>
     public required bool ByBaseValue { get; init; }
+
+    public MaxData DeepCopy()
+    {
+        return new MaxData() { MaxStatId = this.MaxStatId, ByBaseValue = this.ByBaseValue };
+    }
 }
 
 public interface IMax

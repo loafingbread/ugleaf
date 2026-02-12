@@ -1,10 +1,12 @@
 namespace GameLogic.Entities.Stats.Stat;
 
+using GameLogic.Entities.Stats.Modifiers;
 using GameLogic.Registry;
+using GameLogic.Utils;
 
 // TODO: Implement stat template vs stat value/instance
 
-public class Stat
+public class Stat : IDeepCopyable<Stat>
 {
     public ReferenceId ReferenceId { get; set; }
     public IStatModel Model { get; set; }
@@ -16,6 +18,11 @@ public class Stat
     {
         this.ReferenceId = referenceId;
         this.Model = model;
+    }
+
+    public Stat DeepCopy()
+    {
+        return new Stat(this.ReferenceId, this.Model);
     }
 
     public bool AddModifier(StatModifier modifier)

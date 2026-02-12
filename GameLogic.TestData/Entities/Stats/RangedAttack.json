@@ -1,0 +1,56 @@
+{
+    "ReferenceMetadata": {
+        "Kind": "Inline",
+        "TemplateType": "Stat",
+        "ReferenceId": {
+            "Value": "stat_ranged_attack"
+        }
+    },
+    "Value": {
+        "Metadata": {
+            "Name": "stat_ranged_attack",
+            "DisplayName": "Ranged Attack",
+            "Description": "Ranged Attack is a measure of your ability to attack from a distance.",
+            "Tags": ["physical", "ranged", "attack"]
+        },
+        "ValueModel": {
+            "Type": "Formula",
+            "Formula": {
+                "ExpressionType": "Operator",
+                "Operator": "Add",
+                "Arguments": [
+                    {
+                        "ExpressionType": "Operator",
+                        "Operator": "Multiply",
+                        "Arguments": [
+                            {
+                                "ExpressionType": "Constant",
+                                "Value": 0.3
+                            },
+                            {
+                                "ExpressionType": "Reference",
+                                "Id": "stat_strength",
+                                "ByBaseValue": false
+                            }
+                        ]
+                    },
+                    {
+                        "ExpressionType": "Operator",
+                        "Operand": "Multiply",
+                        "Arguments": [
+                            {
+                                "ExpressionType": "Constant",
+                                "Value": 0.7
+                            },
+                            {
+                                "ExpressionType": "Reference",
+                                "Id": "stat_agility",
+                                "ByBaseValue": false
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

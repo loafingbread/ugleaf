@@ -4,6 +4,11 @@ public record BoundsData
 {
     public required float LowerBound { get; init; }
     public required float UpperBound { get; init; }
+
+    public BoundsData DeepCopy()
+    {
+        return new BoundsData() { LowerBound = this.LowerBound, UpperBound = this.UpperBound };
+    }
 }
 
 public interface IBounds

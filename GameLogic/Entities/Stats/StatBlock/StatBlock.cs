@@ -2,6 +2,7 @@ namespace GameLogic.Entities.Stats.StatBlock;
 
 using GameLogic.Entities.Stats.Modifiers;
 using GameLogic.Entities.Stats.Stat;
+using GameLogic.Registry;
 using GameLogic.Utils;
 
 public class StatBlock : IDeepCopyable<StatBlock>
@@ -45,49 +46,10 @@ public class StatBlock : IDeepCopyable<StatBlock>
     /// <param name="name">The name of the stat to get.</param>
     /// <param name="type">The type of the stat to get. If Any, any stat with the given name will be returned.</param>
     /// <returns>The stat with the given name and type, or null if no stat with the given name and type is found.</returns>
-    public Stat? GetStat(string name, StatType type)
+    public Stat? GetStat(ReferenceId referenceId)
     {
-        Func<Stat?, bool> filter =
-            type == StatType.Any
-                ? (Stat? stat) => stat?.Metadata.Name == name
-                : (Stat? stat) => stat?.Metadata.Name == name && stat?.Type == type;
+        Func<Stat?, bool> filter = (Stat? stat) => stat?.ReferenceId == referenceId;
 
         return this.Stats.FirstOrDefault(filter, null);
-    }
-
-    /// <summary>
-    /// Sets the current value of a resource stat.
-    /// </summary>
-    /// <param name="name">The name of the resource stat to set.</param>
-    /// <param name="value">The value to set the resource stat to.</param>
-    /// <returns>The resource stat with the given name, or null if no resource stat with the given name is found.</returns>
-    public ResourceStat? SetResourceStat(string name, int value)
-    {
-        ResourceStat? resourceStat = this.GetStat(name, StatType.Resource) as ResourceStat;
-        if (resourceStat == null)
-        {
-            return null;
-        }
-
-        resourceStat.SetCurrentValue(value);
-        return resourceStat;
-    }
-
-    /// <summary>
-    /// Modifies the current value of a resource stat.
-    /// </summary>
-    /// <param name="name">The name of the resource stat to modify.</param>
-    /// <param name="amount">The amount to modify the resource stat by. Positive values increase, negative values decrease.</param>
-    /// <returns>The resource stat with the given name, or null if no resource stat with the given name is found.</returns>
-    public ResourceStat? ModifyResourceStat(string name, int amount)
-    {
-        ResourceStat? resourceStat = this.GetStat(name, StatType.Resource) as ResourceStat;
-        if (resourceStat == null)
-        {
-            return null;
-        }
-
-        resourceStat.SetCurrentValue(resourceStat.CurrentValue + amount);
-        return resourceStat;
     }
 }

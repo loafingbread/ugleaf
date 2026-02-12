@@ -1,6 +1,7 @@
 namespace GameLogic.Targeting;
 
 using System.Diagnostics.CodeAnalysis;
+using GameLogic.Utils;
 
 public interface ITargeterData
 {
@@ -9,7 +10,7 @@ public interface ITargeterData
     public int Count { get; }
 }
 
-public record TargeterData : ITargeterData
+public record TargeterData : ITargeterData, IDeepCopyable<TargeterData>
 {
     public required ETargetQuantity TargetQuantity { get; init; }
     public required List<EFactionRelationship> AllowedTargets { get; init; }
@@ -21,6 +22,16 @@ public record TargeterData : ITargeterData
         this.TargetQuantity = ETargetQuantity.None;
         this.AllowedTargets = new();
         this.Count = 0;
+    }
+
+    public TargeterData DeepCopy()
+    {
+        return new TargeterData()
+        {
+            TargetQuantity = this.TargetQuantity,
+            AllowedTargets = [.. this.AllowedTargets],
+            Count = this.Count,
+        };
     }
 }
 

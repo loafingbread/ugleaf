@@ -27,12 +27,12 @@ public class UsableReference : ReferenceBase<UsableTemplate, UsableData>
             );
         }
 
-        if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
+        if (this.Spec.ReferenceMetadata.Kind == ETemplateKind.Instance)
         {
             Usable usable = new Usable(this.Data);
             this.Registry.TryAdd(
                 (IReference<object, ReferenceSpec>)this,
-                this.Spec.Metadata.ReferenceId
+                this.Spec.ReferenceMetadata.ReferenceId
             );
             return;
         }
@@ -40,7 +40,7 @@ public class UsableReference : ReferenceBase<UsableTemplate, UsableData>
         UsableTemplate usableTemplate = new UsableTemplate(this.Data);
         this.Registry.TryAdd(
             (IReference<object, ReferenceSpec>)this,
-            this.Spec.Metadata.ReferenceId
+            this.Spec.ReferenceMetadata.ReferenceId
         );
     }
 

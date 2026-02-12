@@ -36,7 +36,7 @@ public class CharacterReference : ReferenceBase<CharacterTemplate, CharacterData
         Character character = new Character(this.Data);
         this.Registry.TryAdd(
             (IReference<object, ReferenceSpec>)this,
-            this.Spec.Metadata.ReferenceId
+            this.Spec.ReferenceMetadata.ReferenceId
         );
     }
 

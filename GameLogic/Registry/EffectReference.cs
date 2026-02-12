@@ -26,12 +26,12 @@ public class EffectReference : ReferenceBase<EffectTemplate, EffectData>
             );
         }
 
-        if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
+        if (this.Spec.ReferenceMetadata.Kind == ETemplateKind.Instance)
         {
             Effect effect = EffectFactory.CreateEffectFromData(this.Data);
             this.Registry.TryAdd(
                 (IReference<object, ReferenceSpec>)this,
-                this.Spec.Metadata.ReferenceId
+                this.Spec.ReferenceMetadata.ReferenceId
             );
             return;
         }
@@ -39,7 +39,7 @@ public class EffectReference : ReferenceBase<EffectTemplate, EffectData>
         EffectTemplate effectTemplate = new EffectTemplate(this.Data);
         this.Registry.TryAdd(
             (IReference<object, ReferenceSpec>)this,
-            this.Spec.Metadata.ReferenceId
+            this.Spec.ReferenceMetadata.ReferenceId
         );
     }
 

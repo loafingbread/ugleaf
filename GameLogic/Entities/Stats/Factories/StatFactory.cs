@@ -15,13 +15,8 @@ public static class StatFactory
     {
         IBounds? bounds = CapabilitiesFactory.CreateBoundsFromData(data.Capabilities.Bounds);
         IMax? max = CapabilitiesFactory.CreateMaxFromData(data.Capabilities.Max, buildContext);
-        IMutable? mutableValue = CapabilitiesFactory.CreateMutableFromData(
-            data.Capabilities.MutableValue
-        );
-        IImmutable? immutableValue = CapabilitiesFactory.CreateImmutableFromData(
-            data.Capabilities.ImmutableValue
-        );
+        IValueModel valueModel = ValueModelFactory.FromSpecToValueModel(data.ValueModel);
 
-        return new StatModel(bounds, max, mutableValue, immutableValue);
+        return new StatModel(valueModel, bounds, max);
     }
 }

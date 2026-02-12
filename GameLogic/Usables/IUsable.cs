@@ -2,8 +2,9 @@ namespace GameLogic.Usables;
 
 using GameLogic.Entities;
 using GameLogic.Usables.Effects;
+using GameLogic.Utils;
 
-public interface IUsable
+public interface IUsable : IDeepCopyable<IUsable>
 {
     public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets);
 }

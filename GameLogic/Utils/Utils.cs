@@ -11,7 +11,6 @@ public interface IDeepCopyable<out T>
 /// </summary>
 public static class DeepCopyExtensions
 {
-
     public static T DeepCopy<T>(T obj)
         where T : IDeepCopyable<T>
     {

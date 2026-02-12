@@ -39,7 +39,7 @@ public static class Ids
     }
 }
 
-public enum ETemplateType
+public enum EEntityType
 {
     Character,
     Item,
@@ -47,11 +47,4 @@ public enum ETemplateType
     Usable,
     Effect,
     Stat,
-}
-
-public enum ETemplateSubType
-{
-    None,
-    StatValue,
-    StatResource,
 }

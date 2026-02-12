@@ -27,12 +27,12 @@ public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
             );
         }
 
-        if (this.Spec.Metadata.Kind == EReferenceKind.Instance)
+        if (this.Spec.ReferenceMetadata.Kind == ETemplateKind.Instance)
         {
             Skill skill = new Skill(this.Data);
             this.Registry.TryAdd(
                 (IReference<object, ReferenceSpec>)this,
-                this.Spec.Metadata.ReferenceId
+                this.Spec.ReferenceMetadata.ReferenceId
             );
             return;
         }
@@ -40,7 +40,7 @@ public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
         SkillTemplate skillTemplate = new SkillTemplate(this.Data);
         this.Registry.TryAdd(
             (IReference<object, ReferenceSpec>)this,
-            this.Spec.Metadata.ReferenceId
+            this.Spec.ReferenceMetadata.ReferenceId
         );
     }
 

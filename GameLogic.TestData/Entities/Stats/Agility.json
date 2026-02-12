@@ -1,0 +1,27 @@
+{
+    "ReferenceMetadata": {
+        "Kind": "Inline",
+        "TemplateType": "Stat",
+        "ReferenceId": {
+            "Value": "stat_agility"
+        }
+    },
+    "Value": {
+        "Metadata": {
+            "Name": "stat_agility",
+            "DisplayName": "Agility",
+            "Description": "Agility is a measure of your ability to move quickly and efficiently.",
+            "Tags": ["physical", "agility"]
+        },
+        "ValueModel": {
+            "Type": "Mutable",
+            "Value": 10
+        },
+        "Capabilities": {
+            "Bounds": {
+                "LowerBound": 0,
+                "UpperBound": 100
+            }
+        }
+    }
+}

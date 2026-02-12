@@ -24,7 +24,7 @@ public record UsableOverrideSpec
 
 public record UsableInstanceSpec : UsableTemplateSpec { }
 
-public record UsableData
+public record UsableData : IDeepCopyable<UsableData>
 {
     public required ReferenceId ReferenceId { get; init; }
     public string Name { get; set; } = "";
@@ -37,7 +37,23 @@ public record UsableData
     [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
     public UsableData(ReferenceSpec spec)
     {
-        this.ReferenceId = spec.Metadata.ReferenceId;
+        this.ReferenceId = spec.ReferenceMetadata.ReferenceId;
+    }
+
+    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public UsableData() { }
+
+    public UsableData DeepCopy()
+    {
+        return new UsableData()
+        {
+            ReferenceId = Ids.NewReferenceId(),
+            Name = this.Name,
+            Description = this.Description,
+            Tags = [.. this.Tags],
+            Targeter = this.Targeter.DeepCopy(),
+            Effects = [.. this.Effects.Select(effect => effect.DeepCopy())],
+        };
     }
 
     public void Resolve(
@@ -46,24 +62,24 @@ public record UsableData
         Func<ReferenceId?, EffectData> getEffectData
     )
     {
-        switch (spec.Metadata.Kind)
+        switch (spec.ReferenceMetadata.Kind)
         {
-            case EReferenceKind.Ref:
+            case ETemplateKind.Ref:
             {
                 this.ResolveReference(spec, getUsableData);
                 return;
             }
-            case EReferenceKind.Inline:
+            case ETemplateKind.Inline:
             {
                 this.ResolveInline(spec, getEffectData);
                 return;
             }
-            case EReferenceKind.Override:
+            case ETemplateKind.Override:
             {
                 this.ResolveOverride(spec, getEffectData, getUsableData);
                 return;
             }
-            case EReferenceKind.Instance:
+            case ETemplateKind.Instance:
             {
                 this.ResolveInstance(spec, getEffectData);
                 return;
@@ -77,7 +93,7 @@ public record UsableData
 
     private void ResolveReference(ReferenceSpec spec, Func<ReferenceId?, UsableData> getUsableData)
     {
-        UsableData usableData = getUsableData(spec.Metadata.ReferenceId);
+        UsableData usableData = getUsableData(spec.ReferenceMetadata.ReferenceId);
 
         this.Name = usableData.Name;
         this.Description = usableData.Description;
@@ -88,7 +104,7 @@ public record UsableData
 
     private void ResolveInline(ReferenceSpec spec, Func<ReferenceId?, EffectData> getEffectData)
     {
-        var inlineSpec = spec as InlineSpec<UsableTemplateSpec>;
+        var inlineSpec = spec as TypedReferenceSpec<UsableTemplateSpec, UsableOverrideSpec>;
         if (inlineSpec is null)
         {
             throw new InvalidOperationException("Inline spec is not a usable template");

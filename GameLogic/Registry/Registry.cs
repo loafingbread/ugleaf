@@ -106,7 +106,7 @@ public class Registry : IRegistry
         // References can only be initialized (wrapped types created) after all
         //  dependencies are resolved.
         this.referencesById = records.ToDictionary(
-            record => record.Metadata.ReferenceId,
+            record => record.ReferenceMetadata.ReferenceId,
             record =>
                 (IReference<object, ReferenceSpec>)
                     ReferenceFactory.CreateReferenceFromRecord(record, this.entitiesRegistry)

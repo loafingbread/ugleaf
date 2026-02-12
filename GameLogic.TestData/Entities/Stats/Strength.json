@@ -1,0 +1,27 @@
+{
+    "ReferenceMetadata": {
+        "Kind": "Inline",
+        "TemplateType": "Stat",
+        "ReferenceId": {
+            "Value": "stat_strength"
+        }
+    },
+    "Value": {
+        "Metadata": {
+            "Name": "stat_strength",
+            "DisplayName": "Strength",
+            "Description": "Strength is a measure of your physical power.",
+            "Tags": ["physical", "strength"]
+        },
+        "ValueModel": {
+            "Type": "Mutable",
+            "Value": 10
+        },
+        "Capabilities": {
+            "Bounds": {
+                "LowerBound": 0,
+                "UpperBound": 100
+            }
+        }
+    }
+}

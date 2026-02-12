@@ -14,7 +14,7 @@ public record CharacterTemplateSpec : IStatBlockSpec
     public required List<ReferenceSpec> Skills { get; init; } = new();
 }
 
-public record CharacterOverrideSpec : ITemplateOverride<CharacterTemplateSpec>
+public record CharacterOverrideSpec
 {
     public string? Name { get; init; } = "";
     public string? Description { get; init; } = "";
@@ -47,22 +47,22 @@ public record CharacterData : IStatBlockData
     {
         switch (spec.Metadata.Kind)
         {
-            case EReferenceKind.Ref:
+            case ETemplateKind.Ref:
             {
                 this.ResolveReference(spec, getCharacterData);
                 return;
             }
-            case EReferenceKind.Inline:
+            case ETemplateKind.Inline:
             {
                 this.ResolveInline(spec, getStatData, getSkillData);
                 return;
             }
-            case EReferenceKind.Override:
+            case ETemplateKind.Override:
             {
                 this.ResolveOverride(spec, getCharacterData, getStatData, getSkillData);
                 return;
             }
-            case EReferenceKind.Instance:
+            case ETemplateKind.Instance:
             {
                 this.ResolveInstance(spec, getSkillData);
                 return;

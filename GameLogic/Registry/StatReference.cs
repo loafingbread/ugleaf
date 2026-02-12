@@ -9,7 +9,7 @@ public class StatReference : ReferenceBase<Stat, StatData>
 
     protected override StatData InitData()
     {
-        return new StatData(this.Spec.Metadata.ReferenceId);
+        return new StatData(this.Spec.ReferenceMetadata.ReferenceId);
     }
 
     public override void ResolveDependencies(IRegistry registry)
@@ -43,10 +43,10 @@ public class StatReference : ReferenceBase<Stat, StatData>
             this.Data,
             new BuildContext(this.Registry)
         );
-        this.Value = new Stat(this.Spec.Metadata.ReferenceId, statModel);
+        this.Value = new Stat(this.Spec.ReferenceMetadata.ReferenceId, statModel);
         this.Registry.TryAdd(
             (IReference<object, ReferenceSpec>)this,
-            this.Spec.Metadata.ReferenceId
+            this.Spec.ReferenceMetadata.ReferenceId
         );
     }
 }

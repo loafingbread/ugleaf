@@ -76,7 +76,7 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
             this.Value = value;
             this.IsResolved = true;
         }
-        else if (this.Spec.Metadata.Kind == EReferenceKind.Inline)
+        else if (this.Spec.ReferenceMetadata.Kind == ETemplateKind.Inline)
         {
             this.IsResolved = true;
         }
@@ -101,7 +101,7 @@ public abstract class ReferenceBase<TValue, TData> : IReference<TValue, TData>
     public virtual TValue GetValue()
     {
         this.Registry.TryGetReference(
-            this.Spec.Metadata.ReferenceId,
+            this.Spec.ReferenceMetadata.ReferenceId,
             out IReference<TValue, ReferenceSpec>? reference
         );
 
@@ -122,17 +122,17 @@ public static class ReferenceFactory
 {
     public static IReference CreateReferenceFromRecord(ReferenceSpec record, IRegistry registry)
     {
-        switch (record.Metadata.TemplateType)
+        switch (record.ReferenceMetadata.TemplateType)
         {
-            case ETemplateType.Skill:
+            case EEntityType.Skill:
                 return new SkillReference(registry, record, null);
-            case ETemplateType.Stat:
+            case EEntityType.Stat:
                 return new StatReference(registry, record, null);
-            case ETemplateType.Usable:
+            case EEntityType.Usable:
                 return new UsableReference(registry, record, null);
-            case ETemplateType.Effect:
+            case EEntityType.Effect:
                 return new EffectReference(registry, record, null);
-            case ETemplateType.Character:
+            case EEntityType.Character:
                 return new CharacterReference(registry, record, null);
             default:
                 throw new InvalidOperationException("Invalid template type");
