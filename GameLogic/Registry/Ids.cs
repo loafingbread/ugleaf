@@ -48,3 +48,9 @@ public enum EEntityType
     Effect,
     Stat,
 }
+
+public enum EReferenceKind
+{
+    Template,
+    Instance,
+}

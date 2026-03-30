@@ -4,22 +4,18 @@ using GameLogic.Entities;
 
 public class Targeter : ITargeter
 {
-    public ETargetQuantity QuantityType  { get; private set; }
+    public ETargetQuantity QuantityType { get; private set; }
     public int Count { get; private set; }
     public List<EFactionRelationship> AllowedTargets { get; private set; }
     public Position Position { get; } = new(0, 0, 0);
 
     private List<ITargetable> _targets = new();
 
-    public Targeter(
-        ETargetQuantity quantityType,
-        List<EFactionRelationship> allowedTargets,
-        int count
-    )
+    public Targeter(TargeterData data)
     {
-        this.QuantityType = quantityType;
-        this.AllowedTargets = allowedTargets;
-        this.Count = count;
+        this.QuantityType = data.QuantityType;
+        this.AllowedTargets = data.AllowedTargets;
+        this.Count = data.Count;
     }
 
     public Targeter(Targeter targeter)

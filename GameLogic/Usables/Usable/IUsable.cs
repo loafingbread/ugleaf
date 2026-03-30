@@ -1,4 +1,4 @@
-namespace GameLogic.Usables;
+namespace GameLogic.Usables.Usable;
 
 using GameLogic.Entities;
 using GameLogic.Usables.Effects;

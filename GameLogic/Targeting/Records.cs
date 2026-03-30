@@ -5,21 +5,21 @@ using GameLogic.Utils;
 
 public interface ITargeterData
 {
-    public ETargetQuantity TargetQuantity { get; }
+    public ETargetQuantity QuantityType { get; }
     public List<EFactionRelationship> AllowedTargets { get; }
     public int Count { get; }
 }
 
 public record TargeterData : ITargeterData, IDeepCopyable<TargeterData>
 {
-    public required ETargetQuantity TargetQuantity { get; init; }
+    public required ETargetQuantity QuantityType { get; init; }
     public required List<EFactionRelationship> AllowedTargets { get; init; }
     public int Count { get; init; }
 
     [SetsRequiredMembers]
     public TargeterData()
     {
-        this.TargetQuantity = ETargetQuantity.None;
+        this.QuantityType = ETargetQuantity.None;
         this.AllowedTargets = new();
         this.Count = 0;
     }
@@ -28,7 +28,7 @@ public record TargeterData : ITargeterData, IDeepCopyable<TargeterData>
     {
         return new TargeterData()
         {
-            TargetQuantity = this.TargetQuantity,
+            QuantityType = this.QuantityType,
             AllowedTargets = [.. this.AllowedTargets],
             Count = this.Count,
         };

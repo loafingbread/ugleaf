@@ -2,7 +2,53 @@ namespace GameLogic.Usables.Effects;
 
 using GameLogic.Registry;
 
-public record EffectTemplateSpec
+public record EffectTemplateRef : TemplateRef<EffectTemplateData, EffectTemplatePatch> { }
+
+public record EffectTemplateData
+{
+    public required string DefaultType { get; set; }
+    public required string DefaultSubtype { get; set; }
+    public required string DefaultVariant { get; set; }
+    public required string DefaultName { get; set; }
+    public required string DefaultDescription { get; set; }
+    public required List<string> DefaultTags { get; set; }
+    public required EffectConfigData DefaultConfig { get; set; }
+
+    public EffectTemplateData DeepCopy()
+    {
+        return new EffectTemplateData()
+        {
+            DefaultType = this.DefaultType,
+            DefaultSubtype = this.DefaultSubtype,
+            DefaultVariant = this.DefaultVariant,
+            DefaultName = this.DefaultName,
+            DefaultDescription = this.DefaultDescription,
+            DefaultTags = [.. this.DefaultTags],
+            DefaultConfig = this.DefaultConfig.DeepCopy(),
+        };
+    }
+}
+
+public record EffectTemplatePatch
+{
+    public string? DefaultType { get; init; }
+    public string? DefaultSubtype { get; init; }
+    public string? DefaultVariant { get; init; }
+    public string? DefaultName { get; init; }
+    public string? DefaultDescription { get; init; }
+    public List<string>? DefaultTags { get; init; }
+    public EffectConfigData? DefaultConfig { get; init; }
+}
+
+/// <summary>
+/// A reference to an effect instance. Only defines a data class instead of a
+/// spec class because specs are for definitions that need references to be
+/// resolved. Effect should not have any references to other types, as it
+/// is a leaf level type.
+/// </summary>
+public record EffectInstanceRef : InstanceRef<EffectInstanceData> { }
+
+public record EffectInstanceData
 {
     public required string Type { get; set; }
     public required string Subtype { get; set; }
@@ -11,20 +57,21 @@ public record EffectTemplateSpec
     public required string Description { get; set; }
     public required List<string> Tags { get; set; }
     public required EffectConfigData Config { get; set; }
-}
 
-public record EffectOverrideSpec
-{
-    public string? Type { get; init; }
-    public string? Subtype { get; init; }
-    public string? Variant { get; init; }
-    public string? Name { get; init; }
-    public string? Description { get; init; }
-    public List<string>? Tags { get; init; }
-    public EffectConfigData? Config { get; init; }
+    public EffectInstanceData DeepCopy()
+    {
+        return new EffectInstanceData()
+        {
+            Type = this.Type,
+            Subtype = this.Subtype,
+            Variant = this.Variant,
+            Name = this.Name,
+            Description = this.Description,
+            Tags = [.. this.Tags],
+            Config = this.Config.DeepCopy(),
+        };
+    }
 }
-
-public record EffectInstanceSpec : EffectTemplateSpec { }
 
 public record EffectData : IDeepCopyable<EffectData>
 {

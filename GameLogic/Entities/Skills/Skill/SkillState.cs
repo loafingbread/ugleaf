@@ -2,20 +2,22 @@ namespace GameLogic.Entities.Skills.Skill;
 
 using GameLogic.Registry;
 using GameLogic.Targeting;
-using GameLogic.Usables;
+using GameLogic.Usables.Usable;
 
 public class SkillState
 {
-    public required ReferenceId ReferenceId { get; init; } = Ids.NewReferenceId();
-    public string Name { get; private set; } = "";
-    public string Description { get; private set; } = "";
-    public List<string> Tags { get; private set; } = new();
-    public ITargeter Targeter { get; private set; } = new NoTargeter(new Position(0, 0, 0));
-    public List<IUsable> Usables { get; private set; } = new();
+    public ReferenceId ReferenceId { get; set; } = Ids.NewReferenceId();
+    public ReferenceId? DependencyId { get; set; } = null;
 
-    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public string Name { get; set; } = "";
+    public string Description { get; set; } = "";
+    public List<string> Tags { get; set; } = new();
+    public ITargeter Targeter { get; set; } = new NoTargeter(new Position(0, 0, 0));
+    public List<IUsable> Usables { get; set; } = new();
+
     public SkillState(
         ReferenceId? referenceId,
+        ReferenceId? dependencyId,
         string name,
         string description,
         List<string> tags,
@@ -24,6 +26,7 @@ public class SkillState
     )
     {
         this.ReferenceId = referenceId ?? Ids.NewReferenceId();
+        this.DependencyId = dependencyId;
         this.Name = name;
         this.Description = description;
         this.Tags = tags;
@@ -35,11 +38,12 @@ public class SkillState
     {
         return new SkillState(
             null,
+            this.DependencyId,
             this.Name,
             this.Description,
-            this.Tags,
+            [.. this.Tags],
             this.Targeter.DeepCopy(),
-            this.Usables.Select(usable => usable.DeepCopy()).ToList()
+            this.Usables.Select((IUsable usable) => usable.DeepCopy()).ToList()
         );
     }
 }

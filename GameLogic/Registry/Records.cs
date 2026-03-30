@@ -7,14 +7,25 @@ using GameLogic.Entities.Stats.Stat;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
 
-public record TemplateRefBase
+public record Ref
 {
-    public required ETemplateKind Kind { get; init; }
     public required ReferenceMetadata ReferenceMetadata { get; init; }
+}
+
+public record InstanceRef<TState> : Ref
+{
+    public required TState? InstanceState { get; init; }
+}
+
+public record TemplateRefBase : Ref
+{
+    public required ETemplateKind TemplateKind { get; init; }
 }
 
 public record ReferenceMetadata
 {
+    // The kind of reference to create: pure reference, override, inline, instance
+    public required EReferenceKind ReferenceKind { get; init; }
 
     // The type to create a reference for: character, skill, usable, effect, stat
     public required EEntityType EntityType { get; init; }
@@ -22,15 +33,16 @@ public record ReferenceMetadata
     // Used to identify the reference in the registry
     public ReferenceId ReferenceId { get; init; } = Ids.NewReferenceId();
 
-    // Used to identify the dependency in the registry
+    // Used to identify the dependency in the registry. The dependency
+    // needs to be the same entity type as reference and will be a template.
     public ReferenceId? DependencyId { get; init; } = null;
 };
 
 public record TemplateRef<TValue, TPatch> : TemplateRefBase
 {
     // The kind of reference to create: pure reference, override, inline, instance
-    public required TValue? Value { get; init; }
-    public required TPatch? Patch { get; init; }
+    public required TValue? TemplateValue { get; init; }
+    public required TPatch? TemplatePatch { get; init; }
 }
 
 /// <summary>
@@ -46,9 +58,6 @@ public enum ETemplateKind
 
     // An inline definition of a template.
     Inline,
-
-    // A reference to an instance with a template id. Create an instance id if not provided.
-    Instance,
 }
 
 public static class TypeMaps

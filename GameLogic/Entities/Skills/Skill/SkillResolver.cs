@@ -1,85 +1,139 @@
 namespace GameLogic.Entities.Skills.Skill;
 
 using GameLogic.Registry;
-using GameLogic.Usables;
+using GameLogic.Targeting;
+using GameLogic.Usables.Usable;
 
 public static class SkillResolver
 {
-    public static SkillData ToData(
-        ReferenceSpec untypedRef,
-        Func<ReferenceId?, SkillData> getSkillData,
-        Func<ReferenceId?, UsableData> getUsableData
+    public static List<SkillTemplate> ToTemplates(
+        List<SkillTemplateRef> skillTemplateRefs,
+        Func<ReferenceId?, SkillTemplate> getSkillTemplate,
+        Func<ReferenceId?, UsableTemplate> getUsableTemplate
     )
     {
-        TypedReferenceSpec<SkillSpec, SkillPatch>? typedRef =
-            untypedRef as TypedReferenceSpec<SkillSpec, SkillPatch>;
-        if (!TypedReferenceSpecValidator.IsValid(typedRef))
+        return skillTemplateRefs
+            .Select(skillTemplateRef =>
+                ToTemplate(skillTemplateRef, getSkillTemplate, getUsableTemplate)
+            )
+            .ToList();
+    }
+
+    public static SkillTemplate ToTemplate(
+        SkillTemplateRef skillTemplateRef,
+        Func<ReferenceId?, SkillTemplate> getSkillTemplate,
+        Func<ReferenceId?, UsableTemplate> getUsableTemplate
+    )
+    {
+        if (!TypedReferenceSpecValidator.IsTemplateRefValid(skillTemplateRef))
         {
-            throw new InvalidOperationException("Reference spec is valid");
+            throw new InvalidOperationException("Skill template reference spec is valid");
         }
 
-        switch (typedRef!.ReferenceMetadata.Kind)
+        switch (skillTemplateRef.TemplateKind)
         {
             case ETemplateKind.Inline:
             {
-                return new SkillData(
-                    typedRef.ReferenceMetadata.ReferenceId,
-                    typedRef.Value!.Name,
-                    typedRef.Value!.Description,
-                    [.. typedRef.Value!.Tags],
-                    typedRef.Value!.Targeter,
-                    [
-                        .. typedRef
-                            .Value!.Usables.Select(usable =>
-                                getUsableData(usable.ReferenceMetadata.ReferenceId)
-                            )
-                            .ToList(),
-                    ]
+                return new SkillTemplate(
+                    skillTemplateRef.ReferenceMetadata.ReferenceId,
+                    skillTemplateRef.ReferenceMetadata.DependencyId,
+                    skillTemplateRef.TemplateValue!.DefaultName,
+                    skillTemplateRef.TemplateValue!.DefaultDescription,
+                    [.. skillTemplateRef.TemplateValue!.DefaultTags],
+                    skillTemplateRef.TemplateValue!.DefaultTargeter,
+                    UsableResolver.ToTemplates(
+                        skillTemplateRef.TemplateValue!.DefaultUsables,
+                        getUsableTemplate
+                    )
                 );
             }
             case ETemplateKind.Ref:
             {
-                SkillData refData = getSkillData(typedRef.ReferenceMetadata.ReferenceId);
-                return refData;
+                SkillTemplate dependencyRef = getSkillTemplate(
+                    skillTemplateRef.ReferenceMetadata.DependencyId
+                );
+
+                return dependencyRef;
             }
             case ETemplateKind.Override:
             {
-                SkillData refData = getSkillData(typedRef.ReferenceMetadata.DependencyId);
-                SkillData overridedData = typedRef.Patch!.ApplyTo(refData, getUsableData);
-                return overridedData;
-            }
-            case ETemplateKind.Instance:
-            {
-                if (typedRef.ReferenceMetadata.DependencyId is null)
-                {
-                    return new SkillData(
-                        typedRef.ReferenceMetadata.ReferenceId,
-                        typedRef.Value!.Name,
-                        typedRef.Value!.Description,
-                        [.. typedRef.Value!.Tags],
-                        typedRef.Value!.Targeter,
-                        [
-                            .. typedRef.Value!.Usables.Select(usable =>
-                                getUsableData(usable.ReferenceMetadata.ReferenceId)
-                            ),
-                        ]
-                    );
-                }
-
-                SkillData refData = getSkillData(typedRef.ReferenceMetadata.DependencyId);
-                return new SkillData(
-                    typedRef.ReferenceMetadata.ReferenceId,
-                    refData.Name,
-                    refData.Description,
-                    [.. refData.Tags],
-                    refData.Targeter,
-                    [.. refData.Usables]
+                SkillTemplate dependencyRef = getSkillTemplate(
+                    skillTemplateRef.ReferenceMetadata.DependencyId
                 );
-            }
-            default:
-            {
-                throw new InvalidOperationException("Invalid skill spec kind");
+
+                return skillTemplateRef.TemplatePatch!.ApplyTo(dependencyRef, getUsableTemplate);
             }
         }
+
+        throw new InvalidOperationException("Invalid skill template spec kind");
+    }
+
+    public static List<Skill> ToSkills(
+        List<SkillStateRef> skillStateRefs,
+        Func<ReferenceId?, SkillTemplate> getSkillTemplate,
+        Func<ReferenceId?, SkillState> getSkillState,
+        Func<ReferenceId?, IUsable> getUsable
+    )
+    {
+        return skillStateRefs
+            .Select(skillStateRef =>
+                ToSkill(skillStateRef, getSkillTemplate, getSkillState, getUsable)
+            )
+            .ToList();
+    }
+
+    public static Skill ToSkill(
+        SkillStateRef skillStateRef,
+        Func<ReferenceId?, SkillTemplate> getSkillTemplate,
+        Func<ReferenceId?, SkillState> getSkillState,
+        Func<ReferenceId?, IUsable> getUsable
+    )
+    {
+        SkillState skillState = ToState(skillStateRef, getSkillState, getUsable);
+        SkillTemplate skillTemplate = getSkillTemplate(
+            skillStateRef.ReferenceMetadata.DependencyId
+        );
+
+        return new Skill(skillTemplate, skillState);
+    }
+
+    public static List<SkillState> ToStates(
+        List<SkillStateRef> skillStateRefs,
+        Func<ReferenceId?, SkillState> getSkillState,
+        Func<ReferenceId?, IUsable> getUsable
+    )
+    {
+        return skillStateRefs
+            .Select(skillStateRef => ToState(skillStateRef, getSkillState, getUsable))
+            .ToList();
+    }
+
+    public static SkillState ToState(
+        SkillStateRef skillStateRef,
+        Func<ReferenceId?, SkillState> getSkillState,
+        Func<ReferenceId?, IUsable> getUsable
+    )
+    {
+        if (!TypedReferenceSpecValidator.IsInstanceRefValid(skillStateRef))
+        {
+            throw new InvalidOperationException("Skill state reference spec is valid");
+        }
+
+        Targeter targeter = new Targeter(skillStateRef.InstanceState!.Targeter);
+        List<IUsable> usables = skillStateRef
+            .InstanceState.Usables.Select(usableStateData =>
+                getUsable(usableStateData.ReferenceMetadata.ReferenceId)
+            )
+            .ToList();
+
+        return new SkillState(
+            skillStateRef.ReferenceMetadata.ReferenceId,
+            skillStateRef.ReferenceMetadata.DependencyId,
+            skillStateRef.InstanceState!.Name,
+            skillStateRef.InstanceState!.Description,
+            [.. skillStateRef.InstanceState!.Tags],
+            targeter,
+            usables
+        );
     }
 }
