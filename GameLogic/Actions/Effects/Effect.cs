@@ -1,6 +1,6 @@
 using GameLogic.Targeting;
 
-namespace GameLogic.Usables.Effects;
+namespace GameLogic.Actions.Effects;
 
 using GameLogic.Registry;
 using GameLogic.Utils;

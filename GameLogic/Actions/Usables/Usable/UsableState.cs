@@ -1,9 +1,9 @@
-namespace GameLogic.Usables.Usable;
+namespace GameLogic.Actions.Usables.Usable;
 
 using GameLogic.Entities;
 using GameLogic.Registry;
 using GameLogic.Targeting;
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Effects;
 using GameLogic.Utils;
 
 public class UsableState

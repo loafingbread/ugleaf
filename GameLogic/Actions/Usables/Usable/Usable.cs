@@ -1,4 +1,4 @@
-namespace GameLogic.Usables.Usable;
+namespace GameLogic.Actions.Usables.Usable;
 
 using GameLogic.Entities;
 

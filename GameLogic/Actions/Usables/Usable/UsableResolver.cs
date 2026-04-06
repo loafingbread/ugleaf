@@ -1,8 +1,8 @@
-namespace GameLogic.Usables.Usable;
+namespace GameLogic.Actions.Usables.Usable;
 
 using GameLogic.Registry;
 using GameLogic.Targeting;
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Effects;
 
 public static class UsableResolver
 {

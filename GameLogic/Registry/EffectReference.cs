@@ -1,6 +1,6 @@
 namespace GameLogic.Registry;
 
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Effects;
 
 public class EffectReference : ReferenceBase<EffectTemplate, EffectData>
 {

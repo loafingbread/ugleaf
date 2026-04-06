@@ -1,7 +1,7 @@
-namespace GameLogic.Usables.Usable;
+namespace GameLogic.Actions.Usables.Usable;
 
 using GameLogic.Entities;
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Effects;
 using GameLogic.Utils;
 
 public interface IUsable : IDeepCopyable<IUsable>

@@ -1,4 +1,4 @@
-namespace GameLogic.Usables.Effects;
+namespace GameLogic.Actions.Effects;
 
 using GameLogic.Entities;
 using GameLogic.Targeting;

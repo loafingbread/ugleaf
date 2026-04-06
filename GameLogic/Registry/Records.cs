@@ -4,8 +4,8 @@ using System.Text.Json;
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats.Stat;
-using GameLogic.Usables;
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Usables;
+using GameLogic.Actions.Effects;
 
 public record Ref
 {

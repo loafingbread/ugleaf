@@ -42,7 +42,7 @@ Stats live under `GameLogic/Entities/Stats/` and are organized into subfolders: 
 
 ### Skill & Usable System
 
-`SkillTemplate` defines a skill's static data (name, description, tags, targeter spec, usables list). `Skill` is the runtime instance with `SkillState`. Skills are executed via `SkillResolver`. Usables (`GameLogic/Usables/`) implement `IUsable` and are consumed by `IUser` entities. Effects live in `GameLogic/Usables/Effects/`.
+`SkillTemplate` defines a skill's static data (name, description, tags, targeter spec, usables list). `Skill` is the runtime instance with `SkillState`. Skills are executed via `SkillResolver`. Usables (`GameLogic/Actions/Usables/`) implement `IUsable` and are consumed by `IUser` entities. Effects live in `GameLogic/Actions/Effects/`.
 
 ### Combat
 

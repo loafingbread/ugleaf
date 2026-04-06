@@ -1,7 +1,7 @@
 namespace GameLogic.Registry;
 
 using GameLogic.Entities.Skills;
-using GameLogic.Usables;
+using GameLogic.Actions.Usables;
 
 public class SkillReference : ReferenceBase<SkillTemplate, SkillData>
 {

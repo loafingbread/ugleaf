@@ -1,7 +1,7 @@
 using GameLogic.Entities;
 using GameLogic.Utils;
 
-namespace GameLogic.Usables;
+namespace GameLogic.Actions.Usables;
 
 public class User : IUser
 {

@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using GameLogic.Entities.Skills;
 using GameLogic.Registry;
-using GameLogic.Usables;
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Usables;
+using GameLogic.Actions.Effects;
 
 public sealed class ReferenceSpecConverter : JsonConverter<ReferenceSpec>
 {

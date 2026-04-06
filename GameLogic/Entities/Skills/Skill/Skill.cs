@@ -2,7 +2,7 @@ namespace GameLogic.Entities.Skills.Skill;
 
 using GameLogic.Registry;
 using GameLogic.Targeting;
-using GameLogic.Usables;
+using GameLogic.Actions.Usables;
 using GameLogic.Utils;
 
 public class Skill : IDeepCopyable<Skill>

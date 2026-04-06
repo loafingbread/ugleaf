@@ -5,8 +5,8 @@ using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
 using GameLogic.Registry;
 using GameLogic.Targeting;
-using GameLogic.Usables;
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Usables;
+using GameLogic.Actions.Effects;
 using Xunit;
 
 public class CharacterTemplateTest : IClassFixture<CharacterTestFixture>

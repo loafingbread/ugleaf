@@ -1,7 +1,7 @@
 namespace GameLogic.Registry;
 
-using GameLogic.Usables;
-using GameLogic.Usables.Effects;
+using GameLogic.Actions.Usables;
+using GameLogic.Actions.Effects;
 
 public class UsableReference : ReferenceBase<UsableTemplate, UsableData>
 {

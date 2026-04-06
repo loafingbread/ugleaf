@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using GameLogic.Entities.Stats;
 using GameLogic.Targeting;
-using GameLogic.Usables;
+using GameLogic.Actions.Usables;
 using GameLogic.Utils;
 
 public class Entity : ITargeter, ITargetable, IAffectable, IUser, IDeepCopyable<Entity>

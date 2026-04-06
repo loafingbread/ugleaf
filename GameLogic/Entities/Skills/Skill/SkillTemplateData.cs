@@ -2,7 +2,7 @@ namespace GameLogic.Entities.Skills.Skill;
 
 using GameLogic.Registry;
 using GameLogic.Targeting;
-using GameLogic.Usables.Usable;
+using GameLogic.Actions.Usables.Usable;
 
 public record SkillTemplateRef : TemplateRef<SkillTemplateSpec, SkillTemplatePatch> { }
 
