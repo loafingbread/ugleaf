@@ -1,97 +1,99 @@
 namespace GameLogic.Actions.Effects;
 
-using GameLogic.Registry;
+using GameLogic.Entities.Stats.Stat;
 
-public record EffectTemplateRef : TemplateRef<EffectTemplateData, EffectTemplatePatch> { }
-
-public record EffectTemplateData
+/// <summary>
+/// Flat data record for an effect. Used directly as both the JSON-deserialized
+/// template content (EffectTemplateRef.TemplateValue) and the resolved data passed
+/// to EffectVariantFactory. No separate Spec type is needed because effects are
+/// leaf types with no load-time cross-references.
+/// </summary>
+public record EffectData
 {
-    public required string DefaultName { get; set; }
-    public required string DefaultDescription { get; set; }
-    public required List<string> DefaultTags { get; set; }
-    public required EffectModelData DefaultModel { get; set; }
+    public required string Name { get; init; }
+    public required string Description { get; init; }
+    public required List<string> Tags { get; init; }
 
-    public EffectTemplateData DeepCopy()
-    {
-        return new EffectTemplateData()
+    /// <summary>"Attack" | "Heal" | "Status"</summary>
+    public required string Type { get; init; }
+
+    /// <summary>"SingleHit" | "Burn" | "Poison" etc.</summary>
+    public required string Subtype { get; init; }
+
+    public required EffectConfigData Config { get; init; }
+
+    public EffectData DeepCopy() =>
+        new()
         {
-            DefaultName = this.DefaultName,
-            DefaultDescription = this.DefaultDescription,
-            DefaultTags = [.. this.DefaultTags],
-            DefaultModel = this.DefaultModel.DeepCopy(),
+            Name = this.Name,
+            Description = this.Description,
+            Tags = [.. this.Tags],
+            Type = this.Type,
+            Subtype = this.Subtype,
+            Config = this.Config.DeepCopy(),
         };
-    }
 }
 
-public record EffectModelData
+public record EffectConfigData
 {
-    public required AttackEffectVariantData? Attack { get; set; }
-    public required HealEffectVariantData? Heal { get; set; }
-    public required BuffEffectVariantData? Buff { get; set; }
-    public required StatusEffectVariantData? Status { get; set; }
+    /// <summary>
+    /// Flat damage/heal/status value. Used when ValueFormula is null.
+    /// </summary>
+    public float? Value { get; init; }
 
-    public EffectModelData DeepCopy()
-    {
-        return new EffectModelData()
+    public float? CritChance { get; init; }
+
+    /// <summary>
+    /// Duration in turns/seconds. Used when DurationFormula is null.
+    /// </summary>
+    public float? Duration { get; init; }
+
+    /// <summary>
+    /// Formula evaluated at runtime against the user's IStatProvider.
+    /// Supports stat references, constants, operators, and conditionals.
+    /// Uses FormulaEvaluator from GameLogic/Entities/Stats/Stat/Formula/.
+    /// Mutually exclusive with Value per field.
+    /// </summary>
+    public FormulaData? ValueFormula { get; init; }
+
+    public FormulaData? DurationFormula { get; init; }
+
+    public EffectConfigData DeepCopy() =>
+        new()
         {
-            Attack = this.Attack?.DeepCopy(),
-            Heal = this.Heal?.DeepCopy(),
-            Buff = this.Buff?.DeepCopy(),
-            Status = this.Status?.DeepCopy(),
+            Value = this.Value,
+            CritChance = this.CritChance,
+            Duration = this.Duration,
+            ValueFormula = this.ValueFormula?.DeepCopy(),
+            DurationFormula = this.DurationFormula?.DeepCopy(),
         };
-    }
 }
 
-public record AttackEffectVariantData
+/// <summary>
+/// Nullable override fields applied on top of a base EffectData when using
+/// the Override template kind.
+/// </summary>
+public record EffectPatch
 {
-    public required float Value { get; set; }
-    public required float CritChance { get; set; }
+    public string? Name { get; init; }
+    public string? Description { get; init; }
+    public List<string>? Tags { get; init; }
+    public string? Type { get; init; }
+    public string? Subtype { get; init; }
 
-    public AttackEffectVariantData DeepCopy()
-    {
-        return new AttackEffectVariantData() { Value = this.Value, CritChance = this.CritChance };
-    }
-}
+    /// <summary>
+    /// Replaces the entire Config when set (whole-object override, same as StatPatch.Capabilities).
+    /// </summary>
+    public EffectConfigData? Config { get; init; }
 
-public record HealEffectVariantData
-{
-    public required float Value { get; set; }
-
-    public HealEffectVariantData DeepCopy()
-    {
-        return new HealEffectVariantData() { Value = this.Value };
-    }
-}
-
-public record BuffEffectVariantData
-{
-    public required float Value { get; set; }
-    public required float Duration { get; set; }
-
-    public BuffEffectVariantData DeepCopy()
-    {
-        return new BuffEffectVariantData() { Value = this.Value, Duration = this.Duration };
-    }
-}
-
-public record StatusEffectVariantData
-{
-    public required float Value { get; set; }
-    public required float Duration { get; set; }
-
-    public StatusEffectVariantData DeepCopy()
-    {
-        return new StatusEffectVariantData() { Value = this.Value, Duration = this.Duration };
-    }
-}
-
-public record EffectTemplatePatch
-{
-    public string? DefaultType { get; init; }
-    public string? DefaultSubtype { get; init; }
-    public string? DefaultVariant { get; init; }
-    public string? DefaultName { get; init; }
-    public string? DefaultDescription { get; init; }
-    public List<string>? DefaultTags { get; init; }
-    public EffectConfigData? DefaultConfig { get; init; }
+    public EffectData ApplyTo(EffectData baseData) =>
+        new()
+        {
+            Name = this.Name ?? baseData.Name,
+            Description = this.Description ?? baseData.Description,
+            Tags = this.Tags ?? [.. baseData.Tags],
+            Type = this.Type ?? baseData.Type,
+            Subtype = this.Subtype ?? baseData.Subtype,
+            Config = this.Config ?? baseData.Config.DeepCopy(),
+        };
 }

@@ -1,18 +1,30 @@
-using GameLogic.Targeting;
-
 namespace GameLogic.Actions.Effects;
 
+using GameLogic.Actions.Usables;
 using GameLogic.Registry;
+using GameLogic.Targeting;
 using GameLogic.Utils;
 
-public abstract class Effect 
+public interface IEffect : IDeepCopyable<IEffect>
 {
-    public EffectTemplate Template { get; set; }
-    public EffectState State { get; set; }
+    ReferenceId ReferenceId { get; }
+    IEffectVariant Variant { get; }
+    IEffectResult Compute(IUser user, ITargetable target);
+}
 
-    public Effect(EffectTemplate template, EffectState state)
+public class Effect : IEffect
+{
+    public ReferenceId ReferenceId { get; }
+    public IEffectVariant Variant { get; }
+
+    public Effect(ReferenceId referenceId, IEffectVariant variant)
     {
-        this.Template = template;
-        this.State = state;
+        this.ReferenceId = referenceId;
+        this.Variant = variant;
     }
+
+    public IEffectResult Compute(IUser user, ITargetable target) =>
+        this.Variant.Compute(user, target);
+
+    public IEffect DeepCopy() => new Effect(this.ReferenceId, this.Variant);
 }

@@ -30,6 +30,12 @@ public static class UsableResolver
         {
             case ETemplateKind.Inline:
             {
+                List<Effect> effects = usableTemplateRef
+                    .TemplateValue!.DefaultEffects.Select(
+                        effectRef => EffectVariantFactory.CreateFromTemplateRef(effectRef)
+                    )
+                    .ToList();
+
                 return new UsableTemplate(
                     usableTemplateRef.ReferenceMetadata.ReferenceId,
                     usableTemplateRef.ReferenceMetadata.DependencyId,
@@ -37,7 +43,7 @@ public static class UsableResolver
                     usableTemplateRef.TemplateValue!.DefaultDescription,
                     [.. usableTemplateRef.TemplateValue!.DefaultTags],
                     usableTemplateRef.TemplateValue!.DefaultTargeter,
-                    [.. usableTemplateRef.TemplateValue!.DefaultEffects]
+                    effects
                 );
             }
             case ETemplateKind.Ref:

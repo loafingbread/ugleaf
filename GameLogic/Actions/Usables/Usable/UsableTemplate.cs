@@ -12,7 +12,7 @@ public class UsableTemplate
     public string DefaultDescription { get; set; } = "";
     public List<string> DefaultTags { get; set; } = new();
     public TargeterData DefaultTargeter { get; set; } = new();
-    public List<EffectTemplateData> DefaultEffects { get; set; } = new();
+    public List<Effect> DefaultEffects { get; set; } = new();
 
     public UsableTemplate(
         ReferenceId referenceId,
@@ -21,7 +21,7 @@ public class UsableTemplate
         string defaultDescription,
         List<string> defaultTags,
         TargeterData defaultTargeter,
-        List<EffectTemplateData> defaultEffects
+        List<Effect> defaultEffects
     )
     {
         this.ReferenceId = referenceId;
@@ -44,7 +44,7 @@ public class UsableTemplate
         this.DefaultTags = [.. template.DefaultTags];
         this.DefaultTargeter = template.DefaultTargeter.DeepCopy();
         this.DefaultEffects = template
-            .DefaultEffects.Select(defaultEffect => defaultEffect.DeepCopy())
+            .DefaultEffects.Select(e => (Effect)e.DeepCopy())
             .ToList();
     }
 

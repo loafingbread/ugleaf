@@ -2,49 +2,56 @@ namespace GameLogic.Actions.Effects;
 
 using GameLogic.Registry;
 
-public static class EffectFactory
+public static class EffectVariantFactory
 {
-    public static Effect CreateEffect(EffectTemplate template)
+    /// <summary>
+    /// Creates the appropriate IEffectVariant from resolved EffectData.
+    /// The variant stores the config (including any formula) and evaluates it at Compute() time.
+    /// To add a new effect type: implement IEffectVariant, add a case here, and add JSON support.
+    /// </summary>
+    public static IEffectVariant CreateVariant(EffectData data)
     {
-        return CreateEffectFromData(
-            new EffectData(
-                template.ReferenceId,
-                template.Type.ToString(),
-                template.Subtype,
-                template.Variant,
-                template.Name,
-                template.Description,
-                template.Tags,
-                new EffectConfigData { Value = template.Value, Duration = template.Duration }
-            )
-        );
-    }
-
-    public static List<Effect> CreateEffectsFromData(List<EffectData> data)
-    {
-        return data.Select(CreateEffectFromData).ToList();
-    }
-
-    public static Effect CreateEffectFromData(EffectData data)
-    {
-        return Enum.Parse<EEffectType>(data.Type) switch
+        return data.Type switch
         {
-            EEffectType.Status => CreateStatusEffectFromData(data),
-            EEffectType.Attack => new AttackEffect(data),
-            EEffectType.Heal => new HealEffect(data),
-            _ => throw new NotSupportedException($"Effect type {data.Type} is not supported."),
+            "Attack" => new AttackEffectVariant(data.Config),
+            "Heal" => new HealEffectVariant(data.Config),
+            "Status" => CreateStatusVariant(data),
+            _ => throw new NotSupportedException($"Unknown effect type: '{data.Type}'"),
         };
     }
 
-    public static Effect CreateStatusEffectFromData(EffectData data)
+    private static IEffectVariant CreateStatusVariant(EffectData data)
     {
         return data.Subtype switch
         {
-            "Burn" => new BurnStatusEffect(data),
-            "Poison" => new PoisonStatusEffect(data),
+            "Burn" => new BurnStatusVariant(data.Config),
+            "Poison" => new PoisonStatusVariant(data.Config),
             _ => throw new NotSupportedException(
-                $"Effect subtype {data.Subtype} is not supported."
+                $"Unknown status subtype: '{data.Subtype}'"
             ),
         };
+    }
+
+    /// <summary>
+    /// Convenience method for resolving an inline EffectTemplateRef directly to an Effect,
+    /// used when building UsableTemplates (effects embedded in usables are always inline).
+    /// </summary>
+    public static Effect CreateFromTemplateRef(
+        EffectTemplateRef effectRef,
+        Func<ReferenceId?, EffectData>? getEffectData = null
+    )
+    {
+        EffectData data = EffectResolver.ToData(
+            effectRef,
+            getEffectData
+                ?? (
+                    _ =>
+                        throw new NotSupportedException(
+                            "Effect Ref/Override kinds require a registry lookup callback"
+                        )
+                )
+        );
+        IEffectVariant variant = CreateVariant(data);
+        return new Effect(effectRef.ReferenceMetadata.ReferenceId, variant);
     }
 }

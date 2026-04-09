@@ -13,7 +13,7 @@ public record UsableTemplateSpec
     public required List<string> DefaultTags { get; init; } = new();
     public required List<string> Tags { get; init; } = new();
     public required TargeterData DefaultTargeter { get; init; }
-    public required List<EffectTemplateData> DefaultEffects { get; init; } = new();
+    public required List<EffectTemplateRef> DefaultEffects { get; init; } = new();
 }
 
 public record UsableTemplatePatch
@@ -22,7 +22,7 @@ public record UsableTemplatePatch
     public string? DefaultDescription { get; init; }
     public List<string>? DefaultTags { get; init; }
     public TargeterData? DefaultTargeter { get; init; }
-    public List<EffectTemplateData>? DefaultEffects { get; init; }
+    public List<EffectTemplateRef>? DefaultEffects { get; init; }
 
     public UsableTemplate ApplyTo(UsableTemplate baseTemplate)
     {

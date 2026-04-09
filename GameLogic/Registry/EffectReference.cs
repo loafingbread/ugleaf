@@ -2,54 +2,46 @@ namespace GameLogic.Registry;
 
 using GameLogic.Actions.Effects;
 
-public class EffectReference : ReferenceBase<EffectTemplate, EffectData>
+public class EffectReference : ReferenceBase<Effect, EffectData>
 {
-    public EffectReference(IRegistry registry, ReferenceSpec spec, EffectTemplate? value)
+    public EffectReference(IRegistry registry, ReferenceSpec spec, Effect? value)
         : base(registry, spec, value) { }
 
-    protected override EffectData InitData()
-    {
-        return new EffectData(this.Spec);
-    }
+    protected override EffectData InitData() =>
+        new()
+        {
+            Name = "",
+            Description = "",
+            Tags = new(),
+            Type = "",
+            Subtype = "",
+            Config = new(),
+        };
 
     public override void ResolveDependencies(IRegistry registry)
     {
-        this.Data.Resolve(this.Spec, this.GetEffectData(registry));
+        this.Data = EffectResolver.ToData(this.Spec, GetEffectData(registry));
     }
 
     public override void Initialize()
     {
-        if (this.Data is null)
-        {
-            throw new InvalidOperationException(
-                "Effect data should be resolved before initializing the reference"
-            );
-        }
-
-        if (this.Spec.ReferenceMetadata.Kind == ETemplateKind.Instance)
-        {
-            Effect effect = EffectFactory.CreateEffectFromData(this.Data);
-            this.Registry.TryAdd(
-                (IReference<object, ReferenceSpec>)this,
-                this.Spec.ReferenceMetadata.ReferenceId
-            );
-            return;
-        }
-
-        EffectTemplate effectTemplate = new EffectTemplate(this.Data);
+        IEffectVariant variant = EffectVariantFactory.CreateVariant(this.Data);
+        this.Value = new Effect(this.Spec.ReferenceMetadata.ReferenceId, variant);
         this.Registry.TryAdd(
             (IReference<object, ReferenceSpec>)this,
             this.Spec.ReferenceMetadata.ReferenceId
         );
     }
 
-    protected Func<ReferenceId?, EffectData> GetEffectData(IRegistry registry)
+    private Func<ReferenceId?, EffectData> GetEffectData(IRegistry registry)
     {
         return (ReferenceId? referenceId) =>
         {
             var effectRef =
-                registry.GetReference(referenceId) as IReference<EffectTemplate, EffectData>
-                ?? throw new InvalidOperationException("Effect reference not found");
+                registry.GetReference(referenceId) as IReference<Effect, EffectData>
+                ?? throw new InvalidOperationException(
+                    $"Effect reference not found for id: {referenceId}"
+                );
 
             effectRef.Resolve(registry);
             return effectRef.GetData();

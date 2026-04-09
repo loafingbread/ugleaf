@@ -78,7 +78,7 @@ public static class TypeMaps
         }
         else if (EEntityType.Effect == templateType)
         {
-            return (typeof(EffectTemplateSpec), typeof(EffectOverrideSpec));
+            return (typeof(EffectData), typeof(EffectPatch));
         }
         else if (EEntityType.Stat == templateType)
         {

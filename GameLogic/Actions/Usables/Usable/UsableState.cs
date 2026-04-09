@@ -45,7 +45,7 @@ public class UsableState
         this.Description = template.DefaultDescription;
         this.Tags = [.. template.DefaultTags];
         this.Targeter = new Targeter(template.DefaultTargeter);
-        this.Effects = [.. template.DefaultEffects.Select(effect => new Effect(effect)).ToList()];
+        this.Effects = [.. template.DefaultEffects];
     }
 
     public UsableState DeepCopy()
