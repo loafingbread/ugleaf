@@ -12,25 +12,19 @@ public record EffectInstanceRef : InstanceRef<EffectStateData> { }
 
 public record EffectStateData
 {
-    public required string Type { get; set; }
-    public required string Subtype { get; set; }
-    public required string Variant { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public required List<string> Tags { get; set; }
-    public required EffectConfigData Config { get; set; }
+    public required EffectModelData Model { get; set; }
 
     public EffectStateData DeepCopy()
     {
         return new EffectStateData()
         {
-            Type = this.Type,
-            Subtype = this.Subtype,
-            Variant = this.Variant,
             Name = this.Name,
             Description = this.Description,
             Tags = [.. this.Tags],
-            Config = this.Config.DeepCopy(),
+            Model = this.Model.DeepCopy(),
         };
     }
 }

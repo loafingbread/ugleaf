@@ -1,11 +1,13 @@
 namespace GameLogic.Actions.Effects;
 
+using GameLogic.Actions.Usables;
+using GameLogic.Targeting;
+
 public interface IEffectModel
 {
     public IAttackEffectVariant? Attack { get; }
     public IHealEffectVariant? Heal { get; }
     public IBuffEffectVariant? Buff { get; }
-    public IDebuffEffectVariant? Debuff { get; }
     public IStatusEffectVariant? Status { get; }
 }
 
@@ -14,7 +16,6 @@ public class EffectModel : IEffectModel
     public IAttackEffectVariant? Attack { get; init; }
     public IHealEffectVariant? Heal { get; init; }
     public IBuffEffectVariant? Buff { get; init; }
-    public IDebuffEffectVariant? Debuff { get; init; }
     public IStatusEffectVariant? Status { get; init; }
 
     public EffectModel(
@@ -28,11 +29,10 @@ public class EffectModel : IEffectModel
         this.Attack = attack;
         this.Heal = heal;
         this.Buff = buff;
-        this.Debuff = debuff;
         this.Status = status;
     }
 
-    public EffectResult<IAttackEffectVariant> ApplyAttack()
+    public EffectResult<IAttackEffectVariant> ApplyAttack(IUser user, ITargetable target)
     {
         if (this.Attack == null)
         {
@@ -41,6 +41,8 @@ public class EffectModel : IEffectModel
 
         return new EffectResult<IAttackEffectVariant>(
             this.Attack,
+            user,
+            target,
             this.Attack.Value,
             1f,
             0f,
@@ -48,43 +50,43 @@ public class EffectModel : IEffectModel
         );
     }
 
-    public EffectResult<IHealEffectVariant> ApplyHeal()
+    public EffectResult<IHealEffectVariant> ApplyHeal(IUser user, ITargetable target)
     {
         if (this.Heal == null)
         {
             throw new InvalidOperationException("Heal effect is not set.");
         }
 
-        return new EffectResult<IHealEffectVariant>(this.Heal, this.Heal.Value, 1f, 0f, false);
-    }
-
-    public EffectResult<IBuffEffectVariant> ApplyBuff()
-    {
-        if (this.Buff == null)
-        {
-            throw new InvalidOperationException("Buff effect is not set.");
-        }
-
-        return new EffectResult<IBuffEffectVariant>(this.Buff, this.Buff.Value, 1f, 0f, false);
-    }
-
-    public EffectResult<IDebuffEffectVariant> ApplyDebuff()
-    {
-        if (this.Debuff == null)
-        {
-            throw new InvalidOperationException("Debuff effect is not set.");
-        }
-
-        return new EffectResult<IDebuffEffectVariant>(
-            this.Debuff,
-            this.Debuff.Value,
+        return new EffectResult<IHealEffectVariant>(
+            this.Heal,
+            user,
+            target,
+            this.Heal.Value,
             1f,
             0f,
             false
         );
     }
 
-    public EffectResult<IStatusEffectVariant> ApplyStatus()
+    public EffectResult<IBuffEffectVariant> ApplyBuff(IUser user, ITargetable target)
+    {
+        if (this.Buff == null)
+        {
+            throw new InvalidOperationException("Buff effect is not set.");
+        }
+
+        return new EffectResult<IBuffEffectVariant>(
+            this.Buff,
+            user,
+            target,
+            this.Buff.Value,
+            1f,
+            0f,
+            false
+        );
+    }
+
+    public EffectResult<IStatusEffectVariant> ApplyStatus(IUser user, ITargetable target)
     {
         if (this.Status == null)
         {
@@ -93,6 +95,8 @@ public class EffectModel : IEffectModel
 
         return new EffectResult<IStatusEffectVariant>(
             this.Status,
+            user,
+            target,
             this.Status.Value,
             1f,
             0f,
@@ -100,31 +104,30 @@ public class EffectModel : IEffectModel
         );
     }
 
-    public EffectResults Apply()
+    public EffectResults Apply(IUser user, ITargetable target)
     {
         EffectResult<IAttackEffectVariant>? attackResult = null;
         EffectResult<IHealEffectVariant>? healResult = null;
         EffectResult<IBuffEffectVariant>? buffResult = null;
-        EffectResult<IDebuffEffectVariant>? debuffResult = null;
         EffectResult<IStatusEffectVariant>? statusResult = null;
 
         if (this.Attack != null)
         {
-            attackResult = this.ApplyAttack();
+            attackResult = this.ApplyAttack(user, target);
         }
         if (this.Heal != null)
         {
-            healResult = this.ApplyHeal();
+            healResult = this.ApplyHeal(user, target);
         }
-        if (this.Debuff != null)
+        if (this.Buff != null)
         {
-            debuffResult = this.ApplyDebuff();
+            buffResult = this.ApplyBuff(user, target);
         }
         if (this.Status != null)
         {
-            statusResult = this.ApplyStatus();
+            statusResult = this.ApplyStatus(user, target);
         }
 
-        return new EffectResults(attackResult, healResult, buffResult, debuffResult, statusResult);
+        return new EffectResults(attackResult, healResult, buffResult, statusResult);
     }
 }
