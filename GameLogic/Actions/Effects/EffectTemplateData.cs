@@ -1,6 +1,9 @@
 namespace GameLogic.Actions.Effects;
 
 using GameLogic.Entities.Stats.Stat;
+using GameLogic.Registry;
+
+public record EffectTemplateRef : TemplateRef<EffectTemplateData, EffectTemplatePatch> { }
 
 /// <summary>
 /// Flat data record for an effect. Used directly as both the JSON-deserialized
@@ -8,29 +11,29 @@ using GameLogic.Entities.Stats.Stat;
 /// to EffectVariantFactory. No separate Spec type is needed because effects are
 /// leaf types with no load-time cross-references.
 /// </summary>
-public record EffectData
+public record EffectTemplateData
 {
-    public required string Name { get; init; }
-    public required string Description { get; init; }
-    public required List<string> Tags { get; init; }
+    public required string DefaultName { get; init; }
+    public required string DefaultDescription { get; init; }
+    public required List<string> DefaultTags { get; init; }
 
     /// <summary>"Attack" | "Heal" | "Status"</summary>
-    public required string Type { get; init; }
+    public required string DefaultType { get; init; }
 
     /// <summary>"SingleHit" | "Burn" | "Poison" etc.</summary>
-    public required string Subtype { get; init; }
+    public required string DefaultSubtype { get; init; }
 
-    public required EffectConfigData Config { get; init; }
+    public required EffectConfigData DefaultConfig { get; init; }
 
-    public EffectData DeepCopy() =>
+    public EffectTemplateData DeepCopy() =>
         new()
         {
-            Name = this.Name,
-            Description = this.Description,
-            Tags = [.. this.Tags],
-            Type = this.Type,
-            Subtype = this.Subtype,
-            Config = this.Config.DeepCopy(),
+            DefaultName = this.DefaultName,
+            DefaultDescription = this.DefaultDescription,
+            DefaultTags = [.. this.DefaultTags],
+            DefaultType = this.DefaultType,
+            DefaultSubtype = this.DefaultSubtype,
+            DefaultConfig = this.DefaultConfig.DeepCopy(),
         };
 }
 
@@ -73,27 +76,27 @@ public record EffectConfigData
 /// Nullable override fields applied on top of a base EffectData when using
 /// the Override template kind.
 /// </summary>
-public record EffectPatch
+public record EffectTemplatePatch
 {
-    public string? Name { get; init; }
-    public string? Description { get; init; }
-    public List<string>? Tags { get; init; }
-    public string? Type { get; init; }
-    public string? Subtype { get; init; }
+    public string? DefaultName { get; init; }
+    public string? DefaultDescription { get; init; }
+    public List<string>? DefaultTags { get; init; }
+    public string? DefaultType { get; init; }
+    public string? DefaultSubtype { get; init; }
 
     /// <summary>
     /// Replaces the entire Config when set (whole-object override, same as StatPatch.Capabilities).
     /// </summary>
-    public EffectConfigData? Config { get; init; }
+    public EffectConfigData? DefaultConfig { get; init; }
 
-    public EffectData ApplyTo(EffectData baseData) =>
+    public EffectTemplatePatch ApplyTo(EffectTemplateData baseData) =>
         new()
         {
-            Name = this.Name ?? baseData.Name,
-            Description = this.Description ?? baseData.Description,
-            Tags = this.Tags ?? [.. baseData.Tags],
-            Type = this.Type ?? baseData.Type,
-            Subtype = this.Subtype ?? baseData.Subtype,
-            Config = this.Config ?? baseData.Config.DeepCopy(),
+            DefaultName = this.DefaultName ?? baseData.DefaultName,
+            DefaultDescription = this.DefaultDescription ?? baseData.DefaultDescription,
+            DefaultTags = this.DefaultTags ?? [.. baseData.DefaultTags],
+            DefaultType = this.DefaultType ?? baseData.DefaultType,
+            DefaultSubtype = this.DefaultSubtype ?? baseData.DefaultSubtype,
+            DefaultConfig = this.DefaultConfig ?? baseData.DefaultConfig.DeepCopy(),
         };
 }

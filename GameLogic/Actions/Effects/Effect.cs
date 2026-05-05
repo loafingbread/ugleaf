@@ -7,24 +7,24 @@ using GameLogic.Utils;
 
 public interface IEffect : IDeepCopyable<IEffect>
 {
-    ReferenceId ReferenceId { get; }
-    IEffectVariant Variant { get; }
     IEffectResult Compute(IUser user, ITargetable target);
 }
 
 public class Effect : IEffect
 {
     public ReferenceId ReferenceId { get; }
-    public IEffectVariant Variant { get; }
+    public EffectTemplate Template { get; }
+    public EffectState State { get; }
 
-    public Effect(ReferenceId referenceId, IEffectVariant variant)
+    public Effect(ReferenceId referenceId, EffectTemplate template, EffectState state)
     {
         this.ReferenceId = referenceId;
-        this.Variant = variant;
+        this.Template = template;
+        this.State = state;
     }
 
     public IEffectResult Compute(IUser user, ITargetable target) =>
-        this.Variant.Compute(user, target);
+        this.State.Variant.Compute(user, target);
 
-    public IEffect DeepCopy() => new Effect(this.ReferenceId, this.Variant);
+    public IEffect DeepCopy() => new Effect(this.ReferenceId, this.Template, this.State);
 }

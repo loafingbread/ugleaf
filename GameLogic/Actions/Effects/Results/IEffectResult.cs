@@ -1,10 +1,12 @@
 namespace GameLogic.Actions.Effects;
 
+using GameLogic.Actions.Usables;
 using GameLogic.Targeting;
 
 public interface IEffectResult
 {
-    IEffectVariant Source { get; }
+    IEffectVariant EffectVariant { get; }
+    IUser User { get; }
     ITargetable Target { get; }
     void Apply();
 }

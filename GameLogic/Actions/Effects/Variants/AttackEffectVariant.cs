@@ -24,7 +24,7 @@ public class AttackEffectVariant : IAttackEffectVariant
         if (didCrit)
             damage *= 2f;
 
-        return new AttackEffectResult(this, target, damage, didCrit);
+        return new AttackEffectResult(this, user, target, damage, didCrit);
     }
 
     private float ResolveValue(IUser user)

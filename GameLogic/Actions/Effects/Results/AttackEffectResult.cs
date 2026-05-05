@@ -1,22 +1,26 @@
 namespace GameLogic.Actions.Effects;
 
+using GameLogic.Actions.Usables;
 using GameLogic.Targeting;
 
 public class AttackEffectResult : IEffectResult, ICritCapable
 {
-    public IEffectVariant Source { get; }
+    public IEffectVariant EffectVariant { get; }
+    public IUser User { get; }
     public ITargetable Target { get; }
     public float Damage { get; }
     public bool DidCrit { get; }
 
     public AttackEffectResult(
-        IEffectVariant source,
+        IEffectVariant effectVariant,
+        IUser user,
         ITargetable target,
         float damage,
         bool didCrit
     )
     {
-        this.Source = source;
+        this.EffectVariant = effectVariant;
+        this.User = user;
         this.Target = target;
         this.Damage = damage;
         this.DidCrit = didCrit;

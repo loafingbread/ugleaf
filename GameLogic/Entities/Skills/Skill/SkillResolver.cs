@@ -1,8 +1,8 @@
 namespace GameLogic.Entities.Skills.Skill;
 
+using GameLogic.Actions.Usables.Usable;
 using GameLogic.Registry;
 using GameLogic.Targeting;
-using GameLogic.Actions.Usables.Usable;
 
 public static class SkillResolver
 {
@@ -27,7 +27,7 @@ public static class SkillResolver
     {
         if (!TypedReferenceSpecValidator.IsTemplateRefValid(skillTemplateRef))
         {
-            throw new InvalidOperationException("Skill template reference spec is valid");
+            throw new InvalidOperationException("Skill template reference spec is not valid");
         }
 
         switch (skillTemplateRef.TemplateKind)

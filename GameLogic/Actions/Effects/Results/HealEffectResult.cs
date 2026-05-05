@@ -1,16 +1,19 @@
 namespace GameLogic.Actions.Effects;
 
+using GameLogic.Actions.Usables;
 using GameLogic.Targeting;
 
 public class HealEffectResult : IEffectResult
 {
-    public IEffectVariant Source { get; }
+    public IEffectVariant EffectVariant { get; }
+    public IUser User { get; }
     public ITargetable Target { get; }
     public float Amount { get; }
 
-    public HealEffectResult(IEffectVariant source, ITargetable target, float amount)
+    public HealEffectResult(IEffectVariant effectVariant, IUser user, ITargetable target, float amount)
     {
-        this.Source = source;
+        this.EffectVariant = effectVariant;
+        this.User = user;
         this.Target = target;
         this.Amount = amount;
     }
