@@ -14,7 +14,8 @@ public static class EffectResolver
             throw new InvalidOperationException("Effect template reference spec is not valid");
         }
 
-        switch (effectTemplateRef.TemplateKind) {
+        switch (effectTemplateRef.TemplateKind)
+        {
             case ETemplateKind.Inline:
             {
                 return new EffectTemplate(
@@ -28,7 +29,7 @@ public static class EffectResolver
             }
             case ETemplateKind.Ref:
             {
-                // TODO: Consider replacing all instances of this with generic, 
+                // TODO: Consider replacing all instances of this with generic,
                 // since this seems repeated in all other types
                 EffectTemplate dependencyRef = getEffectTemplate(
                     effectTemplateRef.ReferenceMetadata.DependencyId
@@ -38,7 +39,7 @@ public static class EffectResolver
             }
             case ETemplateKind.Override:
             {
-                // TODO: Consider replacing all instances of this with generic, 
+                // TODO: Consider replacing all instances of this with generic,
                 // since this seems repeated in all other types
                 EffectTemplate dependencyRef = getEffectTemplate(
                     effectTemplateRef.ReferenceMetadata.DependencyId
@@ -46,17 +47,20 @@ public static class EffectResolver
 
                 return effectTemplateRef.TemplatePatch!.ApplyTo(dependencyRef);
             }
+            default:
+            {
+                throw new InvalidOperationException("Invalid effect template spec kind");
+            }
         }
+
+        throw new InvalidOperationException("Invalid effect template spec kind");
     }
 
     /// <summary>
     /// Resolves a reference spec to flat EffectData, handling Inline / Ref / Override kinds.
     /// Follows the same pattern as StatResolver.ToData().
     /// </summary>
-    public static EffectData ToData(
-        Ref untypedRef,
-        Func<ReferenceId?, EffectData> getEffectData
-    )
+    public static EffectData ToData(Ref untypedRef, Func<ReferenceId?, EffectData> getEffectData)
     {
         var typedRef =
             untypedRef as TemplateRef<EffectData, EffectPatch>
