@@ -1,9 +1,11 @@
 namespace GameLogic.Entities.Stats;
 
+using GameLogic.Registry;
+
 /// <summary>
 /// A stat is a value that can be modified by modifiers.
 /// </summary>
-public abstract class Stat
+public abstract class Stat : IToData<StatRecord>
 {
     public StatMetadataRecord Metadata { get; init; }
     public IStatConfigRecord Config { get; init; }
@@ -33,6 +35,13 @@ public abstract class Stat
     /// <returns>
     /// <c>true</c> if the stat is derived from a formula, <c>false</c> if it is a constant.
     /// </returns>
+    public StatRecord ToData() => new StatRecord
+    {
+        Type = this.Type,
+        Metadata = this.Metadata,
+        Config = this.Config,
+    };
+
     public abstract bool IsFormulaCalculated();
 
     /// <summary>

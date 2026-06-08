@@ -1,8 +1,8 @@
 namespace GameLogic.Entities.Stats;
 
-using System.Diagnostics.CodeAnalysis;
+using GameLogic.Registry;
 
-public class StatBlock
+public class StatBlock : IToData<StatBlockRecord>
 {
     public List<Stat> Stats { get; private set; } = new();
     public StatModifiers Modifiers { get; private set; } = new();
@@ -80,4 +80,9 @@ public class StatBlock
         resourceStat.SetCurrentValue(resourceStat.CurrentValue + amount);
         return resourceStat;
     }
+
+    public StatBlockRecord ToData() => new StatBlockRecord
+    {
+        Stats = Stats.Select(s => s.ToData()).ToList(),
+    };
 }
