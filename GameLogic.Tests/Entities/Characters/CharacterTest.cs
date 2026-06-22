@@ -50,9 +50,9 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
         Assert.Equal("skill_ignite", firstSkill.Id);
         Assert.Equal(ETargetQuantity.Count, firstSkill.Targeter?.GetConfig().TargetQuantity);
 
-        Assert.Equal("usable_ignite", firstSkill.Usables[0].GetConfig().Id);
+        Assert.Equal("usable_ignite", firstSkill.Usables[0].ToData().Id);
 
-        EffectTemplate burnEffect = firstSkill.Usables[0].GetConfig().Effects[0];
+        EffectTemplate burnEffect = firstSkill.Usables[0].Effects[0];
         Assert.Equal("Status", burnEffect.Type);
         Assert.Equal("Burn", burnEffect.Subtype);
         Assert.IsType<BurnStatusVariant>(burnEffect.EffectVariant);

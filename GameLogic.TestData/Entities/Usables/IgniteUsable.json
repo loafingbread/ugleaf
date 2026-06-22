@@ -1,0 +1,24 @@
+{
+    "Id": "usable_ignite",
+    "Targeter": {
+        "TargetQuantity": "Count",
+        "AllowedTargets": ["Enemy"],
+        "Count": 1
+    },
+    "Effects": [
+        {
+            "Type": "Attack",
+            "Subtype": "SingleHit",
+            "Variant": "FireDamage",
+            "Value": 10.0,
+            "CritChance": 0.1
+        },
+        {
+            "Type": "Status",
+            "Subtype": "Burn",
+            "Variant": "DOT",
+            "Value": 5.0,
+            "Duration": 3.0
+        }
+    ]
+}

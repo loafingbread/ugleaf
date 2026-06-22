@@ -261,7 +261,7 @@ public class CharactersCommand : BaseCommand
         ui.PrintIndentedInfo($"Target Count: {targeter.Count}", indentLevel + 1);
     }
 
-    public static void DisplayUsables(List<IUsable> usables, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplayUsables(List<UsableTemplate> usables, ConsoleUI ui, int indentLevel = 0)
     {
         ui.PrintIndentedSection($"Usables ({usables.Count})", indentLevel);
 
@@ -273,17 +273,16 @@ public class CharactersCommand : BaseCommand
     }
 
     public static void DisplayUsable(
-        IUsable usable,
+        UsableTemplate usable,
         ConsoleUI ui,
         int indentLevel = 0,
         bool isLast = false
     )
     {
-        ui.PrintIndentedSection($"{usable.GetConfig().Id}", indentLevel, isLast);
+        ui.PrintIndentedSection($"{usable.ToData().Id}", indentLevel, isLast);
 
-        TargeterConfig usableTargeter = usable.GetConfig().Targeter;
-        DisplayTargeter(usableTargeter, ui, indentLevel + 1);
-        DisplayEffects(usable.GetConfig().Effects, ui, indentLevel + 1);
+        DisplayTargeter(usable.Targeter, ui, indentLevel + 1);
+        DisplayEffects(usable.Effects, ui, indentLevel + 1);
     }
 
     public static void DisplayEffects(List<EffectTemplate> effects, ConsoleUI ui, int indentLevel = 0)

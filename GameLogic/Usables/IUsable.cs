@@ -1,25 +1,19 @@
 namespace GameLogic.Usables;
 
-using GameLogic.Config;
-using GameLogic.Entities;
+using GameLogic.Targeting;
 using GameLogic.Usables.Effects;
-
-public interface IUsable : IConfigurable<UsableConfig>
-{
-    public IEnumerable<UsableResult> Use(Entity user, IEnumerable<Entity> targets);
-}
 
 public class UsableResult
 {
-    public IUsable Usable { get; }
-    public Entity User { get; }
-    public Entity Target { get; }
+    public UsableTemplate Usable { get; }
+    public IUser User { get; }
+    public ITargetable Target { get; }
     public List<IEffectResult> Results { get; } = new();
 
-    public UsableResult(IUsable usable, Entity user, Entity target)
+    public UsableResult(UsableTemplate usable, IUser user, ITargetable target)
     {
-        this.Usable = usable;
-        this.User = user;
-        this.Target = target;
+        Usable = usable;
+        User = user;
+        Target = target;
     }
 }

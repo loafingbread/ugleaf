@@ -114,20 +114,11 @@ public class Entity : ITargeter, ITargetable, IAffectable, IUser
     /*********************
     * IUser
     *********************/
-    public bool CanUse(IUsable usable)
+    public bool CanUse(UsableTemplate usable)
     {
         if (this._user == null)
             return false;
         return this._user.CanUse(usable);
-    }
-
-    public IEnumerable<UsableResult> Use(IUsable usable, Entity user, IEnumerable<Entity> targets)
-    {
-        if (this._user == null)
-        {
-            throw new NoNullAllowedException("Cannot use without a user");
-        }
-        return this._user.Use(usable, user, targets);
     }
 
     public void ApplyConfig(TargeterConfig config)

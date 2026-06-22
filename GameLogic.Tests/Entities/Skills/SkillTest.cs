@@ -42,12 +42,12 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         Assert.Equal("skill_ignite", ignite.Id);
         Assert.Equal("Ignite", ignite.Name);
 
-        UsableConfig usableConfig = (UsableConfig)ignite.Usables[0].GetConfig();
-        Assert.Equal(ETargetQuantity.Count, usableConfig.Targeter?.TargetQuantity);
-        Assert.Equal([EFactionRelationship.Enemy], usableConfig.Targeter?.AllowedTargets);
-        Assert.Equal(1, usableConfig.Targeter?.Count);
+        UsableTemplate usable = ignite.Usables[0];
+        Assert.Equal(ETargetQuantity.Count, usable.Targeter.TargetQuantity);
+        Assert.Equal([EFactionRelationship.Enemy], usable.Targeter.AllowedTargets);
+        Assert.Equal(1, usable.Targeter.Count);
 
-        EffectTemplate burnEffect = usableConfig.Effects[1];
+        EffectTemplate burnEffect = usable.Effects[1];
         Assert.Equal("Status", burnEffect.Type);
         Assert.Equal("Burn", burnEffect.Subtype);
         Assert.Equal("DOT", burnEffect.VariantName);

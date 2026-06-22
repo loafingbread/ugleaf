@@ -38,6 +38,16 @@ public static class ConfigPaths
         public static readonly string SprayAndPray = Path.Combine(Folder, "SprayAndPray.json");
     }
 
+    public static class Usable
+    {
+        public static readonly string Folder = Path.Combine(
+            BasePath,
+            "GameLogic.TestData/Entities/Usables/"
+        );
+
+        public static readonly string IgniteUsable = Path.Combine(Folder, "IgniteUsable.json");
+    }
+
     public static class Effect
     {
         public static readonly string Folder = Path.Combine(
