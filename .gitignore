@@ -21,3 +21,12 @@ mono_crash.*.json
 x64/
 [Bb]in/
 [Oo]bj/
+
+# Vscode ignores
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
