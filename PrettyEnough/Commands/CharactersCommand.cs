@@ -237,12 +237,12 @@ public class CharactersCommand : BaseCommand
     )
     {
         ui.PrintIndentedSection(
-            $"{skill.GetConfig().Name} ({skill.GetConfig().Id})",
+            $"{skill.Name} ({skill.Id})",
             indentLevel,
             isLast
         );
 
-        DisplayTargeter(skill.Targeter?.GetConfig(), ui, indentLevel + 1);
+        DisplayTargeter(skill.Targeter, ui, indentLevel + 1);
         DisplayUsables(skill.Usables, ui, indentLevel + 1);
     }
 

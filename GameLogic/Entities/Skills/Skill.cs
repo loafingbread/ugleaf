@@ -1,38 +1,31 @@
 namespace GameLogic.Entities.Skills;
 
-using GameLogic.Config;
+using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
-public class Skill : IConfigurable<SkillConfig>
+public class Skill : IToData<SkillInstanceData>
 {
-    private SkillConfig _config { get; set; }
-    public string Id { get; private set; } = "";
-    public string Name { get; private set; } = "";
-    public ITargeter? Targeter { get; private set; } = null;
-    public List<UsableTemplate> Usables { get; private set; } = new();
+    public SkillTemplate Template { get; }
+    public int Level { get; private set; }
+    public int CurrentCooldown { get; private set; }
 
-    public Skill(SkillConfig config)
+    public string Id => Template.ToData().Id;
+    public string Name => Template.Name;
+    public TargeterConfig? Targeter => Template.Targeter;
+    public List<UsableTemplate> Usables => Template.Usables;
+
+    public Skill(SkillTemplate template, SkillInstanceData data)
     {
-        this._config = config;
-        this.ApplyConfig(config);
+        Template = template;
+        Level = data.Level;
+        CurrentCooldown = data.CurrentCooldown;
     }
 
-    public bool CanTarget() => this.Targeter != null;
-
-    public bool CanUse() => this.Usables.Count > 0;
-
-    public void ApplyConfig(SkillConfig config)
+    public SkillInstanceData ToData() => new()
     {
-        this._config = config;
-        this.Id = config.Id;
-        this.Name = config.Name;
-
-        if (config.Targeter != null)
-            this.Targeter = new Targeter(config.Targeter);
-
-        this.Usables = config.Usables;
-    }
-
-    public SkillConfig GetConfig() => this._config;
+        TemplateId = Template.ToData().Id,
+        Level = Level,
+        CurrentCooldown = CurrentCooldown,
+    };
 }

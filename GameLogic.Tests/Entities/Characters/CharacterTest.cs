@@ -48,7 +48,7 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
 
         Skill firstSkill = config.Skills[0];
         Assert.Equal("skill_ignite", firstSkill.Id);
-        Assert.Equal(ETargetQuantity.Count, firstSkill.Targeter?.GetConfig().TargetQuantity);
+        Assert.Equal(ETargetQuantity.Count, firstSkill.Targeter?.TargetQuantity);
 
         Assert.Equal("usable_ignite", firstSkill.Usables[0].ToData().Id);
 

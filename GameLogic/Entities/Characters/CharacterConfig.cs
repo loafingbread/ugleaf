@@ -3,6 +3,7 @@ namespace GameLogic.Entities.Characters;
 using System.Diagnostics.CodeAnalysis;
 using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
+using GameLogic.Registry;
 
 public interface ICharacterRecord
 {
@@ -13,7 +14,7 @@ public interface ICharacterRecord
     public int Attack { get; }
     public int Defense { get; }
     public List<StatRecord> Stats { get; }
-    public List<SkillRecord> Skills { get; }
+    public List<SkillTemplateData> Skills { get; }
 }
 
 public record CharacterRecord : ICharacterRecord, IStatBlockRecord
@@ -24,7 +25,7 @@ public record CharacterRecord : ICharacterRecord, IStatBlockRecord
     public int Attack { get; init; }
     public int Defense { get; init; }
     public List<StatRecord> Stats { get; init; } = new();
-    public List<SkillRecord> Skills { get; init; } = new();
+    public List<SkillTemplateData> Skills { get; init; } = new();
 }
 
 public class CharacterConfig : IStatBlockRecord
@@ -37,6 +38,8 @@ public class CharacterConfig : IStatBlockRecord
     public List<StatRecord> Stats { get; init; } = new();
     public List<Skill> Skills { get; init; } = new();
 
+    private static readonly SkillTemplateFactory _skillFactory = new();
+
     [SetsRequiredMembers]
     public CharacterConfig(ICharacterRecord record)
     {
@@ -48,10 +51,10 @@ public class CharacterConfig : IStatBlockRecord
 
         this.Stats = record.Stats;
 
-        foreach (SkillRecord skillRecord in record.Skills)
+        foreach (SkillTemplateData skillData in record.Skills)
         {
-            Skill skill = SkillFactory.CreateFromRecord(skillRecord);
-            this.Skills.Add(skill);
+            SkillTemplate template = _skillFactory.Create(ReferenceId.New(), skillData);
+            this.Skills.Add(new Skill(template, new SkillInstanceData { TemplateId = skillData.Id }));
         }
     }
 }

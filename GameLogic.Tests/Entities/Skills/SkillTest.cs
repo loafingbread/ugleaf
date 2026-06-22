@@ -1,6 +1,7 @@
 namespace GameLogic.Tests;
 
 using GameLogic.Entities.Skills;
+using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
@@ -12,6 +13,7 @@ public class SkillTest : IClassFixture<SkillTestFixture>
 {
     private readonly SkillTestFixture _fixture;
     private readonly ITestOutputHelper _output;
+    private readonly SkillTemplateFactory _factory = new();
 
     public SkillTest(SkillTestFixture fixture, ITestOutputHelper output)
     {
@@ -22,7 +24,8 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     [Fact]
     public void Skill_CanLoadFromFile()
     {
-        Skill facePalm = SkillFactory.CreateFromRecord(this._fixture.FacePalmRecord);
+        SkillTemplate template = _factory.Create(ReferenceId.New(), this._fixture.FacePalmRecord);
+        Skill facePalm = new(template, new SkillInstanceData { TemplateId = template.ToData().Id });
 
         Assert.Equal("skill_facepalm", facePalm.Id);
         Assert.Equal("Face Palm", facePalm.Name);
@@ -37,7 +40,8 @@ public class SkillTest : IClassFixture<SkillTestFixture>
     [Fact]
     public void Skill_CanLoadFullFromFile()
     {
-        Skill ignite = SkillFactory.CreateFromRecord(this._fixture.IgniteRecord);
+        SkillTemplate template = _factory.Create(ReferenceId.New(), this._fixture.IgniteRecord);
+        Skill ignite = new(template, new SkillInstanceData { TemplateId = template.ToData().Id });
 
         Assert.Equal("skill_ignite", ignite.Id);
         Assert.Equal("Ignite", ignite.Name);
@@ -56,5 +60,18 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         EffectTemplateData burnData = burnEffect.ToData();
         Assert.Equal(5.0f, burnData.Value);
         Assert.Equal(3.0f, burnData.Duration);
+    }
+
+    [Fact]
+    public void Skill_InstanceData_RoundTrips()
+    {
+        SkillTemplate template = _factory.Create(ReferenceId.New(), this._fixture.IgniteRecord);
+        Skill ignite = new(template, new SkillInstanceData { TemplateId = template.ToData().Id, Level = 2 });
+
+        SkillInstanceData data = ignite.ToData();
+
+        Assert.Equal("skill_ignite", data.TemplateId);
+        Assert.Equal(2, data.Level);
+        Assert.Equal(0, data.CurrentCooldown);
     }
 }
