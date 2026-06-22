@@ -4,6 +4,7 @@ using GameLogic.Entities.Skills;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 using GameLogic.Usables.Effects;
+using GameLogic.Usables.Effects.Variants;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -46,14 +47,14 @@ public class SkillTest : IClassFixture<SkillTestFixture>
         Assert.Equal([EFactionRelationship.Enemy], usableConfig.Targeter?.AllowedTargets);
         Assert.Equal(1, usableConfig.Targeter?.Count);
 
-        IEffect secondEffect = usableConfig.Effects[1];
-        BurnStatusEffect burnEffect = (BurnStatusEffect)secondEffect;
-        BurnStatusEffectConfig burnEffectConfig = (BurnStatusEffectConfig)burnEffect.GetConfig();
-        Assert.Equal("effect_burn_dot", burnEffectConfig.Id);
-        Assert.Equal("Status", burnEffectConfig.Type);
-        Assert.Equal("Burn", burnEffectConfig.Subtype);
-        Assert.Equal("DOT", burnEffectConfig.Variant);
-        Assert.Equal(3, burnEffectConfig.Duration);
-        Assert.Equal(5, burnEffectConfig.DamagePerTurn);
+        EffectTemplate burnEffect = usableConfig.Effects[1];
+        Assert.Equal("Status", burnEffect.Type);
+        Assert.Equal("Burn", burnEffect.Subtype);
+        Assert.Equal("DOT", burnEffect.VariantName);
+        Assert.IsType<BurnStatusVariant>(burnEffect.EffectVariant);
+
+        EffectTemplateData burnData = burnEffect.ToData();
+        Assert.Equal(5.0f, burnData.Value);
+        Assert.Equal(3.0f, burnData.Duration);
     }
 }

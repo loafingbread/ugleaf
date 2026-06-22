@@ -1,0 +1,7 @@
+{
+    "Type": "Attack",
+    "Subtype": "SingleHit",
+    "Variant": "PhysicalDamage",
+    "Value": 25.0,
+    "CritChance": 0.15
+}

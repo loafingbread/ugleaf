@@ -130,14 +130,11 @@
                     },
                     "Effects": [
                         {
-                            "Id": "effect_burn_dot",
                             "Type": "Status",
                             "Subtype": "Burn",
                             "Variant": "DOT",
-                            "Parameters": {
-                                "Duration": 3,
-                                "DamagePerTurn": 5
-                            }
+                            "Value": 5.0,
+                            "Duration": 3.0
                         }
                     ]
                 }

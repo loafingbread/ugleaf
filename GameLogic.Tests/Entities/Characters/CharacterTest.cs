@@ -4,6 +4,8 @@ using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
 using GameLogic.Targeting;
+using GameLogic.Usables.Effects;
+using GameLogic.Usables.Effects.Variants;
 using Xunit;
 
 public class CharacterTest : IClassFixture<CharacterTestFixture>
@@ -46,13 +48,15 @@ public class CharacterTest : IClassFixture<CharacterTestFixture>
 
         Skill firstSkill = config.Skills[0];
         Assert.Equal("skill_ignite", firstSkill.Id);
-
         Assert.Equal(ETargetQuantity.Count, firstSkill.Targeter?.GetConfig().TargetQuantity);
 
         Assert.Equal("usable_ignite", firstSkill.Usables[0].GetConfig().Id);
-        Assert.Equal(
-            "effect_burn_dot",
-            firstSkill.Usables[0].GetConfig().Effects[0].GetConfig().Id
-        );
+
+        EffectTemplate burnEffect = firstSkill.Usables[0].GetConfig().Effects[0];
+        Assert.Equal("Status", burnEffect.Type);
+        Assert.Equal("Burn", burnEffect.Subtype);
+        Assert.IsType<BurnStatusVariant>(burnEffect.EffectVariant);
+        Assert.Equal(5.0f, burnEffect.ToData().Value);
+        Assert.Equal(3.0f, burnEffect.ToData().Duration);
     }
 }

@@ -14,7 +14,7 @@ public class UsableResult
     public IUsable Usable { get; }
     public Entity User { get; }
     public Entity Target { get; }
-    public List<EffectResult> Results { get; } = new();
+    public List<IEffectResult> Results { get; } = new();
 
     public UsableResult(IUsable usable, Entity user, Entity target)
     {

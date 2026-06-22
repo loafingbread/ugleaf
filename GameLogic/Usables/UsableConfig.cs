@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables.Effects;
 
@@ -8,21 +9,23 @@ public interface IUsableRecord
 {
     public string Id { get; }
     public TargeterRecord Targeter { get; }
-    public List<EffectRecord> Effects { get; }
+    public List<EffectTemplateData> Effects { get; }
 }
 
 public record UsableRecord : IUsableRecord
 {
     public required string Id { get; init; }
     public required TargeterRecord Targeter { get; init; }
-    public required List<EffectRecord> Effects { get; init; } = new();
+    public required List<EffectTemplateData> Effects { get; init; } = new();
 }
 
 public class UsableConfig
 {
     public required string Id { get; init; }
     public required TargeterConfig Targeter { get; init; }
-    public required List<IEffect> Effects { get; init; } = new();
+    public required List<EffectTemplate> Effects { get; init; } = new();
+
+    private static readonly EffectTemplateFactory _effectFactory = new();
 
     [SetsRequiredMembers]
     public UsableConfig(IUsableRecord record)
@@ -30,10 +33,9 @@ public class UsableConfig
         this.Id = record.Id;
         this.Targeter = new TargeterConfig(record.Targeter);
 
-        foreach (EffectRecord effectRecord in record.Effects)
+        foreach (EffectTemplateData effectData in record.Effects)
         {
-            IEffect effect = EffectFactory.CreateFromRecord(effectRecord);
-            this.Effects.Add(effect);
+            this.Effects.Add(_effectFactory.Create(ReferenceId.New(), effectData));
         }
     }
 }

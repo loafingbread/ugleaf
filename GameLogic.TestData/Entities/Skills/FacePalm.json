@@ -11,20 +11,15 @@
             "Id": "usable_facepalm",
             "Targeter": {
                 "TargetQuantity": "Count",
-                "AllowedTargets": [
-                    "Self"
-                ],
+                "AllowedTargets": ["Self"],
                 "Count": 1
             },
             "Effects": [
                 {
-                    "Id": "effect_physical_damage",
                     "Type": "Attack",
                     "Subtype": "SingleHit",
                     "Variant": "PhysicalDamage",
-                    "Parameters": {
-                        "Damage": 777
-                    }
+                    "Value": 777.0
                 }
             ]
         }

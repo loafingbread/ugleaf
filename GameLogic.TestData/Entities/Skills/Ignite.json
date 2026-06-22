@@ -3,9 +3,7 @@
     "Name": "Ignite",
     "Targeter": {
         "TargetQuantity": "Count",
-        "AllowedTargets": [
-            "Enemy"
-        ],
+        "AllowedTargets": ["Enemy"],
         "Count": 1
     },
     "Usables": [
@@ -13,30 +11,23 @@
             "Id": "usable_ignite",
             "Targeter": {
                 "TargetQuantity": "Count",
-                "AllowedTargets": [
-                    "Enemy"
-                ],
+                "AllowedTargets": ["Enemy"],
                 "Count": 1
             },
             "Effects": [
                 {
-                    "Id": "effect_fire_damage",
                     "Type": "Attack",
                     "Subtype": "SingleHit",
                     "Variant": "FireDamage",
-                    "Parameters": {
-                        "Damage": 10
-                    }
+                    "Value": 10.0,
+                    "CritChance": 0.1
                 },
                 {
-                    "Id": "effect_burn_dot",
                     "Type": "Status",
                     "Subtype": "Burn",
                     "Variant": "DOT",
-                    "Parameters": {
-                        "Duration": 3,
-                        "DamagePerTurn": 5
-                    }
+                    "Value": 5.0,
+                    "Duration": 3.0
                 }
             ]
         },
@@ -44,20 +35,15 @@
             "Id": "usable_overheat",
             "Targeter": {
                 "TargetQuantity": "Count",
-                "AllowedTargets": [
-                    "Self"
-                ],
+                "AllowedTargets": ["Self"],
                 "Count": 1
             },
             "Effects": [
                 {
-                    "Id": "effect_overheat",
                     "Type": "Attack",
                     "Subtype": "SingleHit",
                     "Variant": "FireDamage",
-                    "Parameters": {
-                        "Damage": 5
-                    }
+                    "Value": 5.0
                 }
             ]
         }

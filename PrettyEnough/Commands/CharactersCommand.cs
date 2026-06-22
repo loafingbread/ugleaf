@@ -286,7 +286,7 @@ public class CharactersCommand : BaseCommand
         DisplayEffects(usable.GetConfig().Effects, ui, indentLevel + 1);
     }
 
-    public static void DisplayEffects(List<IEffect> effects, ConsoleUI ui, int indentLevel = 0)
+    public static void DisplayEffects(List<EffectTemplate> effects, ConsoleUI ui, int indentLevel = 0)
     {
         ui.PrintIndentedSection($"Effects ({effects.Count})", indentLevel);
 
@@ -298,24 +298,32 @@ public class CharactersCommand : BaseCommand
     }
 
     public static void DisplayEffect(
-        IEffect effect,
+        EffectTemplate effect,
         ConsoleUI ui,
         int indentLevel = 0,
         bool isLast = false
     )
     {
-        ui.PrintIndentedSection($"{effect.GetConfig().Id}", indentLevel, isLast);
+        ui.PrintIndentedSection($"{effect.Type}/{effect.Subtype}", indentLevel, isLast);
 
-        ui.PrintIndentedInfo($"Type: {effect.GetConfig().Type}", indentLevel + 1);
-        ui.PrintIndentedInfo($"Subtype: {effect.GetConfig().Subtype}", indentLevel + 1);
-        ui.PrintIndentedInfo($"Variant: {effect.GetConfig().Variant}", indentLevel + 1, isLast);
+        ui.PrintIndentedInfo($"Type: {effect.Type}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Subtype: {effect.Subtype}", indentLevel + 1);
+        ui.PrintIndentedInfo($"Variant: {effect.VariantName}", indentLevel + 1, isLast);
 
-        if (effect.GetConfig().Type == "Attack")
+        EffectTemplateData data = effect.ToData();
+        if (effect.Type == "Attack")
         {
-            ui.PrintIndentedInfo(
-                $"Damage: {(effect.GetConfig() as AttackEffectConfig)?.Damage}",
-                indentLevel + 1
-            );
+            ui.PrintIndentedInfo($"Damage: {data.Value}", indentLevel + 1);
+            ui.PrintIndentedInfo($"CritChance: {data.CritChance}", indentLevel + 1, isLast);
+        }
+        else if (effect.Type == "Status")
+        {
+            ui.PrintIndentedInfo($"Value: {data.Value}", indentLevel + 1);
+            ui.PrintIndentedInfo($"Duration: {data.Duration}", indentLevel + 1, isLast);
+        }
+        else
+        {
+            ui.PrintIndentedInfo($"Value: {data.Value}", indentLevel + 1, isLast);
         }
     }
 

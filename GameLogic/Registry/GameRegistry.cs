@@ -1,6 +1,7 @@
 namespace GameLogic.Registry;
 
 using GameLogic.Entities.Stats;
+using GameLogic.Usables.Effects;
 
 /// <summary>
 /// Central access point for all template and instance registries.
@@ -9,4 +10,5 @@ using GameLogic.Entities.Stats;
 public class GameRegistry
 {
     public Registry<StatBlock> StatBlocks { get; } = new();
+    public Registry<EffectTemplate> Effects { get; } = new();
 }
