@@ -93,7 +93,7 @@ public class CharactersCommand : BaseCommand
             Character character = gameState.PlayerState.Characters[i];
             bool isLast = i == gameState.PlayerState.Characters.Count - 1;
             ui.PrintIndentedInfo(
-                $"{character.GetConfig().Name} ({character.GetConfig().Id})",
+                $"{character.Name} ({character.Id})",
                 indentLevel + 1,
                 isLast
             );
@@ -143,7 +143,7 @@ public class CharactersCommand : BaseCommand
     )
     {
         Character? character = gameState.PlayerState.Characters.FirstOrDefault(c =>
-            c.GetConfig().Id == characterId
+            c.Id == characterId
         );
         if (character == null)
             return CommandResult.Error($"Character not found: {characterId}");
@@ -160,7 +160,7 @@ public class CharactersCommand : BaseCommand
     )
     {
         ui.PrintIndentedSection(
-            $"{character.GetConfig().Name} ({character.GetConfig().Id})",
+            $"{character.Name} ({character.Id})",
             indentLevel,
             isLast
         );
@@ -172,7 +172,7 @@ public class CharactersCommand : BaseCommand
     public static void DisplayStats(Character character, ConsoleUI ui, int indentLevel = 0)
     {
         ui.PrintIndentedSection(
-            $"{character.GetConfig().Name} Stats ({character.Stats.Stats.Count})",
+            $"{character.Name} Stats ({character.Stats.Stats.Count})",
             indentLevel
         );
 
@@ -218,14 +218,14 @@ public class CharactersCommand : BaseCommand
     public static void DisplaySkills(Character character, ConsoleUI ui, int indentLevel = 0)
     {
         ui.PrintIndentedSection(
-            $"{character.GetConfig().Name} Skills ({character.GetConfig().Skills.Count})",
+            $"{character.Name} Skills ({character.Skills.Count})",
             indentLevel
         );
 
-        for (int i = 0; i < character.GetConfig().Skills.Count; i++)
+        for (int i = 0; i < character.Skills.Count; i++)
         {
-            bool isLast = i == character.GetConfig().Skills.Count - 1;
-            DisplaySkill(character.GetConfig().Skills[i], ui, indentLevel + 1, isLast);
+            bool isLast = i == character.Skills.Count - 1;
+            DisplaySkill(character.Skills[i], ui, indentLevel + 1, isLast);
         }
     }
 

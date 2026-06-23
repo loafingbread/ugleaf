@@ -4,7 +4,7 @@ using GameLogic.Registry;
 using GameLogic.Targeting;
 using GameLogic.Usables;
 
-public class Skill : IToData<SkillInstanceData>
+public class Skill : IToInstanceData<SkillInstanceData>
 {
     public SkillTemplate Template { get; }
     public int Level { get; private set; }

@@ -11,7 +11,7 @@ public abstract class CombatEvent : GameEvent<BuiltInEventCategory>
         {
             string targets = String.Join(
                 ", ",
-                this.Targets.Select(x => x.GetConfig().Name).ToList()
+                this.Targets.Select(x => x.Name).ToList()
             );
             return $"{GetType().Name}: Phase[{Phase}], Action[{Action}], User[{User}], CurrentTurn[{CurrentTurn}], Targets[{targets}]";
         }

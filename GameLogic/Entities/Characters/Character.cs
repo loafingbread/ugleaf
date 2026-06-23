@@ -1,26 +1,30 @@
 namespace GameLogic.Entities.Characters;
 
-using System.Diagnostics.CodeAnalysis;
-using GameLogic.Config;
+using GameLogic.Entities.Skills;
 using GameLogic.Entities.Stats;
+using GameLogic.Registry;
 
-public class Character : IConfigurable<CharacterConfig>
+public class Character : IToInstanceData<CharacterInstanceData>
 {
-    private CharacterConfig _config { get; set; }
-    public StatBlock Stats { get; private set; }
+    public CharacterTemplate Template { get; }
+    public StatBlock Stats { get; }
+    public List<Skill> Skills { get; }
 
-    [SetsRequiredMembers]
-    public Character(CharacterConfig config)
+    public string Id => Template.ToData().Id;
+    public string Name => Template.Name;
+
+    public Character(CharacterTemplate template, CharacterInstanceData data)
     {
-        this._config = config;
-        this.Stats = StatFactory.CreateStatBlockFromRecord(config);
-        this.ApplyConfig(config);
+        Template = template;
+        Stats = new StatBlock(template.ToData());
+        Skills = template.Skills
+            .Select(t => new Skill(t, new SkillInstanceData { TemplateId = t.ToData().Id }))
+            .ToList();
     }
 
-    public void ApplyConfig(CharacterConfig config)
+    public CharacterInstanceData ToData() => new()
     {
-        this._config = config;
-    }
-
-    public CharacterConfig GetConfig() => this._config;
+        TemplateId = Template.ToData().Id,
+        Skills = Skills.Select(s => s.ToData()).ToList(),
+    };
 }

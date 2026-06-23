@@ -1,6 +1,7 @@
 namespace GameLogic.Entities;
 
 using GameLogic.Entities.Characters;
+using GameLogic.Registry;
 
 public class GameState
 {
@@ -21,19 +22,21 @@ public record PlayerState
 {
     public List<Character> Characters { get; init; } = new();
 
+    private static readonly CharacterTemplateFactory _characterFactory = new();
+
     public PlayerState(PlayerStateRecord playerStateRecord)
     {
-        foreach (CharacterRecord characterRecord in playerStateRecord.Characters)
+        foreach (CharacterTemplateData data in playerStateRecord.Characters)
         {
-            Character character = CharacterFactory.CreateFromRecord(characterRecord);
-            this.Characters.Add(character);
+            CharacterTemplate template = _characterFactory.Create(ReferenceId.New(), data);
+            Characters.Add(new Character(template, new CharacterInstanceData { TemplateId = data.Id }));
         }
     }
 }
 
 public record PlayerStateRecord
 {
-    public List<CharacterRecord> Characters { get; init; } = new();
+    public List<CharacterTemplateData> Characters { get; init; } = new();
 }
 
 public class GameStateFactory

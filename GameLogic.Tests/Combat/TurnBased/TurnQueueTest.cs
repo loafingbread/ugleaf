@@ -3,11 +3,20 @@ namespace GameLogic.TurnBasedTests;
 using GameLogic.Combat.TurnBased;
 using GameLogic.Config;
 using GameLogic.Entities.Characters;
+using GameLogic.Registry;
 using GameLogic.Tests;
 using Xunit;
 
 class TurnQueueTestData
 {
+    private static readonly CharacterTemplateFactory _factory = new();
+
+    private static Character MakeCharacter(CharacterTemplateData data)
+    {
+        CharacterTemplate template = _factory.Create(ReferenceId.New(), data);
+        return new Character(template, new CharacterInstanceData { TemplateId = data.Id });
+    }
+
     private readonly CharacterTestFixture _characters;
 
     public List<Character> Players;
@@ -18,11 +27,11 @@ class TurnQueueTestData
         this._characters = characters;
         this.Players =
         [
-            CharacterFactory.CreateFromRecord(this._characters.AshRecord),
-            CharacterFactory.CreateFromRecord(this._characters.BrockRecord),
-            CharacterFactory.CreateFromRecord(this._characters.MissyRecord),
+            MakeCharacter(this._characters.AshRecord),
+            MakeCharacter(this._characters.BrockRecord),
+            MakeCharacter(this._characters.MissyRecord),
         ];
-        this.Enemies = [CharacterFactory.CreateFromRecord(this._characters.MissyRecord)];
+        this.Enemies = [MakeCharacter(this._characters.MissyRecord)];
     }
 }
 
@@ -43,7 +52,7 @@ public class TurnQueueTest : IClassFixture<CharacterTestFixture>
 
         Character currentTurn = sut.GetCurrentTurn();
 
-        Assert.Equal("Ash", currentTurn.GetConfig().Name);
+        Assert.Equal("Ash", currentTurn.Name);
     }
 
     [Fact]
