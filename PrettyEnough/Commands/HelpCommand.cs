@@ -64,9 +64,8 @@ public class HelpCommand : BaseCommand
         {
             new HelpCommand(),
             new InfoCommand(),
+            new CombatCommand(),
             new ClearCommand(),
-            // new ModifyStatCommand(),
-            // new SetStatCommand(),
         };
     }
 }

@@ -18,10 +18,8 @@ public class CommandProcessor
     {
         commands["help"] = new HelpCommand();
         commands["info"] = new InfoCommand();
+        commands["combat"] = new CombatCommand();
         commands["clear"] = new ClearCommand();
-        // commands["stats"] = new StatsCommand();
-        // commands["modify"] = new ModifyStatCommand();
-        // commands["set"] = new SetStatCommand();
     }
 
     public async Task<CommandResult> ProcessCommand(string input, GameState? gameState)

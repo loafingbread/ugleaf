@@ -16,10 +16,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 20
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 20 }
                         }
                     },
                     {
@@ -33,10 +30,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -50,10 +44,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -67,10 +58,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 30
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 30 }
                         }
                     },
                     {
@@ -85,10 +73,7 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 80,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 80
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 80 }
                         }
                     },
                     {
@@ -103,10 +88,7 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 50,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 60
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 60 }
                         }
                     }
                 ],
@@ -116,28 +98,21 @@
                         "Name": "Giant Aura Sphere",
                         "Targeter": {
                             "TargetQuantity": "All",
-                            "AllowedTargets": [
-                                "Enemy"
-                            ]
+                            "AllowedTargets": ["Enemy"]
                         },
                         "Usables": [
                             {
                                 "Id": "usable_giant_aura_sphere",
                                 "Targeter": {
                                     "TargetQuantity": "All",
-                                    "AllowedTargets": [
-                                        "Enemy"
-                                    ]
+                                    "AllowedTargets": ["Enemy"]
                                 },
                                 "Effects": [
                                     {
-                                        "Id": "effect_giant_aura_sphere",
                                         "Type": "Attack",
                                         "Subtype": "SingleHit",
                                         "Variant": "FightingDamage",
-                                        "Parameters": {
-                                            "Damage": 240
-                                        }
+                                        "Value": 240.0
                                     }
                                 ]
                             }
@@ -160,10 +135,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 20
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 20 }
                         }
                     },
                     {
@@ -177,10 +149,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -194,10 +163,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -211,10 +177,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 30
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 30 }
                         }
                     },
                     {
@@ -229,10 +192,7 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 80,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 80
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 80 }
                         }
                     },
                     {
@@ -247,10 +207,7 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 50,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 60
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 60 }
                         }
                     }
                 ],
@@ -260,9 +217,7 @@
                         "Name": "Ignite",
                         "Targeter": {
                             "TargetQuantity": "Count",
-                            "AllowedTargets": [
-                                "Enemy"
-                            ],
+                            "AllowedTargets": ["Enemy"],
                             "Count": 1
                         },
                         "Usables": [
@@ -270,30 +225,22 @@
                                 "Id": "usable_ignite",
                                 "Targeter": {
                                     "TargetQuantity": "Count",
-                                    "AllowedTargets": [
-                                        "Enemy"
-                                    ],
+                                    "AllowedTargets": ["Enemy"],
                                     "Count": 1
                                 },
                                 "Effects": [
                                     {
-                                        "Id": "effect_fire_damage",
                                         "Type": "Attack",
                                         "Subtype": "SingleHit",
                                         "Variant": "FireDamage",
-                                        "Parameters": {
-                                            "Damage": 10
-                                        }
+                                        "Value": 10.0
                                     },
                                     {
-                                        "Id": "effect_burn_dot",
                                         "Type": "Status",
                                         "Subtype": "Burn",
                                         "Variant": "DOT",
-                                        "Parameters": {
-                                            "Duration": 3,
-                                            "DamagePerTurn": 5
-                                        }
+                                        "Value": 5.0,
+                                        "Duration": 3.0
                                     }
                                 ]
                             },
@@ -301,20 +248,15 @@
                                 "Id": "usable_overheat",
                                 "Targeter": {
                                     "TargetQuantity": "Count",
-                                    "AllowedTargets": [
-                                        "Self"
-                                    ],
+                                    "AllowedTargets": ["Self"],
                                     "Count": 1
                                 },
                                 "Effects": [
                                     {
-                                        "Id": "effect_overheat",
                                         "Type": "Attack",
                                         "Subtype": "SingleHit",
                                         "Variant": "FireDamage",
-                                        "Parameters": {
-                                            "Damage": 5
-                                        }
+                                        "Value": 5.0
                                     }
                                 ]
                             }
@@ -333,20 +275,15 @@
                                 "Id": "usable_facepalm",
                                 "Targeter": {
                                     "TargetQuantity": "Count",
-                                    "AllowedTargets": [
-                                        "Self"
-                                    ],
+                                    "AllowedTargets": ["Self"],
                                     "Count": 1
                                 },
                                 "Effects": [
                                     {
-                                        "Id": "effect_physical_damage",
                                         "Type": "Attack",
                                         "Subtype": "SingleHit",
                                         "Variant": "PhysicalDamage",
-                                        "Parameters": {
-                                            "Damage": 777
-                                        }
+                                        "Value": 777.0
                                     }
                                 ]
                             }
@@ -369,10 +306,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 20
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 20 }
                         }
                     },
                     {
@@ -386,10 +320,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -403,10 +334,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -420,10 +348,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 30
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 30 }
                         }
                     },
                     {
@@ -438,10 +363,7 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 80,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 80
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 80 }
                         }
                     },
                     {
@@ -456,10 +378,7 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 50,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 60
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 60 }
                         }
                     }
                 ]
@@ -479,10 +398,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -496,10 +412,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 30
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 30 }
                         }
                     },
                     {
@@ -513,10 +426,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 25
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 25 }
                         }
                     },
                     {
@@ -530,10 +440,7 @@
                         "Config": {
                             "BaseValueCap": 50,
                             "CurrentValueCap": 100,
-                            "BaseValueFormula": {
-                                "Type": "Constant",
-                                "Value": 20
-                            }
+                            "BaseValueFormula": { "Type": "Constant", "Value": 20 }
                         }
                     },
                     {
@@ -548,10 +455,7 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 80,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 100
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 100 }
                         }
                     },
                     {
@@ -566,10 +470,88 @@
                             "BaseCapacityCap": 200,
                             "CurrentCapacityCap": 300,
                             "StartingCurrentValue": 40,
-                            "BaseCapacityFormula": {
-                                "Type": "Constant",
-                                "Value": 50
-                            }
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 50 }
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "EnemyState": {
+        "Characters": [
+            {
+                "Id": "char_npc_goblin",
+                "Name": "Goblin",
+                "Stats": [
+                    {
+                        "Type": "Value",
+                        "Metadata": {
+                            "Name": "value_stat_strength",
+                            "DisplayName": "Strength",
+                            "Description": "Strength is a measure of your physical power.",
+                            "Tags": ["physical", "strength"]
+                        },
+                        "Config": {
+                            "BaseValueCap": 50,
+                            "CurrentValueCap": 100,
+                            "BaseValueFormula": { "Type": "Constant", "Value": 10 }
+                        }
+                    },
+                    {
+                        "Type": "Value",
+                        "Metadata": {
+                            "Name": "value_stat_constitution",
+                            "DisplayName": "Constitution",
+                            "Description": "Constitution is a measure of your physical health.",
+                            "Tags": ["physical", "constitution"]
+                        },
+                        "Config": {
+                            "BaseValueCap": 50,
+                            "CurrentValueCap": 100,
+                            "BaseValueFormula": { "Type": "Constant", "Value": 10 }
+                        }
+                    },
+                    {
+                        "Type": "Value",
+                        "Metadata": {
+                            "Name": "value_stat_agility",
+                            "DisplayName": "Agility",
+                            "Description": "Agility is a measure of your movement speed.",
+                            "Tags": ["physical", "agility"]
+                        },
+                        "Config": {
+                            "BaseValueCap": 50,
+                            "CurrentValueCap": 100,
+                            "BaseValueFormula": { "Type": "Constant", "Value": 15 }
+                        }
+                    },
+                    {
+                        "Type": "Value",
+                        "Metadata": {
+                            "Name": "value_stat_intelligence",
+                            "DisplayName": "Intelligence",
+                            "Description": "Intelligence is a measure of your mental power.",
+                            "Tags": ["mental", "intelligence"]
+                        },
+                        "Config": {
+                            "BaseValueCap": 50,
+                            "CurrentValueCap": 100,
+                            "BaseValueFormula": { "Type": "Constant", "Value": 5 }
+                        }
+                    },
+                    {
+                        "Type": "Resource",
+                        "Metadata": {
+                            "Name": "resource_stat_health",
+                            "DisplayName": "Health",
+                            "Description": "Health is a measure of your healthiness. You die when it reaches 0.",
+                            "Tags": ["physical", "health"]
+                        },
+                        "Config": {
+                            "BaseCapacityCap": 200,
+                            "CurrentCapacityCap": 300,
+                            "StartingCurrentValue": 30,
+                            "BaseCapacityFormula": { "Type": "Constant", "Value": 30 }
                         }
                     }
                 ]

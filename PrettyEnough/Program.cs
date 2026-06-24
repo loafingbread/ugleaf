@@ -44,10 +44,12 @@ class Program
                 throw new Exception("Game state failed to be created");
 
             ui.PrintSuccess("✅ Game initialized successfully!");
-            ui.PrintIndentedInfo($"Loaded {gameState.PlayerState.Characters.Count} characters", 0);
+            ui.PrintIndentedInfo($"Loaded {gameState.PlayerState.Characters.Count} player(s), {gameState.EnemyState.Characters.Count} enemy/enemies", 0);
 
-            // Display initial player state
+            ui.PrintSection("Players");
             CharactersCommand.DisplayCharacters(gameState.PlayerState.Characters, ui);
+            ui.PrintSection("Enemies");
+            CharactersCommand.DisplayCharacters(gameState.EnemyState.Characters, ui);
         }
         catch (Exception ex)
         {
