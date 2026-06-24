@@ -60,7 +60,7 @@ public class TurnQueue
     {
         Character prevTurn = this._turnQueue[0];
         this._turnQueue.RemoveAt(0);
-        this._turnQueue.Append(prevTurn);
+        this._turnQueue.Add(prevTurn);
     }
 
     public void RemoveCharacter(Character character)

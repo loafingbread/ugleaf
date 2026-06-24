@@ -2,6 +2,7 @@ namespace GameLogic.Combat.TurnBased;
 
 using GameLogic.Entities.Characters;
 using GameLogic.Entities.Skills;
+using GameLogic.Events;
 using GameLogic.Targeting;
 
 public enum EPhase
@@ -23,6 +24,7 @@ public class CombatState
 {
     public EPhase Phase { get; private set; }
     public TurnQueue Queue { get; private set; }
+    public EventBus EventBus { get; } = new();
     public Skill? SelectedSkill { get; private set; }
     public List<Character> SelectedTargets { get; private set; } = new();
 
