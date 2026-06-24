@@ -1,7 +1,5 @@
 namespace GameLogic.Targeting;
 
-using GameLogic.Entities;
-
 public class Targeter : ITargeter
 {
     private List<ITargetable> _targets = new();
@@ -25,8 +23,6 @@ public class Targeter : ITargeter
     /*********************************
     * ITargeter
     *********************************/
-    public Entity GetEntity() => (Entity)this;
-
     public bool CanTarget(ITargetable candidate)
     {
         return this._config.AllowedTargets.Contains(candidate.GetRelationTo(this));

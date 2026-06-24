@@ -1,118 +1,106 @@
 namespace GameLogic.Combat.TurnBased;
 
 using GameLogic.Entities.Characters;
+using GameLogic.Entities.Stats;
+using GameLogic.Usables;
+using GameLogic.Usables.Effects;
 
 public class Combat
 {
-    CombatState State;
+    public CombatState State { get; }
 
     public Combat(List<Character> players, List<Character> enemies)
     {
-        this.State = new CombatState(players, enemies);
+        State = new CombatState(players, enemies);
     }
 
     public void Play()
     {
-        if (this.State.Phase == EPhase.CombatStart)
-        {
-            this.CombatStart();
-        }
-        else if (this.State.Phase == EPhase.TurnStart)
-        {
-            this.TurnStart();
-        }
-        else if (this.State.Phase == EPhase.PlayerTurn)
-        {
-            this.PlayerTurn();
-        }
-        else if (this.State.Phase == EPhase.EnemyTurn)
-        {
-            this.EnemyTurn();
-        }
-        else if (this.State.Phase == EPhase.EnemySelectCommand)
-        {
-            this.EnemySelectCommand();
-        }
-        else if (this.State.Phase == EPhase.EnemySelectTargets)
-        {
-            this.EnemySelectTargets();
-        }
-        else if (this.State.Phase == EPhase.ExecuteCommand)
-        {
-            this.ExecuteCommand();
-        }
-        else if (this.State.Phase == EPhase.TurnEnd)
-        {
-            this.TurnEnd();
-        }
-
-        this.CombatEnd();
+        if (State.Phase == EPhase.CombatStart)
+            CombatStart();
+        else if (State.Phase == EPhase.TurnStart)
+            TurnStart();
+        else if (State.Phase == EPhase.PlayerTurn)
+            PlayerTurn();
+        else if (State.Phase == EPhase.EnemyTurn)
+            EnemyTurn();
+        else if (State.Phase == EPhase.EnemySelectCommand)
+            EnemySelectCommand();
+        else if (State.Phase == EPhase.EnemySelectTargets)
+            EnemySelectTargets();
+        else if (State.Phase == EPhase.ExecuteCommand)
+            ExecuteCommand();
+        else if (State.Phase == EPhase.TurnEnd)
+            TurnEnd();
     }
 
-    void CombatStart()
-    {
-        this.State.SetPhase(EPhase.TurnStart);
-    }
+    void CombatStart() => State.SetPhase(EPhase.TurnStart);
 
     void TurnStart()
     {
-        Character currentTurn = this.State.Queue.GetCurrentTurn();
-
-        if (this.State.Queue.IsCharacterAnEnemy(currentTurn))
-        {
-            this.State.SetPhase(EPhase.EnemyTurn);
-            return;
-        }
-
-        this.State.SetPhase(EPhase.PlayerTurn);
+        Character current = State.Queue.GetCurrentTurn();
+        State.SetPhase(State.Queue.IsCharacterAnEnemy(current) ? EPhase.EnemyTurn : EPhase.PlayerTurn);
     }
 
-    void PlayerTurn()
+    void PlayerTurn() => State.SetPhase(EPhase.AwaitPlayerSelectCommand);
+
+    public void PlayerSelectCommand(GameLogic.Entities.Skills.Skill skill, List<Character> targets)
     {
-        this.State.SetPhase(EPhase.AwaitPlayerSelectCommand);
+        State.SelectSkillAndTargets(skill, targets);
+        State.SetPhase(EPhase.ExecuteCommand);
     }
 
-    public void PlayerSelectCommand()
-    {
-        this.State.SetPhase(EPhase.AwaitPlayerSelectTargets);
-    }
+    void EnemyTurn() => State.SetPhase(EPhase.EnemySelectCommand);
 
-    public void PlayerSelectTargets()
-    {
-        this.State.SetPhase(EPhase.ExecuteCommand);
-    }
+    void EnemySelectCommand() => State.SetPhase(EPhase.EnemySelectTargets);
 
-    void EnemyTurn()
-    {
-        this.State.SetPhase(EPhase.EnemySelectCommand);
-    }
-
-    void EnemySelectCommand()
-    {
-        this.State.SetPhase(EPhase.EnemySelectTargets);
-    }
-
-    void EnemySelectTargets()
-    {
-        this.State.SetPhase(EPhase.ExecuteCommand);
-    }
+    void EnemySelectTargets() => State.SetPhase(EPhase.ExecuteCommand);
 
     void ExecuteCommand()
     {
-        this.State.SetPhase(EPhase.TurnEnd);
+        Character user = State.Queue.GetCurrentTurn();
+
+        if (State.SelectedSkill != null && State.SelectedTargets.Count > 0)
+        {
+            foreach (UsableTemplate usable in State.SelectedSkill.Usables)
+            {
+                foreach (Character target in State.SelectedTargets)
+                {
+                    UsableResult usableResult = usable.Use(user, target);
+                    foreach (IEffectResult effectResult in usableResult.Results)
+                        effectResult.Apply();
+                }
+            }
+        }
+
+        State.ClearSelection();
+        State.SetPhase(EPhase.TurnEnd);
     }
 
     void TurnEnd()
     {
-        if (this.State.Queue.HaveMorePlayersAndEnemies())
+        RemoveDefeatedCharacters();
+
+        if (!State.Queue.HaveMorePlayersAndEnemies())
         {
-            this.State.Queue.NextTurn();
-            this.State.SetPhase(EPhase.TurnStart);
+            State.SetPhase(EPhase.CombatEnd);
             return;
         }
 
-        this.State.SetPhase(EPhase.CombatEnd);
+        State.Queue.NextTurn();
+        State.SetPhase(EPhase.TurnStart);
     }
 
-    void CombatEnd() { }
+    void RemoveDefeatedCharacters()
+    {
+        List<Character> all = [.. State.Queue.Players, .. State.Queue.Enemies];
+        foreach (Character c in all)
+        {
+            ResourceStat? hp = c.Stats.GetStat("resource_stat_health", StatType.Resource) as ResourceStat;
+            if (hp != null && hp.CurrentValue <= 0)
+                State.Queue.RemoveCharacter(c);
+        }
+    }
+
+    public bool IsCombatOver() => State.Phase == EPhase.CombatEnd;
 }

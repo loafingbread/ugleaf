@@ -1,5 +1,6 @@
 namespace GameLogic.Usables.Effects.Results;
 
+using GameLogic.Entities.Characters;
 using GameLogic.Targeting;
 
 public class HealEffectResult : IEffectResult
@@ -17,6 +18,7 @@ public class HealEffectResult : IEffectResult
 
     public void Apply()
     {
-        // TODO: Target.Heal(Amount) — requires Heal on ITargetable
+        if (Target is Character character)
+            character.Stats.ModifyResourceStat("resource_stat_health", (int)Amount);
     }
 }

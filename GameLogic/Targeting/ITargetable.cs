@@ -1,8 +1,6 @@
-using GameLogic.Entities;
-
 namespace GameLogic.Targeting;
 
-public interface ITargetable : IEntity
+public interface ITargetable
 {
     public EFactionRelationship GetRelationTo(ITargeter targeter);
 }

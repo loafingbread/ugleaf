@@ -1,5 +1,6 @@
 namespace GameLogic.Usables.Effects.Results;
 
+using GameLogic.Entities.Characters;
 using GameLogic.Targeting;
 
 public class AttackEffectResult : IEffectResult, ICritCapable
@@ -19,6 +20,7 @@ public class AttackEffectResult : IEffectResult, ICritCapable
 
     public void Apply()
     {
-        // TODO: Target.TakeDamage(Damage) — requires TakeDamage on ITargetable
+        if (Target is Character character)
+            character.Stats.ModifyResourceStat("resource_stat_health", -(int)Damage);
     }
 }

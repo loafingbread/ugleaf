@@ -8,6 +8,9 @@ public class TurnQueue
     List<Character> _players;
     List<Character> _enemies;
 
+    public IReadOnlyList<Character> Players => _players;
+    public IReadOnlyList<Character> Enemies => _enemies;
+
     public TurnQueue(List<Character> players, List<Character> enemies)
     {
         this._turnQueue = [.. players, .. enemies];
@@ -63,7 +66,7 @@ public class TurnQueue
     public void RemoveCharacter(Character character)
     {
         this._turnQueue.Remove(character);
-        this._enemies.Remove(character);
+        this._players.Remove(character);
         this._enemies.Remove(character);
     }
 }

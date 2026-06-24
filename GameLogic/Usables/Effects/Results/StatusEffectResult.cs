@@ -1,5 +1,6 @@
 namespace GameLogic.Usables.Effects.Results;
 
+using GameLogic.Entities.Characters;
 using GameLogic.Targeting;
 
 public class StatusEffectResult : IEffectResult
@@ -19,6 +20,13 @@ public class StatusEffectResult : IEffectResult
 
     public void Apply()
     {
-        // TODO: Target.ApplyStatusEffect(...) — requires status effect system on ITargetable
+        if (Target is Character character)
+            character.AddStatusEffect(new ActiveStatusEffect
+            {
+                VariantName = Variant.GetType().Name,
+                Value = Value,
+                Duration = Duration,
+                RemainingTurns = Duration,
+            });
     }
 }

@@ -1,8 +1,6 @@
 namespace GameLogic.Usables;
 
-using GameLogic.Entities;
-
-public interface IUser : IEntity
+public interface IUser
 {
     public bool CanUse(UsableTemplate usable);
 }
